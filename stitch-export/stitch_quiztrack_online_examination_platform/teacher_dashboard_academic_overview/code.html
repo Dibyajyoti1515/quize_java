@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-secondary-fixed-variant":"#2f2ebe","inverse-on-surface":"#eaf1ff","surface-container-low":"#eff4ff","secondary-container":"#6063ee","error":"#ba1a1a","on-tertiary":"#ffffff","outline-variant":"#c7c4d8","surface-dim":"#cbdbf5","on-tertiary-fixed-variant":"#005236","primary-container":"#4f46e5","on-secondary-container":"#fffbff","primary-fixed-dim":"#c3c0ff","error-container":"#ffdad6","on-secondary-fixed":"#07006c","primary":"#3525cd","surface-tint":"#4d44e3","on-background":"#0b1c30","tertiary-fixed-dim":"#4edea3","inverse-primary":"#c3c0ff","surface-variant":"#d3e4fe","on-error-container":"#93000a","on-tertiary-container":"#67f4b7","secondary-fixed":"#e1e0ff","surface-bright":"#f8f9ff","on-primary-fixed-variant":"#3323cc","on-primary-container":"#dad7ff","on-error":"#ffffff","surface-container-high":"#dce9ff","on-primary":"#ffffff","surface":"#f8f9ff","on-primary-fixed":"#0f0069","tertiary-container":"#006e4b","surface-container":"#e5eeff","secondary":"#4648d4","primary-fixed":"#e2dfff","tertiary-fixed":"#6ffbbe","on-surface-variant":"#464555","on-secondary":"#ffffff","tertiary":"#005338","secondary-fixed-dim":"#c0c1ff","surface-container-lowest":"#ffffff","surface-container-highest":"#d3e4fe","outline":"#777587","on-tertiary-fixed":"#002113","inverse-surface":"#213145","on-surface":"#0b1c30","background":"#f8f9ff"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"gutter":"1.5rem","margin-sm":"1rem","space-md":"1rem","gutter-sm":"1rem","space-lg":"1.5rem","space-xl":"2rem","space-xs":"0.25rem","space-sm":"0.5rem","margin":"2rem"},"fontFamily":{"label-md":["Inter"],"body-md":["Inter"],"body-sm":["Inter"],"label-sm":["Inter"],"display":["Plus Jakarta Sans"],"display-mobile":["Plus Jakarta Sans"],"title-lg":["Plus Jakarta Sans"],"body-lg":["Inter"],"headline-lg":["Plus Jakarta Sans"],"title-md":["Inter"],"headline-sm":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"code-telemetry":["JetBrains Mono"],"headline-lg-mobile":["Plus Jakarta Sans"]},"fontSize":{"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"body-sm":["13px",{"lineHeight":"18px","fontWeight":"400"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}],"display":["48px",{"lineHeight":"56px","letterSpacing":"-0.02em","fontWeight":"700"}],"display-mobile":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"700"}],"title-lg":["18px",{"lineHeight":"26px","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.015em","fontWeight":"600"}],"title-md":["16px",{"lineHeight":"24px","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"code-telemetry":["12px",{"lineHeight":"16px","fontWeight":"500"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[20px]">verified_user</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface leading-none">QuizTrack</span><span class="font-code-telemetry text-code-telemetry text-on-surface-variant uppercase tracking-wider">Enterprise Suite</span></div></div></div><div class="px-space-md py-space-sm"><div class="px-space-sm py-space-xs rounded-lg bg-surface-container flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-tertiary-container text-[16px]">admin_panel_settings</span><span class="font-label-sm text-label-sm text-on-surface uppercase">Role: Educator &amp; Proctor</span></div><span class="font-label-sm text-label-sm text-tertiary font-bold">PRO</span></div></div><nav class="flex flex-col gap-space-xs px-space-md mt-space-sm" data-active-classes="bg-primary-container text-on-primary rounded-xl font-bold"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl font-title-md text-title-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="live-proctoring-matrix" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span>Live Proctoring</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-all bg-primary-container text-on-primary rounded-xl font-bold" data-path="quiz-management-dashboard" href="#"><span class="material-symbols-outlined text-[20px]">quiz</span><span>Quiz Console</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl font-title-md text-title-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="student-registry-roster" href="#"><span class="material-symbols-outlined text-[20px]">group</span><span>Student Roster</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl font-title-md text-title-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="violation-audit-logs" href="#"><span class="material-symbols-outlined text-[20px]">policy</span><span>Violation Logs</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl font-title-md text-title-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="analytics-and-performance" href="#"><span class="material-symbols-outlined text-[20px]">analytics</span><span>Telemetry &amp; Reports</span></a></nav></div><div class="p-space-md flex flex-col gap-space-xs"><div class="p-space-md rounded-xl bg-surface-container-low flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-tertiary-container animate-pulse"></span><span class="font-code-telemetry text-code-telemetry text-on-surface">Websocket Active</span></div><span class="font-code-telemetry text-code-telemetry text-outline">18ms</span></div><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="system-settings" href="#"><span class="material-symbols-outlined text-[18px]">tune</span><span>Proctor Rules Engine</span></a></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-space-xl"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs text-on-surface-variant"><span class="material-symbols-outlined text-[18px]">terminal</span><span class="font-code-telemetry text-code-telemetry uppercase tracking-wider">Node: us-east-mon-02</span></div><div class="h-4 w-px bg-outline-variant"></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-tertiary-container text-[18px]">shield</span><span class="font-label-md text-label-md text-on-surface">AI Sentinel Active (v4.2)</span></div></div><div class="flex items-center gap-space-md"><button aria-label="Notifications" class="relative p-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-error"></span></button><div class="h-6 w-px bg-outline-variant"></div><div class="flex items-center gap-space-sm"><div class="text-right"><span class="block font-label-md text-label-md text-on-surface">Dr. Eleanor Vance</span><span class="block font-label-sm text-label-sm text-on-surface-variant">Chief Proctor</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-16 bg-surface min-h-screen w-full px-gutter"><div class="flex flex-col w-full pb-space-xl">
+<!-- Top Executive Bar with Context Controls & Global Actions -->
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-space-md py-space-md mb-space-lg">
+<div class="flex flex-wrap items-center gap-space-sm">
+<div class="flex items-center gap-space-xs px-space-md py-space-xs rounded-xl bg-surface-container-high text-on-surface">
+<span class="material-symbols-outlined text-[18px] text-primary">calendar_month</span>
+<span class="font-label-md text-label-md">Spring 2025 Semester</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-space-xs rounded-xl bg-surface-container-highest text-on-surface shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary">school</span>
+<span class="font-title-md text-title-md font-bold">CS402: Distributed Systems</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">expand_more</span>
+</div>
+<div class="flex items-center gap-space-xs px-space-sm py-space-xs rounded-lg bg-surface-container text-on-surface-variant">
+<span class="font-code-telemetry text-code-telemetry">Cohorts: CS402-A, B, C</span>
+</div>
+</div>
+<!-- Quick CTAs -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-on-surface shadow-sm hover:bg-surface-container transition-all" type="button">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">download</span>
+<span class="font-label-md text-label-md">Export Roster CSV</span>
+</button>
+<a class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-error text-on-error shadow-md hover:opacity-95 transition-all" data-path="live-proctoring-matrix" href="#">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-on-error opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-on-error"></span>
+</span>
+<span class="material-symbols-outlined text-[18px]">videocam</span>
+<span class="font-label-md text-label-md uppercase tracking-wider">Live Proctoring HUD</span>
+</a>
+<button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-primary-container text-on-primary shadow-sm hover:opacity-90 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+<span class="font-label-md text-label-md">+ Create New Quiz</span>
+</button>
+</div>
+</div>
+<!-- In-Flight Live Examination Mission Alert -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-lowest shadow-md p-space-lg mb-space-lg">
+<div class="absolute left-0 top-0 bottom-0 w-2 bg-error"></div>
+<div class="flex flex-col xl:flex-row xl:items-center justify-between gap-space-lg pl-space-sm">
+<div class="flex flex-col lg:flex-row items-start lg:items-center gap-space-lg">
+<div class="relative w-16 h-16 rounded-xl bg-surface-container-high flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[32px]">sensors</span>
+<span class="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-error"></span>
+</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="px-space-xs py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm uppercase font-bold tracking-wider">Examination In Session</span>
+<span class="font-code-telemetry text-code-telemetry text-outline">CRN-88219 • Window Closes: 11:45 AM (52m remaining)</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">CS402: Midterm Exam - Distributed Systems &amp; Concurrency</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Live neural telemetry scanning enabled: dual-cam verification, browser lockdown v3.1, audio frequency fingerprinting.</p>
+</div>
+</div>
+<!-- Live Exam Telemetry Snapshot -->
+<div class="flex flex-wrap items-center gap-space-md bg-surface-container-low px-space-lg py-space-md rounded-xl">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Stream Status</span>
+<div class="flex items-center gap-space-xs mt-0.5">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">42<span class="text-outline text-[16px]">/45</span></span>
+<span class="px-space-xs py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm">93% Connected</span>
+</div>
+</div>
+<div class="h-8 w-px bg-outline-variant"></div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">AI Sentinel Flag</span>
+<div class="flex items-center gap-space-xs mt-0.5">
+<span class="font-headline-sm text-headline-sm text-error font-bold">3</span>
+<span class="px-space-xs py-0.5 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">Review Pending</span>
+</div>
+</div>
+<div class="h-8 w-px bg-outline-variant"></div>
+<a class="flex items-center gap-space-xs px-space-lg py-space-sm rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:bg-surface-tint transition-all shadow-sm" data-path="live-proctoring-matrix" href="#">
+<span class="material-symbols-outlined text-[18px]">fullscreen</span>
+<span>Open Live Monitoring Matrix</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Executive Metric KPI Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-space-md mb-space-lg">
+<!-- Metric 1 -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Enrolled Students</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+</div>
+</div>
+<div class="mt-space-md">
+<span class="font-headline-lg text-headline-lg text-on-surface">184</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant mt-space-xs">Across 3 Cohorts (A, B, C)</span>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center gap-space-xs text-tertiary">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span class="font-label-sm text-label-sm">100% Identity Verified</span>
+</div>
+</div>
+<!-- Metric 2 -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Active Quizzes</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">quiz</span>
+</div>
+</div>
+<div class="mt-space-md">
+<span class="font-headline-lg text-headline-lg text-on-surface">3</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant mt-space-xs">1 Live Now • 2 Scheduled</span>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center gap-space-xs text-secondary-container">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span class="font-label-sm text-label-sm">Next: Raft (Mar 28)</span>
+</div>
+</div>
+<!-- Metric 3 -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Completed Sessions</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-on-secondary-fixed-variant">
+<span class="material-symbols-outlined text-[20px]">task_alt</span>
+</div>
+</div>
+<div class="mt-space-md">
+<span class="font-headline-lg text-headline-lg text-on-surface">12</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant mt-space-xs">This semester to date</span>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center gap-space-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">fact_check</span>
+<span class="font-label-sm text-label-sm">2,208 total submissions</span>
+</div>
+</div>
+<!-- Metric 4 -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Class Average</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[20px]">insights</span>
+</div>
+</div>
+<div class="mt-space-md">
+<span class="font-headline-lg text-headline-lg text-on-surface">78.4%</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant mt-space-xs">Coursewide mean benchmark</span>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center gap-space-xs text-tertiary">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span class="font-label-sm text-label-sm">+4.2% vs previous term</span>
+</div>
+</div>
+<!-- Metric 5 -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Proctor Trust Index</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[20px]">verified</span>
+</div>
+</div>
+<div class="mt-space-md">
+<span class="font-headline-lg text-headline-lg text-primary font-bold">96.8%</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant mt-space-xs">Low anomaly &amp; false-flag rate</span>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center gap-space-xs text-tertiary-container">
+<span class="material-symbols-outlined text-[16px]">format_image_left</span>
+<span class="font-label-sm text-label-sm">Sentinel Strict Integrity</span>
+</div>
+</div>
+</div>
+<!-- Analytics & Performance Section -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg mb-space-lg">
+<!-- Topic Mastery & Score Trend -->
+<div class="lg:col-span-8 p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pb-space-md">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Curriculum Deep-Dive</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Distributed Systems Concept Mastery</h3>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant">
+<span class="w-3 h-3 rounded-full bg-primary-container"></span> Spring 2025
+          </span>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-outline ml-space-sm">
+<span class="w-3 h-3 rounded-full bg-surface-container-high"></span> Dept Median
+          </span>
+</div>
+</div>
+<!-- High polish inline SVG visualization chart -->
+<div class="w-full my-space-md">
+<svg class="w-full h-auto text-on-surface" fill="none" viewbox="0 0 760 220" xmlns="http://www.w3.org/2000/svg">
+<!-- Horizontal Grid lines -->
+<line stroke="#E2E8F0" stroke-dasharray="4 4" stroke-width="1" x1="40" x2="740" y1="30" y2="30"></line>
+<line stroke="#E2E8F0" stroke-dasharray="4 4" stroke-width="1" x1="40" x2="740" y1="80" y2="80"></line>
+<line stroke="#E2E8F0" stroke-dasharray="4 4" stroke-width="1" x1="40" x2="740" y1="130" y2="130"></line>
+<line stroke="#E2E8F0" stroke-width="1.5" x1="40" x2="740" y1="180" y2="180"></line>
+<text class="font-code-telemetry text-[11px]" fill="#777587" text-anchor="end" x="25" y="34">100%</text>
+<text class="font-code-telemetry text-[11px]" fill="#777587" text-anchor="end" x="25" y="84">75%</text>
+<text class="font-code-telemetry text-[11px]" fill="#777587" text-anchor="end" x="25" y="134">50%</text>
+<text class="font-code-telemetry text-[11px]" fill="#777587" text-anchor="end" x="25" y="184">0%</text>
+<!-- Area fill gradient under curve -->
+<defs>
+<lineargradient id="areaGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#4F46E5" stop-opacity="0.25"></stop>
+<stop offset="100%" stop-color="#4F46E5" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<!-- Shaded Area -->
+<path d="M 80 120 C 160 110, 220 55, 290 60 C 370 65, 430 90, 500 70 C 580 50, 640 45, 710 40 L 710 180 L 80 180 Z" fill="url(#areaGrad)"></path>
+<!-- Department Baseline (Grey Line) -->
+<path d="M 80 135 C 160 125, 220 85, 290 85 C 370 85, 430 105, 500 90 C 580 75, 640 68, 710 65" stroke="#CBD5E1" stroke-dasharray="3 3" stroke-width="2"></path>
+<!-- Class Average (Primary Active Line) -->
+<path d="M 80 120 C 160 110, 220 55, 290 60 C 370 65, 430 90, 500 70 C 580 50, 640 45, 710 40" stroke="#4F46E5" stroke-linecap="round" stroke-width="3.5"></path>
+<!-- Interactive Node Points -->
+<g>
+<circle cx="80" cy="120" fill="#FFFFFF" r="5" stroke="#4F46E5" stroke-width="3"></circle>
+<text class="font-label-sm text-[12px]" fill="#0B1C30" font-weight="600" text-anchor="middle" x="80" y="202">Lamport Clocks</text>
+<text class="font-code-telemetry text-[11px]" fill="#3525CD" font-weight="700" text-anchor="middle" x="80" y="105">62.5%</text>
+</g>
+<g>
+<circle cx="290" cy="60" fill="#FFFFFF" r="5" stroke="#4F46E5" stroke-width="3"></circle>
+<text class="font-label-sm text-[12px]" fill="#0B1C30" font-weight="600" text-anchor="middle" x="290" y="202">Vector Clocks</text>
+<text class="font-code-telemetry text-[11px]" fill="#3525CD" font-weight="700" text-anchor="middle" x="290" y="45">86.2%</text>
+</g>
+<g>
+<circle cx="500" cy="70" fill="#FFFFFF" r="5" stroke="#4F46E5" stroke-width="3"></circle>
+<text class="font-label-sm text-[12px]" fill="#0B1C30" font-weight="600" text-anchor="middle" x="500" y="202">2PC / Paxos Core</text>
+<text class="font-code-telemetry text-[11px]" fill="#3525CD" font-weight="700" text-anchor="middle" x="500" y="55">81.0%</text>
+</g>
+<g>
+<circle cx="710" cy="40" fill="#FFFFFF" r="5" stroke="#4F46E5" stroke-width="3"></circle>
+<text class="font-label-sm text-[12px]" fill="#0B1C30" font-weight="600" text-anchor="middle" x="710" y="202">Raft Consensus</text>
+<text class="font-code-telemetry text-[11px]" fill="#3525CD" font-weight="700" text-anchor="middle" x="710" y="25">92.4%</text>
+</g>
+</svg>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-sm pt-space-md bg-surface-container-low rounded-xl p-space-md">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Strongest Area</span>
+<span class="block font-title-md text-title-md text-tertiary font-bold">Raft Protocols</span>
+<span class="font-code-telemetry text-code-telemetry text-outline">92.4% avg</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Need Review</span>
+<span class="block font-title-md text-title-md text-error font-bold">Lamport Clocks</span>
+<span class="font-code-telemetry text-code-telemetry text-outline">62.5% avg</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Assessment Integrity</span>
+<span class="block font-title-md text-title-md text-on-surface font-bold">Strict Cam-Locked</span>
+<span class="font-code-telemetry text-code-telemetry text-outline">0 flagged false</span>
+</div>
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Median Completion Time</span>
+<span class="block font-title-md text-title-md text-on-surface font-bold">38.4 mins</span>
+<span class="font-code-telemetry text-code-telemetry text-outline">Window: 50m</span>
+</div>
+</div>
+</div>
+<!-- Cohort Comparison & Faculty Audit Widget -->
+<div class="lg:col-span-4 flex flex-col gap-space-md">
+<!-- Cohort Comparison -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between flex-1">
+<div>
+<div class="flex items-center justify-between mb-space-md">
+<h3 class="font-title-lg text-title-lg text-on-surface">Cohort Comparisons</h3>
+<span class="px-space-xs py-0.5 rounded bg-surface-container font-code-telemetry text-code-telemetry text-on-surface-variant">CS402</span>
+</div>
+<div class="flex flex-col gap-space-md">
+<!-- Cohort A -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-center">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Cohort CS402-A (Morning)</span>
+<span class="font-code-telemetry text-code-telemetry font-bold text-primary">82.1%</span>
+</div>
+<div class="w-full h-2.5 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 82.1%"></div>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">61 Students • 98.2% Proctor score</span>
+</div>
+<!-- Cohort B -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-center">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Cohort CS402-B (Midday)</span>
+<span class="font-code-telemetry text-code-telemetry font-bold text-secondary">77.3%</span>
+</div>
+<div class="w-full h-2.5 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 77.3%"></div>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">64 Students • 95.8% Proctor score</span>
+</div>
+<!-- Cohort C -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex justify-between items-center">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Cohort CS402-C (Evening)</span>
+<span class="font-code-telemetry text-code-telemetry font-bold text-tertiary">75.8%</span>
+</div>
+<div class="w-full h-2.5 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full bg-tertiary rounded-full" style="width: 75.8%"></div>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">59 Students • 96.4% Proctor score</span>
+</div>
+</div>
+</div>
+<div class="pt-space-md mt-space-md bg-surface-container-low p-space-md rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-tertiary">balance</span>
+<span class="font-label-sm text-label-sm text-on-surface">Cohort Variance: ±3.1%</span>
+</div>
+<span class="font-code-telemetry text-code-telemetry text-tertiary font-bold">STABLE</span>
+</div>
+</div>
+<!-- Proctor Quick Actions & Pending Requests -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-error text-[20px]">notification_important</span>
+<h4 class="font-title-md text-title-md text-on-surface">Pending Proctor Audits</h4>
+</div>
+<span class="px-space-xs py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">4 Action Items</span>
+</div>
+<div class="flex flex-col gap-space-sm my-space-sm">
+<div class="p-space-sm rounded-lg bg-surface-container flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-7 h-7 rounded-full bg-error-container flex items-center justify-center text-on-error-container font-label-sm font-bold">TL</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">T. Larson (CS402-A)</span>
+<span class="font-code-telemetry text-code-telemetry text-outline">Gaze tracking lost &gt; 40s</span>
+</div>
+</div>
+<button class="px-space-xs py-1 rounded bg-surface-container-highest text-on-surface font-label-sm text-label-sm hover:bg-primary hover:text-on-primary transition-all" type="button">Audit</button>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-7 h-7 rounded-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed font-label-sm font-bold">MK</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">M. Kapoor (CS402-B)</span>
+<span class="font-code-telemetry text-code-telemetry text-outline">Accommodation: +15m timer</span>
+</div>
+</div>
+<button class="px-space-xs py-1 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm hover:opacity-90 transition-all" type="button">Grant</button>
+</div>
+</div>
+<a class="text-center font-label-sm text-label-sm text-primary hover:underline pt-space-xs" data-path="violation-audit-logs" href="#">
+          Open All Incident Reviews →
+        </a>
+</div>
+</div>
+</div>
+<!-- Recent & Scheduled Quiz Activity Table -->
+<div class="rounded-xl bg-surface-container-lowest shadow-sm p-space-lg mb-space-lg">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md mb-space-lg">
+<div class="flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Course Examination Schedule &amp; Activity</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Live telemetry status, past test audits, and scheduled assessments</p>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<input class="pl-9 pr-space-md py-space-xs rounded-lg bg-surface-container text-on-surface font-body-sm text-body-sm focus:outline-none focus:bg-surface-container-lowest transition-all w-60" placeholder="Search assessments..." type="text"/>
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+</div>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">filter_list</span>
+<span>Filter</span>
+</button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-space-sm px-space-md rounded-l-lg">Assessment Details</th>
+<th class="py-space-sm px-space-md">Subject / Module</th>
+<th class="py-space-sm px-space-md">Scheduled Window</th>
+<th class="py-space-sm px-space-md">Submissions</th>
+<th class="py-space-sm px-space-md">Mean Score</th>
+<th class="py-space-sm px-space-md">Sentinel Status</th>
+<th class="py-space-sm px-space-md rounded-r-lg text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-transparent">
+<!-- Row 1: Live Now -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-error-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-error text-[20px]">videocam</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface font-bold block">CS402 Midterm Exam</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface-variant">Distributed Systems &amp; Concurrency</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-xs py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-semibold">CS402 Core</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-error font-bold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-error animate-ping"></span> Live Now
+                </span>
+<span class="font-code-telemetry text-code-telemetry text-outline">10:00 - 11:45 AM EDT</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md font-bold text-on-surface">42 / 45</span>
+<div class="w-24 h-1.5 rounded-full bg-surface-container mt-1">
+<div class="h-full bg-primary rounded-full" style="width: 93%"></div>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-code-telemetry text-code-telemetry text-outline italic">In Progress</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-xs py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold flex items-center gap-1 w-max">
+<span class="material-symbols-outlined text-[14px]">warning</span> 3 Flagged
+              </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<a class="px-space-sm py-1 rounded bg-primary text-on-primary font-label-sm text-label-sm hover:opacity-90" data-path="live-proctoring-matrix" href="#">Live Matrix</a>
+</div>
+</td>
+</tr>
+<!-- Row 2: Completed -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[20px]">assignment_turned_in</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface font-bold block">CS301 Database Internals</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface-variant">B-Trees &amp; WAL Logging Architecture</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-highest text-on-surface font-label-sm text-label-sm font-semibold">CS301 Elective</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Completed</span>
+<span class="font-code-telemetry text-code-telemetry text-outline">Mar 20, 2025</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-title-md text-title-md font-bold text-on-surface">112 / 112</span>
+<div class="w-24 h-1.5 rounded-full bg-surface-container mt-1">
+<div class="h-full bg-tertiary rounded-full" style="width: 100%"></div>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-code-telemetry text-code-telemetry font-bold text-tertiary">81.6%</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-xs py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold flex items-center gap-1 w-max">
+<span class="material-symbols-outlined text-[14px]">check</span> Clean Audit
+              </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="px-space-sm py-1 rounded bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high" type="button">View Results</button>
+<button class="px-space-xs py-1 rounded text-on-surface-variant hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Scheduled -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[20px]">event_upcoming</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface font-bold block">CS402 Quiz #4: Raft Consensus</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface-variant">Leader Election &amp; Heartbeat Dynamics</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-xs py-0.5 rounded bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-semibold">CS402 Core</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Scheduled</span>
+<span class="font-code-telemetry text-code-telemetry text-outline">Mar 28, 02:00 PM</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-code-telemetry text-code-telemetry text-outline">0 / 184</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-code-telemetry text-code-telemetry text-outline">—</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-xs py-0.5 rounded-full bg-surface-container-highest text-on-surface font-label-sm text-label-sm flex items-center gap-1 w-max">
+<span class="material-symbols-outlined text-[14px]">tune</span> Sentinel Armed
+              </span>
+</td>
+<td class="py-space-md px-space-md text-right">
+<div class="flex items-center justify-end gap-space-xs">
+<button class="px-space-sm py-1 rounded bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high" type="button">Edit Quiz</button>
+<button class="px-space-xs py-1 rounded text-on-surface-variant hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Faculty Proctor Credentials & Security Diagnostics Footer Card -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary text-[24px]">verified_user</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Designated Chief Proctor</span>
+<span class="font-title-md text-title-md text-on-surface font-bold">Prof. Ronald Vance</span>
+<span class="font-code-telemetry text-code-telemetry text-outline">Department of Computer Science</span>
+</div>
+</div>
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-tertiary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-tertiary text-[24px]">network_check</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Stream Integrity Protocol</span>
+<span class="font-title-md text-title-md text-on-surface font-bold">WebRTC + TLS 1.3</span>
+<span class="font-code-telemetry text-code-telemetry text-outline">Average Latency: 18ms (Optimal)</span>
+</div>
+</div>
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-secondary-container text-[24px]">auto_fix_high</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Anomaly Detection Engine</span>
+<span class="font-title-md text-title-md text-on-surface font-bold">Model v4.2 Edge Neural</span>
+<span class="font-code-telemetry text-code-telemetry text-outline">Face Mesh + Keystroke Dynamics</span>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuizTrack Navigation Architecture & Screen Flow Diagram</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            primary: '#4f46e5',
+            secondary: '#06b6d4',
+            surface: '#0f172a',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0b0f19;
+      color: #e2e8f0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .flow-line {
+      stroke-dasharray: 6;
+      animation: dash 30s linear infinite;
+    }
+    @keyframes dash {
+      to {
+        stroke-dashoffset: -600;
+      }
+    }
+    .glow-indigo {
+      filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.45));
+    }
+    .glow-cyan {
+      filter: drop-shadow(0 0 10px rgba(6, 182, 212, 0.45));
+    }
+    .glow-amber {
+      filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.45));
+    }
+    .glass-card {
+      background: rgba(17, 24, 39, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card:hover {
+      border-color: rgba(99, 102, 241, 0.4);
+      transform: translateY(-2px);
+      transition: all 0.25s ease;
+    }
+    .connector-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-6 lg:p-12 overflow-x-auto selection:bg-indigo-500 selection:text-white">
+
+  <!-- Top Flow Header -->
+  <header class="max-w-[1600px] mx-auto mb-10">
+    <div class="glass-card rounded-2xl p-6 lg:p-8 relative overflow-hidden">
+      <!-- Glow ambient background -->
+      <div class="absolute -right-20 -top-20 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -left-20 -bottom-20 w-96 h-96 bg-cyan-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div>
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-cyan-400 flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/30">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <div>
+              <h1 class="text-2xl lg:text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
+                QuizTrack™ Ecosystem Sitemap & Master Flowchart
+                <span class="text-xs bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2.5 py-0.5 rounded-full font-mono font-medium">v4.2 Production Map</span>
+              </h1>
+              <p class="text-sm text-slate-400 mt-0.5">End-to-end navigational architecture, interactive user journeys, and screen-to-screen transitions</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Legend and Role Color Index -->
+        <div class="flex flex-wrap items-center gap-4 bg-slate-900/90 border border-slate-800 rounded-xl p-3 px-4">
+          <div class="text-xs font-semibold uppercase tracking-wider text-slate-400 mr-1">Flow Legend:</div>
+          
+          <div class="flex items-center gap-2">
+            <span class="w-3.5 h-3.5 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></span>
+            <span class="text-xs font-medium text-emerald-300">Gateway / Entry</span>
+          </div>
+          
+          <div class="flex items-center gap-2">
+            <span class="w-3.5 h-3.5 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></span>
+            <span class="text-xs font-medium text-amber-300">Teacher Flow (Amber/Gold)</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="w-3.5 h-3.5 rounded-full bg-indigo-400 shadow-sm shadow-indigo-400/50"></span>
+            <span class="text-xs font-medium text-indigo-300">Student Flow (Indigo/Cyan)</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="w-3.5 h-1.5 rounded-full bg-rose-400"></span>
+            <span class="text-xs font-medium text-rose-300">Return / Back Action</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Canvas Container -->
+  <main class="max-w-[1600px] mx-auto space-y-12">
+
+    <!-- STEP 1: AUTHENTICATION & ROLE GATEWAY (STARTING POINT) -->
+    <section class="relative">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold font-mono">NODE 00</span>
+          <h2 class="text-lg font-bold text-white tracking-wide">Common Starting Point: Authentication &amp; Role Gateway</h2>
+        </div>
+        <span class="text-xs text-slate-400 font-mono">Screen: QuizTrack Unified Authentication &amp; Role Gateway</span>
+      </div>
+
+      <div class="glass-card rounded-2xl p-6 border-emerald-500/30 bg-gradient-to-r from-slate-900/90 via-emerald-950/20 to-slate-900/90 shadow-xl relative">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="flex items-start gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-3">
+                <h3 class="text-xl font-bold text-white">Unified Authentication &amp; Role Dispatcher</h3>
+                <span class="bg-emerald-500/20 text-emerald-300 text-xs px-2 py-0.5 rounded font-mono">Central SSO + 2FA</span>
+              </div>
+              <p class="text-sm text-slate-300 mt-1 max-w-2xl">
+                The master entry gateway for all users. Evaluates credentials, biometric tokens, and authorization claims to route users into their dedicated role workspaces.
+              </p>
+              <div class="flex items-center gap-3 mt-3 text-xs text-slate-400 font-mono">
+                <span>• Candidate Instant Sandbox (Alex Mercer)</span>
+                <span>• Faculty Instant Sandbox (Prof. Ronald Vance)</span>
+                <span>• Hardware Pre-check</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dual Dispatch Branch Visual -->
+          <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+            <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center gap-3 text-left">
+              <div class="w-3 h-3 rounded-full bg-amber-400 animate-ping"></div>
+              <div>
+                <div class="text-xs font-semibold text-amber-300 uppercase tracking-wider">Role Claim: Faculty</div>
+                <div class="text-sm font-bold text-white">Dispatch → Teacher Hub</div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center gap-3 text-left">
+              <div class="w-3 h-3 rounded-full bg-indigo-400 animate-ping"></div>
+              <div>
+                <div class="text-xs font-semibold text-indigo-300 uppercase tracking-wider">Role Claim: Student</div>
+                <div class="text-sm font-bold text-white">Dispatch → Student Hub</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2: SPLIT COHORTS (TEACHER WORKSPACE & STUDENT WORKSPACE) -->
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-10">
+
+      <!-- LEFT COLUMN: TEACHER WORKSPACE FLOW -->
+      <section class="space-y-6">
+        <div class="flex items-center justify-between border-b border-amber-500/30 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-amber-400 shadow-md shadow-amber-400/50"></span>
+            <h2 class="text-xl font-extrabold text-amber-300 tracking-wide">1. Teacher Navigation Flow &amp; Sidebar Routes</h2>
+          </div>
+          <span class="text-xs font-mono bg-amber-500/10 text-amber-300 border border-amber-500/20 px-2 py-0.5 rounded">Faculty Suite</span>
+        </div>
+
+        <!-- Teacher Dashboard Central Node -->
+        <div class="glass-card rounded-2xl p-6 border-amber-500/40 relative">
+          <div class="absolute -top-3 left-6 bg-amber-500 text-slate-950 font-black text-[11px] uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow">
+            Root Hub Screen
+          </div>
+          <div class="flex items-start justify-between">
+            <div>
+              <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                Teacher Dashboard &amp; Academic Overview
+                <span class="text-xs font-mono text-slate-400 font-normal">({{DATA:SCREEN:SCREEN_8}})</span>
+              </h3>
+              <p class="text-xs text-slate-400 mt-1">Instructor Command Center: telemetry banners, curriculum mastery Gaussian curves, and cohort stats.</p>
+            </div>
+            <span class="px-2 py-1 rounded bg-amber-400/20 text-amber-300 font-mono text-xs">Active Live Hub</span>
+          </div>
+
+          <!-- Sidebar Item Routing Table -->
+          <div class="mt-5 space-y-2.5">
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Teacher Sidebar Connectors:</div>
+
+            <!-- Route 1 -->
+            <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between hover:border-amber-500/40 transition">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs text-slate-400">01</span>
+                <span class="text-xs font-bold text-slate-200">Overview</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="connector-badge bg-amber-500/20 text-amber-300">Default View</span>
+                <span class="text-slate-400 text-xs">→ Teacher Dashboard Home</span>
+              </div>
+            </div>
+
+            <!-- Route 2: Create Quiz -->
+            <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between hover:border-amber-500/40 transition">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs text-slate-400">02</span>
+                <span class="text-xs font-bold text-slate-200">Create Quiz / Question Bank</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="connector-badge bg-amber-500/20 text-amber-300">Click CTA</span>
+                <span class="text-slate-300 font-semibold text-xs">→ Quiz Creation Page ({{DATA:SCREEN:SCREEN_16}})</span>
+              </div>
+            </div>
+
+            <!-- Route 3: Live Monitoring -->
+            <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between hover:border-amber-500/40 transition">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs text-slate-400">03</span>
+                <span class="text-xs font-bold text-slate-200">Live Proctoring</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="connector-badge bg-amber-500/20 text-amber-300">Click Menu / Banner</span>
+                <span class="text-slate-300 font-semibold text-xs">→ Teacher Live Monitoring ({{DATA:SCREEN:SCREEN_20}})</span>
+              </div>
+            </div>
+
+            <!-- Route 4: My Subjects / Subject Management -->
+            <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs text-slate-400">04</span>
+                <span class="text-xs font-bold text-slate-200">My Subjects</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="connector-badge bg-slate-800 text-slate-300">Navigate</span>
+                <span class="text-slate-400 text-xs">→ Subject Management &amp; Syllabi</span>
+              </div>
+            </div>
+
+            <!-- Route 5: Student Management -->
+            <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs text-slate-400">05</span>
+                <span class="text-xs font-bold text-slate-200">Student Roster / Management</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="connector-badge bg-slate-800 text-slate-300">Navigate</span>
+                <span class="text-slate-400 text-xs">→ Student Details &amp; Dossiers</span>
+              </div>
+            </div>
+
+            <!-- Route 6: Results & Analytics -->
+            <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs text-slate-400">06</span>
+                <span class="text-xs font-bold text-slate-200">Results &amp; Analytics / Reports</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="connector-badge bg-slate-800 text-slate-300">Export / Audit</span>
+                <span class="text-slate-400 text-xs">→ Performance Dashboard &amp; Reports</span>
+              </div>
+            </div>
+
+            <!-- Route 7: Notifications & Settings -->
+            <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs text-slate-400">07</span>
+                <span class="text-xs font-bold text-slate-200">Notifications &amp; Settings</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="connector-badge bg-slate-800 text-slate-300">Configure</span>
+                <span class="text-slate-400 text-xs">→ Notification Center &amp; Teacher Settings</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Teacher Target Screen 1: Quiz Creation & Question Bank -->
+        <div class="glass-card rounded-2xl p-5 border-slate-800 relative pl-8">
+          <div class="absolute left-3 top-6 bottom-6 w-1 bg-amber-500 rounded-full"></div>
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Teacher Target Page</span>
+                <span class="connector-badge bg-rose-500/20 text-rose-300 border border-rose-500/30">Has Return CTA</span>
+              </div>
+              <h4 class="text-base font-bold text-white mt-1">Teacher Quiz Creation &amp; Question Bank ({{DATA:SCREEN:SCREEN_16}})</h4>
+              <p class="text-xs text-slate-400 mt-1">Configures MCQ rules, negative marking (-1.0), question pools, randomize seeds, and strictness presets.</p>
+            </div>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono">
+            <span class="text-amber-300">Input: Sidebar "Create Quiz" / "Question Bank"</span>
+            <span class="text-rose-400">Return: Top Back Arrow → Teacher Dashboard</span>
+          </div>
+        </div>
+
+        <!-- Teacher Target Screen 2: Live Proctoring Matrix -->
+        <div class="glass-card rounded-2xl p-5 border-slate-800 relative pl-8">
+          <div class="absolute left-3 top-6 bottom-6 w-1 bg-amber-500 rounded-full"></div>
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Teacher Target Page</span>
+                <span class="connector-badge bg-rose-500/20 text-rose-300 border border-rose-500/30">Has Return CTA</span>
+              </div>
+              <h4 class="text-base font-bold text-white mt-1">Teacher Live Monitoring &amp; Proctoring Command Center ({{DATA:SCREEN:SCREEN_20}})</h4>
+              <p class="text-xs text-slate-400 mt-1">Real-time candidate WebRTC matrix, biometric multi-cam integrity flags, lock-out controls, and live chat HUD.</p>
+            </div>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono">
+            <span class="text-amber-300">Input: Banner "Live Monitoring Matrix" / Sidebar "Live Proctoring"</span>
+            <span class="text-rose-400">Return: Exit Proctor Room → Teacher Dashboard</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT COLUMN: STUDENT WORKSPACE FLOW -->
+      <section class="space-y-6">
+        <div class="flex items-center justify-between border-b border-indigo-500/30 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-indigo-400 shadow-md shadow-indigo-400/50"></span>
+            <h2 class="text-xl font-extrabold text-indigo-300 tracking-wide">2. Student Navigation Flow &amp; Exam Lifecycle</h2>
+          </div>
+          <span class="text-xs font-mono bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 px-2 py-0.5 rounded">Candidate Suite</span>
+        </div>
+
+        <!-- Student Dashboard Central Node -->
+        <div class="glass-card rounded-2xl p-6 border-indigo-500/40 relative">
+          <div class="absolute -top-3 left-6 bg-indigo-500 text-white font-black text-[11px] uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow">
+            Root Hub Screen
+          </div>
+          <div class="flex items-start justify-between">
+            <div>
+              <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                Student Portal Overview &amp; Dashboard
+                <span class="text-xs font-mono text-slate-400 font-normal">({{DATA:SCREEN:SCREEN_6}})</span>
+              </h3>
+              <p class="text-xs text-slate-400 mt-1">Candidate Command Center: active exams, hardware pre-flight indicators, aggregate grades, and quick links.</p>
+            </div>
+            <span class="px-2 py-1 rounded bg-indigo-400/20 text-indigo-300 font-mono text-xs">Active Live Hub</span>
+          </div>
+
+          <!-- Student Sidebar & Sub-routing Table -->
+          <div class="mt-5 space-y-2.5">
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Student Navigation Connectors:</div>
+
+            <!-- Route S1 -->
+            <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between hover:border-indigo-500/40 transition">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs text-slate-400">S1</span>
+                <span class="text-xs font-bold text-slate-200">Available Quizzes / Live Banner</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="connector-badge bg-indigo-500/20 text-indigo-300">Click Exam Card</span>
+                <span class="text-slate-300 font-semibold text-xs">→ Instructions &amp; Pre-Flight Modal ({{DATA:SCREEN:SCREEN_14}})</span>
+              </div>
+            </div>
+
+            <!-- Route S2 -->
+            <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between hover:border-indigo-500/40 transition">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs text-slate-400">S2</span>
+                <span class="text-xs font-bold text-slate-200">My Results / Grade Reports</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="connector-badge bg-indigo-500/20 text-indigo-300">Click Scorecard</span>
+                <span class="text-slate-300 font-semibold text-xs">→ Exam Results &amp; Analytics ({{DATA:SCREEN:SCREEN_12}})</span>
+              </div>
+            </div>
+
+            <!-- Route S3 -->
+            <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between hover:border-indigo-500/40 transition">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs text-slate-400">S3</span>
+                <span class="text-xs font-bold text-slate-200">Leaderboard / Cohort Standing</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="connector-badge bg-indigo-500/20 text-indigo-300">Click Rank #3</span>
+                <span class="text-slate-300 font-semibold text-xs">→ Student Leaderboard ({{DATA:SCREEN:SCREEN_4}} / {{DATA:SCREEN:SCREEN_2}})</span>
+              </div>
+            </div>
+
+            <!-- Route S4 -->
+            <div class="p-3 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="font-mono text-xs text-slate-400">S4</span>
+                <span class="text-xs font-bold text-slate-200">Student Profile &amp; Settings</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="connector-badge bg-slate-800 text-slate-300">Navigate</span>
+                <span class="text-slate-400 text-xs">→ Candidate Profile &amp; Privacy Settings</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- The Sequential Exam Execution Flow (CRITICAL LIFECYCLE) -->
+        <div class="glass-card rounded-2xl p-5 border-indigo-500/40 bg-gradient-to-b from-indigo-950/20 to-slate-900/90">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-black uppercase tracking-wider text-cyan-400 font-mono">Sequential Examination Lifecycle Pipeline</span>
+            <span class="text-xs text-slate-400">5-Step Locked Flow</span>
+          </div>
+
+          <!-- Step 1 to 5 visual chain -->
+          <div class="space-y-3">
+            
+            <!-- Chain 1 -->
+            <div class="flex items-center gap-3 p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+              <div class="w-6 h-6 rounded-full bg-indigo-500/30 text-indigo-300 flex items-center justify-center text-xs font-mono font-bold">1</div>
+              <div class="flex-1">
+                <div class="text-xs font-bold text-white">Available Quizzes</div>
+                <div class="text-[11px] text-slate-400">Trigger on Student Portal</div>
+              </div>
+              <span class="connector-badge bg-cyan-500/20 text-cyan-300">Click "Review Instructions"</span>
+            </div>
+
+            <div class="flex justify-center text-cyan-400 font-mono text-xs font-bold">↓ Action: Open Modal</div>
+
+            <!-- Chain 2 -->
+            <div class="flex items-center gap-3 p-2.5 rounded-lg bg-slate-900 border border-indigo-500/40">
+              <div class="w-6 h-6 rounded-full bg-indigo-500 text-white flex items-center justify-center text-xs font-mono font-bold">2</div>
+              <div class="flex-1">
+                <div class="text-xs font-bold text-white">Quiz Instructions &amp; Pre-Flight Modal ({{DATA:SCREEN:SCREEN_14}})</div>
+                <div class="text-[11px] text-slate-400">Verifies camera, audio, network &amp; takes Honor Pledge</div>
+              </div>
+              <span class="connector-badge bg-rose-500/20 text-rose-300">Return to Dashboard</span>
+            </div>
+
+            <div class="flex justify-center text-cyan-400 font-mono text-xs font-bold">↓ Action: Click "Enter Fullscreen &amp; Begin Exam"</div>
+
+            <!-- Chain 3 -->
+            <div class="flex items-center gap-3 p-2.5 rounded-lg bg-slate-900 border border-cyan-500/40 shadow-lg shadow-cyan-500/10">
+              <div class="w-6 h-6 rounded-full bg-cyan-500 text-slate-950 flex items-center justify-center text-xs font-mono font-bold">3</div>
+              <div class="flex-1">
+                <div class="text-xs font-bold text-white">Distraction-Free Student Examination Interface ({{DATA:SCREEN:SCREEN_18}})</div>
+                <div class="text-[11px] text-slate-400">Lockdown sandbox, 35 questions, timer, auto-saving, anti-blur guard</div>
+              </div>
+              <span class="connector-badge bg-cyan-500/20 text-cyan-300">Active Test Room</span>
+            </div>
+
+            <div class="flex justify-center text-cyan-400 font-mono text-xs font-bold">↓ Action: Click "Submit Final Exam &amp; Finalize"</div>
+
+            <!-- Chain 4 -->
+            <div class="flex items-center gap-3 p-2.5 rounded-lg bg-slate-900 border border-indigo-500/40">
+              <div class="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-mono font-bold">4</div>
+              <div class="flex-1">
+                <div class="text-xs font-bold text-white">Student Exam Results &amp; Performance Analytics ({{DATA:SCREEN:SCREEN_12}})</div>
+                <div class="text-[11px] text-slate-400">118/140 pts, percentile 94.2%, topic mastery, question audit &amp; proctor stamps</div>
+              </div>
+              <span class="connector-badge bg-emerald-500/20 text-emerald-300">Instant Scorecard</span>
+            </div>
+
+            <div class="flex justify-center text-cyan-400 font-mono text-xs font-bold">↓ Action: Click "View Class Standing" / Sidebar "Leaderboard"</div>
+
+            <!-- Chain 5 -->
+            <div class="flex items-center gap-3 p-2.5 rounded-lg bg-slate-900 border border-purple-500/40">
+              <div class="w-6 h-6 rounded-full bg-purple-500 text-white flex items-center justify-center text-xs font-mono font-bold">5</div>
+              <div class="flex-1">
+                <div class="text-xs font-bold text-white">Student Leaderboard with Verified Certificate Modal ({{DATA:SCREEN:SCREEN_2}})</div>
+                <div class="text-[11px] text-slate-400">Rank #3 podium, Gaussian bell curve &amp; cryptographic public certificate modal</div>
+              </div>
+              <span class="connector-badge bg-purple-500/20 text-purple-300">Public Credential</span>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- STEP 3: MASTER INTERACTIVE APPLICATION SITEMAP & CONNECTOR MATRIX -->
+    <section class="glass-card rounded-2xl p-6 lg:p-8">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div>
+          <h2 class="text-xl font-bold text-white flex items-center gap-3">
+            <span>🗺️</span> Full Screen Navigation &amp; Return Matrix
+          </h2>
+          <p class="text-sm text-slate-400 mt-1">Direct map of all interactive triggers, buttons, and reciprocal back actions</p>
+        </div>
+        <div class="text-xs font-mono bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg">
+          Total Generated Screens Connected: 10/10 (100% Continuity)
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs font-mono">
+          <thead>
+            <tr class="border-b border-slate-800 text-slate-400 uppercase tracking-wider text-[11px]">
+              <th class="py-3 px-4">Source Component / Trigger</th>
+              <th class="py-3 px-4">User Action</th>
+              <th class="py-3 px-4">Target Screen / Route</th>
+              <th class="py-3 px-4">Flow Category</th>
+              <th class="py-3 px-4">Return Navigation (Back Button)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/70 text-slate-300">
+            <!-- 1 -->
+            <tr class="hover:bg-slate-900/60">
+              <td class="py-3 px-4 font-semibold text-white">Login Switcher ("Teacher Mode")</td>
+              <td class="py-3 px-4"><span class="connector-badge bg-emerald-500/20 text-emerald-300">Authenticate</span></td>
+              <td class="py-3 px-4 text-amber-300">Teacher Dashboard ({{DATA:SCREEN:SCREEN_8}})</td>
+              <td class="py-3 px-4 text-amber-400 font-sans">Teacher Entry</td>
+              <td class="py-3 px-4 text-slate-400">Header Logout → Gateway ({{DATA:SCREEN:SCREEN_10}})</td>
+            </tr>
+
+            <!-- 2 -->
+            <tr class="hover:bg-slate-900/60">
+              <td class="py-3 px-4 font-semibold text-white">Login Switcher ("Student Mode")</td>
+              <td class="py-3 px-4"><span class="connector-badge bg-emerald-500/20 text-emerald-300">Authenticate</span></td>
+              <td class="py-3 px-4 text-indigo-300">Student Portal ({{DATA:SCREEN:SCREEN_6}})</td>
+              <td class="py-3 px-4 text-indigo-400 font-sans">Student Entry</td>
+              <td class="py-3 px-4 text-slate-400">Header Logout → Gateway ({{DATA:SCREEN:SCREEN_10}})</td>
+            </tr>
+
+            <!-- 3 -->
+            <tr class="hover:bg-slate-900/60">
+              <td class="py-3 px-4 font-semibold text-white">Teacher Sidebar: "Create Quiz"</td>
+              <td class="py-3 px-4"><span class="connector-badge bg-amber-500/20 text-amber-300">Click</span></td>
+              <td class="py-3 px-4 text-amber-300">Quiz Creation &amp; Bank ({{DATA:SCREEN:SCREEN_16}})</td>
+              <td class="py-3 px-4 text-amber-400 font-sans">Quiz Authoring</td>
+              <td class="py-3 px-4 text-rose-300">Breadcrumb Back → Teacher Dashboard ({{DATA:SCREEN:SCREEN_8}})</td>
+            </tr>
+
+            <!-- 4 -->
+            <tr class="hover:bg-slate-900/60">
+              <td class="py-3 px-4 font-semibold text-white">Teacher Sidebar: "Live Proctoring" / HUD Banner</td>
+              <td class="py-3 px-4"><span class="connector-badge bg-amber-500/20 text-amber-300">Click</span></td>
+              <td class="py-3 px-4 text-amber-300">Live Proctoring Command Center ({{DATA:SCREEN:SCREEN_20}})</td>
+              <td class="py-3 px-4 text-amber-400 font-sans">Surveillance</td>
+              <td class="py-3 px-4 text-rose-300">Header "Exit HUD" → Teacher Dashboard ({{DATA:SCREEN:SCREEN_8}})</td>
+            </tr>
+
+            <!-- 5 -->
+            <tr class="hover:bg-slate-900/60">
+              <td class="py-3 px-4 font-semibold text-white">Student Banner: "CS402 Midterm Exam - Ready"</td>
+              <td class="py-3 px-4"><span class="connector-badge bg-indigo-500/20 text-indigo-300">Click</span></td>
+              <td class="py-3 px-4 text-cyan-300">Instructions &amp; Pre-Flight Modal ({{DATA:SCREEN:SCREEN_14}})</td>
+              <td class="py-3 px-4 text-indigo-400 font-sans">Pre-Flight</td>
+              <td class="py-3 px-4 text-rose-300">"Return to Dashboard" / Close Modal → Student Portal ({{DATA:SCREEN:SCREEN_6}})</td>
+            </tr>
+
+            <!-- 6 -->
+            <tr class="hover:bg-slate-900/60">
+              <td class="py-3 px-4 font-semibold text-white">Modal CTA: "Enter Fullscreen &amp; Begin Exam"</td>
+              <td class="py-3 px-4"><span class="connector-badge bg-cyan-500/20 text-cyan-300">Lockdown</span></td>
+              <td class="py-3 px-4 text-cyan-300">Examination Interface ({{DATA:SCREEN:SCREEN_18}})</td>
+              <td class="py-3 px-4 text-cyan-400 font-sans">Active Test</td>
+              <td class="py-3 px-4 text-slate-500">Locked Sandbox (No return until submit)</td>
+            </tr>
+
+            <!-- 7 -->
+            <tr class="hover:bg-slate-900/60">
+              <td class="py-3 px-4 font-semibold text-white">Exam Room: "Finalize &amp; Submit Assessment"</td>
+              <td class="py-3 px-4"><span class="connector-badge bg-emerald-500/20 text-emerald-300">Submit</span></td>
+              <td class="py-3 px-4 text-emerald-300">Exam Results &amp; Analytics ({{DATA:SCREEN:SCREEN_12}})</td>
+              <td class="py-3 px-4 text-emerald-400 font-sans">Grade Report</td>
+              <td class="py-3 px-4 text-rose-300">Breadcrumb "Student Portal" → Dashboard ({{DATA:SCREEN:SCREEN_6}})</td>
+            </tr>
+
+            <!-- 8 -->
+            <tr class="hover:bg-slate-900/60">
+              <td class="py-3 px-4 font-semibold text-white">Student Sidebar: "Leaderboard"</td>
+              <td class="py-3 px-4"><span class="connector-badge bg-purple-500/20 text-purple-300">Navigate</span></td>
+              <td class="py-3 px-4 text-purple-300">Student Leaderboard ({{DATA:SCREEN:SCREEN_4}})</td>
+              <td class="py-3 px-4 text-purple-400 font-sans">Cohort Standings</td>
+              <td class="py-3 px-4 text-rose-300">Sidebar "Overview" → Dashboard ({{DATA:SCREEN:SCREEN_6}})</td>
+            </tr>
+
+            <!-- 9 -->
+            <tr class="hover:bg-slate-900/60">
+              <td class="py-3 px-4 font-semibold text-white">Leaderboard CTA: "View Verified Certificate"</td>
+              <td class="py-3 px-4"><span class="connector-badge bg-purple-500/20 text-purple-300">Open Modal</span></td>
+              <td class="py-3 px-4 text-purple-300">Verified Certificate Modal ({{DATA:SCREEN:SCREEN_2}})</td>
+              <td class="py-3 px-4 text-purple-400 font-sans">Accreditation</td>
+              <td class="py-3 px-4 text-rose-300">Top-right 'X' / Backdrop Click → Return to Leaderboard ({{DATA:SCREEN:SCREEN_4}})</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Footer Summary Note -->
+    <footer class="text-center py-6 border-t border-slate-800/80 text-xs text-slate-500 font-mono">
+      QuizTrack Proctoring Suite Architecture • Designed for Enterprise Java Servlets, JSP &amp; PostgreSQL Relational Backend.
+    </footer>
+
+  </main>
+</body>
+</html>

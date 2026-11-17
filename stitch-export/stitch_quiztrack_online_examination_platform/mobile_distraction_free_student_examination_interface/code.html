@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=JetBrains+Mono:wght@500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "primary": "#3525cd", "outline-variant": "#c7c4d8", "surface-container-highest": "#d3e4fe", "on-error": "#ffffff", "secondary-fixed-dim": "#c0c1ff", "primary-fixed-dim": "#c3c0ff", "on-error-container": "#93000a", "on-background": "#0b1c30", "surface-bright": "#f8f9ff", "primary-fixed": "#e2dfff", "primary-container": "#4f46e5", "surface-container": "#e5eeff", "on-secondary": "#ffffff", "surface-variant": "#d3e4fe", "on-tertiary-fixed-variant": "#005236", "on-secondary-container": "#fffbff", "on-primary": "#ffffff", "secondary-container": "#6063ee", "background": "#f8f9ff", "tertiary-fixed-dim": "#4edea3", "on-tertiary": "#ffffff", "tertiary-fixed": "#6ffbbe", "on-primary-fixed": "#0f0069", "outline": "#777587", "on-tertiary-container": "#67f4b7", "on-secondary-fixed": "#07006c", "error-container": "#ffdad6", "on-primary-container": "#dad7ff", "secondary": "#4648d4", "inverse-primary": "#c3c0ff", "surface-tint": "#4d44e3", "error": "#ba1a1a", "tertiary": "#005338", "on-surface-variant": "#464555", "on-surface": "#0b1c30", "surface-dim": "#cbdbf5", "inverse-on-surface": "#eaf1ff", "on-primary-fixed-variant": "#3323cc", "surface-container-lowest": "#ffffff", "secondary-fixed": "#e1e0ff", "surface-container-low": "#eff4ff", "tertiary-container": "#006e4b", "surface": "#f8f9ff", "inverse-surface": "#213145", "on-secondary-fixed-variant": "#2f2ebe", "on-tertiary-fixed": "#002113", "surface-container-high": "#dce9ff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin": "2rem", "gutter": "1.5rem", "space-lg": "1.5rem", "gutter-sm": "1rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "space-xl": "2rem", "margin-sm": "1rem", "space-md": "1rem" }, "fontFamily": { "code-telemetry": ["JetBrains Mono"], "title-lg": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "body-md": ["Inter"], "label-md": ["Inter"], "body-lg": ["Inter"], "display": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "label-sm": ["Inter"], "display-mobile": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "title-md": ["Inter"], "body-sm": ["Inter"] }, "fontSize": { "code-telemetry": ["12px", {"lineHeight": "16px", "fontWeight": "500"}], "title-lg": ["18px", {"lineHeight": "26px", "fontWeight": "600"}], "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}], "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "600"}], "body-md": ["14px", {"lineHeight": "22px", "fontWeight": "400"}], "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600"}], "body-lg": ["16px", {"lineHeight": "26px", "fontWeight": "400"}], "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}], "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}], "label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600"}], "display-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}], "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}], "title-md": ["16px", {"lineHeight": "24px", "fontWeight": "600"}], "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}] } } } };</script><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#f8f9ff;color:#0b1c30;overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen selection:bg-primary-container selection:text-on-primary"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-gutter-sm flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-xs"><button aria-label="Back or Exit Exam Overview" class="w-11 h-11 flex items-center justify-center rounded-lg text-on-surface-variant hover:bg-surface-container active:bg-surface-container-high transition-colors" onclick="history.back()" type="button"><span class="material-symbols-outlined text-[20px]">arrow_back</span></button><div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Exam Sandbox</span><h1 class="font-title-md text-title-md text-on-surface leading-tight truncate max-w-[140px]">Active Exam Session</h1></div></div><div class="flex items-center gap-space-sm"><div class="flex items-center gap-space-xs px-2 py-1 bg-surface-container rounded-lg"><span class="material-symbols-outlined text-[16px] text-tertiary animate-pulse">timer</span><span class="font-code-telemetry text-code-telemetry text-on-surface">01:28:45</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 bg-surface px-gutter-sm"><div class="flex flex-col w-full pb-28 space-y-space-md">
+<!-- Lockdown & Telemetry Status Bar -->
+<section class="w-full bg-surface-container-lowest rounded-xl p-space-sm shadow-sm flex flex-col gap-space-xs">
+<div class="flex items-center justify-between gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed-dim animate-ping"></span>
+          Guardian Active
+        </span>
+<span class="flex items-center gap-0.5 text-on-surface-variant font-code-telemetry text-code-telemetry">
+<span class="material-symbols-outlined text-[13px] text-tertiary">bolt</span>
+          18ms
+        </span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="flex items-center gap-0.5 text-on-surface-variant font-code-telemetry text-code-telemetry">
+<span class="material-symbols-outlined text-[14px]">battery_charging_90</span>
+          92%
+        </span>
+<button class="px-2 py-1 rounded-lg bg-error-container text-on-error-container font-label-sm text-label-sm active:scale-95 transition-transform flex items-center gap-0.5" id="endExamTrigger" type="button">
+<span class="material-symbols-outlined text-[13px]">logout</span>
+          Finish
+        </button>
+</div>
+</div>
+<!-- Exam Context & Scoring Chips -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Q 14</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">of 35</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">Raft Consensus</span>
+</div>
+<div class="flex items-center gap-1 font-code-telemetry text-code-telemetry">
+<span class="px-1.5 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-semibold">+4.00</span>
+<span class="px-1.5 py-0.5 rounded bg-error-container text-on-error-container font-semibold">-1.00</span>
+</div>
+</div>
+</section>
+<!-- Horizontal Scrollable Question Palette -->
+<section class="w-full flex items-center gap-space-xs">
+<div class="flex-1 overflow-x-auto no-scrollbar py-1">
+<div class="flex items-center gap-1.5 min-w-max px-0.5" id="horizontalPalette">
+<!-- Q1 to Q13 Sampled States -->
+<button class="w-8 h-8 rounded-lg bg-primary-container text-on-primary font-label-sm text-label-sm flex items-center justify-center relative shadow-sm" type="button">1<span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span></button>
+<button class="w-8 h-8 rounded-lg bg-primary-container text-on-primary font-label-sm text-label-sm flex items-center justify-center relative shadow-sm" type="button">2<span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span></button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm flex items-center justify-center" type="button">3</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-lowest text-on-primary-fixed-variant font-label-sm text-label-sm flex items-center justify-center shadow-sm" type="button">
+<span class="material-symbols-outlined text-[14px] text-secondary">bookmark</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-primary-container text-on-primary font-label-sm text-label-sm flex items-center justify-center relative shadow-sm" type="button">5</button>
+<button class="w-8 h-8 rounded-lg bg-primary-container text-on-primary font-label-sm text-label-sm flex items-center justify-center relative shadow-sm" type="button">6</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm flex items-center justify-center" type="button">7</button>
+<button class="w-8 h-8 rounded-lg bg-primary-container text-on-primary font-label-sm text-label-sm flex items-center justify-center relative shadow-sm" type="button">8</button>
+<button class="w-8 h-8 rounded-lg bg-primary-container text-on-primary font-label-sm text-label-sm flex items-center justify-center relative shadow-sm" type="button">9</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm flex items-center justify-center" type="button">10</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm flex items-center justify-center" type="button">11</button>
+<button class="w-8 h-8 rounded-lg bg-primary-container text-on-primary font-label-sm text-label-sm flex items-center justify-center relative shadow-sm" type="button">12</button>
+<button class="w-8 h-8 rounded-lg bg-primary-container text-on-primary font-label-sm text-label-sm flex items-center justify-center relative shadow-sm" type="button">13</button>
+<!-- Current Focused Q14 -->
+<button class="w-9 h-9 rounded-lg bg-surface-container-lowest text-primary font-headline-sm text-[15px] flex items-center justify-center shadow-md shadow-primary/20 scale-105" type="button">
+          14
+        </button>
+<!-- Next items -->
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm flex items-center justify-center" type="button">15</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm flex items-center justify-center" type="button">16</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm flex items-center justify-center" type="button">17</button>
+</div>
+</div>
+<button aria-label="Expand all 35 questions grid" class="w-9 h-9 rounded-lg bg-surface-container-lowest text-on-surface flex items-center justify-center shadow-sm active:scale-95 flex-shrink-0" id="openGridBtn" type="button">
+<span class="material-symbols-outlined text-[20px]">grid_view</span>
+</button>
+</section>
+<!-- Question Content Card -->
+<article class="w-full bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-md">
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Single Choice Question</span>
+<span class="inline-flex items-center gap-1 font-code-telemetry text-code-telemetry text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
+          Autosaved
+        </span>
+</div>
+<p class="font-title-md text-title-md text-on-surface leading-snug">
+        In the Raft distributed consensus algorithm, which condition must be fully satisfied before a leader node is permitted to commit an entry from its current term and safely acknowledge the client?
+      </p>
+</div>
+<!-- Mobile-Optimized Architectural Cluster Diagram -->
+<div class="w-full bg-inverse-surface rounded-xl p-space-sm text-inverse-on-surface flex flex-col gap-space-xs shadow-inner">
+<div class="flex items-center justify-between pb-1">
+<span class="font-code-telemetry text-code-telemetry text-tertiary-fixed flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">dns</span>
+          Cluster Quorum Log State (Term: 4)
+        </span>
+<span class="font-code-telemetry text-code-telemetry text-secondary-fixed-dim">RPC Round 03</span>
+</div>
+<!-- Diagram Nodes SVG Layout -->
+<div class="w-full bg-on-background/40 rounded-lg p-2.5 flex flex-col gap-2">
+<!-- Leader Row -->
+<div class="flex items-center justify-between gap-1.5 text-[11px] font-code-telemetry">
+<div class="flex items-center gap-1 text-tertiary-fixed-dim">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed"></span>
+<span>Leader S1</span>
+</div>
+<div class="flex gap-1">
+<span class="px-1.5 py-0.5 rounded bg-primary text-on-primary">[idx 1]</span>
+<span class="px-1.5 py-0.5 rounded bg-primary text-on-primary">[idx 2]</span>
+<span class="px-1.5 py-0.5 rounded bg-secondary-container text-on-secondary-container font-bold">[idx 3*]</span>
+</div>
+<span class="text-tertiary-fixed text-[10px]">Leader Term 4</span>
+</div>
+<div class="w-full h-0.5 bg-outline-variant/20 rounded"></div>
+<!-- Follower S2 -->
+<div class="flex items-center justify-between gap-1.5 text-[11px] font-code-telemetry">
+<span class="text-surface-container-high">Follower S2</span>
+<div class="flex gap-1">
+<span class="px-1.5 py-0.5 rounded bg-primary text-on-primary">[idx 1]</span>
+<span class="px-1.5 py-0.5 rounded bg-primary text-on-primary">[idx 2]</span>
+<span class="px-1.5 py-0.5 rounded bg-secondary-container text-on-secondary-container">[idx 3*]</span>
+</div>
+<span class="text-tertiary-fixed-dim text-[10px]">Ack OK ✓</span>
+</div>
+<!-- Follower S3 -->
+<div class="flex items-center justify-between gap-1.5 text-[11px] font-code-telemetry">
+<span class="text-surface-container-high">Follower S3</span>
+<div class="flex gap-1">
+<span class="px-1.5 py-0.5 rounded bg-primary text-on-primary">[idx 1]</span>
+<span class="px-1.5 py-0.5 rounded bg-primary text-on-primary">[idx 2]</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant">[syncing]</span>
+</div>
+<span class="text-on-error-container text-[10px]">Heartbeat Pend</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-outline-variant italic">Note: Cluster size N=3, Majority Quorum requirement ≥ 2 nodes.</span>
+</div>
+<!-- Radio Options -->
+<div aria-label="Raft consensus answers" class="space-y-space-sm" role="radiogroup">
+<!-- Option A -->
+<label class="option-label flex items-start gap-space-sm p-3.5 rounded-xl bg-surface-container-low text-on-surface cursor-pointer transition-all active:scale-[0.99] select-none">
+<input class="sr-only" name="raft_q14" type="radio" value="A"/>
+<div class="radio-indicator w-5 h-5 rounded-full bg-surface-container-highest flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="w-2 h-2 rounded-full bg-transparent"></span>
+</div>
+<div class="flex-1 text-body-md font-body-md leading-snug">
+<span class="font-headline-sm text-title-md mr-1 text-on-surface">A.</span>
+          The entry has been successfully transmitted and replicated on at least one follower node in the cluster.
+        </div>
+</label>
+<!-- Option B (Selected State) -->
+<label class="option-label flex items-start gap-space-sm p-3.5 rounded-xl bg-surface-container text-on-surface cursor-pointer shadow-sm transition-all active:scale-[0.99] select-none">
+<input checked="" class="sr-only" name="raft_q14" type="radio" value="B"/>
+<div class="radio-indicator w-5 h-5 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm">
+<span class="material-symbols-outlined text-[15px] text-on-primary">check</span>
+</div>
+<div class="flex-1 space-y-1">
+<div class="text-body-md font-body-md leading-snug text-on-surface">
+<span class="font-headline-sm text-title-md mr-1 text-primary">B.</span>
+            The entry has been replicated on a majority (quorum) of cluster nodes and at least one entry from the current leader's term is also committed.
+          </div>
+<div class="flex items-center gap-1 text-primary font-label-sm text-label-sm pt-0.5">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+            Current selection matches Raft safety invariant (§5.4.2)
+          </div>
+</div>
+</label>
+<!-- Option C -->
+<label class="option-label flex items-start gap-space-sm p-3.5 rounded-xl bg-surface-container-low text-on-surface cursor-pointer transition-all active:scale-[0.99] select-none">
+<input class="sr-only" name="raft_q14" type="radio" value="C"/>
+<div class="radio-indicator w-5 h-5 rounded-full bg-surface-container-highest flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="w-2 h-2 rounded-full bg-transparent"></span>
+</div>
+<div class="flex-1 text-body-md font-body-md leading-snug">
+<span class="font-headline-sm text-title-md mr-1 text-on-surface">C.</span>
+          Every follower node in the cluster must acknowledge receipt via AppendEntries RPC without any network timeouts or dropped packets.
+        </div>
+</label>
+<!-- Option D -->
+<label class="option-label flex items-start gap-space-sm p-3.5 rounded-xl bg-surface-container-low text-on-surface cursor-pointer transition-all active:scale-[0.99] select-none">
+<input class="sr-only" name="raft_q14" type="radio" value="D"/>
+<div class="radio-indicator w-5 h-5 rounded-full bg-surface-container-highest flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="w-2 h-2 rounded-full bg-transparent"></span>
+</div>
+<div class="flex-1 text-body-md font-body-md leading-snug">
+<span class="font-headline-sm text-title-md mr-1 text-on-surface">D.</span>
+          The candidate node steps down to follower upon receiving heartbeats from the previous term leader and executes an fsync barrier.
+        </div>
+</label>
+</div>
+</article>
+<!-- Floating Mobile Biometric Camera PiP HUD -->
+<aside class="fixed right-3 bottom-20 z-40 bg-inverse-surface/95 text-inverse-on-surface rounded-xl p-1.5 shadow-xl backdrop-blur-md flex flex-col gap-1 w-32 cursor-pointer active:scale-95 transition-all" id="biometricPip">
+<div class="relative w-full h-20 rounded-lg overflow-hidden bg-on-background">
+<img class="w-full h-full object-cover" data-alt="Close up face biometric preview of an attentive college student taking an examination on laptop, neutral expression, subtle green facial tracking coordinate box overlay around eyes and forehead, natural study room daylight with blue software illumination" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5Ff_kLFOj7WjMj6hGaJ7aU2ITFL6I9tABpk--bpdigjJT1MafNdK2eorOIwxcME2NIyvmJn_jEh3DuQeSOi3a5Ws_yxxlozbxFja6p1OnWXPHw2rO2o2XJd4-d5s7kdYrOSbIFI6Cwwdnmahwi5FKPSPXKfpLmrFVjnJX822p7pz0yn4LeijAsUJ-oPCZaAPERkvczgUvVt_RCDgYf_ZfQmMlXoU1uD9vUo0PuHQ"/>
+<!-- HUD Overlays -->
+<div class="absolute inset-0 flex flex-col justify-between p-1 bg-gradient-to-b from-inverse-surface/60 via-transparent to-inverse-surface/80">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-0.5 px-1 py-0.2 rounded bg-tertiary text-on-tertiary font-code-telemetry text-[9px]">
+            AI 99.4%
+          </span>
+<span class="material-symbols-outlined text-[13px] text-tertiary-fixed animate-pulse">videocam</span>
+</div>
+<div class="flex items-center justify-between text-[9px] font-code-telemetry">
+<span class="text-tertiary-fixed-dim">Face Locked</span>
+<div class="flex items-center gap-0.5">
+<span class="w-1 h-2 rounded-sm bg-tertiary-fixed"></span>
+<span class="w-1 h-3 rounded-sm bg-tertiary-fixed"></span>
+<span class="w-1 h-1.5 rounded-sm bg-tertiary-fixed"></span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between px-1">
+<span class="font-label-sm text-[10px] text-outline-variant truncate">Sentinel 4.2</span>
+<span class="material-symbols-outlined text-[12px] text-surface-tint">info</span>
+</div>
+</aside>
+<!-- Sticky Bottom Thumb-Friendly Action Bar -->
+<footer class="fixed bottom-0 left-0 right-0 z-50 bg-surface-container-lowest shadow-[0_-4px_16px_rgba(0,0,0,0.06)] px-gutter-sm py-space-sm pb-safe">
+<div class="flex items-center justify-between gap-space-xs max-w-lg mx-auto">
+<!-- Flag / Review Button -->
+<button class="h-12 px-3.5 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center gap-1 font-label-md text-label-md active:scale-95 transition-all" id="flagBtn" type="button">
+<span class="material-symbols-outlined text-[18px]">bookmark_border</span>
+<span class="hidden sm:inline">Review</span>
+</button>
+<!-- Clear Selection Button -->
+<button class="h-12 px-3 rounded-xl text-on-surface-variant hover:bg-surface-container font-label-md text-label-md active:scale-95 transition-colors" id="clearBtn" type="button">
+        Clear
+      </button>
+<!-- Previous Chevron -->
+<button aria-label="Previous question" class="h-12 w-12 rounded-xl bg-surface-container text-on-surface flex items-center justify-center active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<!-- Save & Next CTA -->
+<button class="flex-1 h-12 rounded-xl bg-primary text-on-primary flex items-center justify-center gap-1 font-headline-sm text-title-md shadow-md shadow-primary/25 active:scale-95 transition-transform" id="saveNextBtn" type="button">
+<span>Save &amp; Next</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</footer>
+<!-- Palette Grid Drawer Modal (Hidden by default) -->
+<div class="fixed inset-0 z-50 bg-on-background/40 backdrop-blur-sm hidden flex-col justify-end transition-opacity" id="paletteModal">
+<div class="w-full bg-surface-container-lowest rounded-t-2xl p-space-md max-h-[707px] overflow-y-auto space-y-space-md shadow-2xl">
+<div class="flex items-center justify-between pb-1">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Question Palette</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant">35 Total Questions • CS402 Midterm</p>
+</div>
+<button class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface" id="closeGridBtn" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Legend -->
+<div class="grid grid-cols-2 gap-2 p-2.5 rounded-xl bg-surface-container-low font-label-sm text-label-sm text-on-surface">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-md bg-primary-container"></span>
+<span>Answered (18)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-md bg-surface-container-high"></span>
+<span>Unanswered (14)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-md bg-surface-container-lowest shadow-sm flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[10px]">bookmark</span>
+</span>
+<span>Flagged (2)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-md bg-primary"></span>
+<span>Current (Q14)</span>
+</div>
+</div>
+<!-- 5x7 Grid of Questions -->
+<div class="grid grid-cols-5 gap-2.5 pt-1">
+<!-- Q1 - Q35 dynamic simulation -->
+<button class="h-10 rounded-xl bg-primary-container text-on-primary font-headline-sm text-[13px] shadow-sm">1</button>
+<button class="h-10 rounded-xl bg-primary-container text-on-primary font-headline-sm text-[13px] shadow-sm">2</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">3</button>
+<button class="h-10 rounded-xl bg-surface-container-lowest text-secondary shadow-sm font-headline-sm text-[13px] flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">bookmark</span>
+</button>
+<button class="h-10 rounded-xl bg-primary-container text-on-primary font-headline-sm text-[13px] shadow-sm">5</button>
+<button class="h-10 rounded-xl bg-primary-container text-on-primary font-headline-sm text-[13px] shadow-sm">6</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">7</button>
+<button class="h-10 rounded-xl bg-primary-container text-on-primary font-headline-sm text-[13px] shadow-sm">8</button>
+<button class="h-10 rounded-xl bg-primary-container text-on-primary font-headline-sm text-[13px] shadow-sm">9</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">10</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">11</button>
+<button class="h-10 rounded-xl bg-primary-container text-on-primary font-headline-sm text-[13px] shadow-sm">12</button>
+<button class="h-10 rounded-xl bg-primary-container text-on-primary font-headline-sm text-[13px] shadow-sm">13</button>
+<button class="h-10 rounded-xl bg-primary text-on-primary font-headline-sm text-[14px] shadow-md scale-105">14</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">15</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">16</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">17</button>
+<button class="h-10 rounded-xl bg-primary-container text-on-primary font-headline-sm text-[13px] shadow-sm">18</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">19</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">20</button>
+<button class="h-10 rounded-xl bg-primary-container text-on-primary font-headline-sm text-[13px] shadow-sm">21</button>
+<button class="h-10 rounded-xl bg-primary-container text-on-primary font-headline-sm text-[13px] shadow-sm">22</button>
+<button class="h-10 rounded-xl bg-surface-container-lowest text-secondary shadow-sm font-headline-sm text-[13px] flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">bookmark</span>
+</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">24</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">25</button>
+<button class="h-10 rounded-xl bg-primary-container text-on-primary font-headline-sm text-[13px] shadow-sm">26</button>
+<button class="h-10 rounded-xl bg-primary-container text-on-primary font-headline-sm text-[13px] shadow-sm">27</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">28</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">29</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">30</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">31</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">32</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">33</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">34</button>
+<button class="h-10 rounded-xl bg-surface-container-high text-on-surface-variant font-headline-sm text-[13px]">35</button>
+</div>
+</div>
+</div>
+<!-- Telemetry Toast Alert -->
+<div class="fixed top-18 left-1/2 -translate-x-1/2 z-50 bg-inverse-surface text-inverse-on-surface px-4 py-2 rounded-full shadow-lg font-label-md text-label-md flex items-center gap-2 opacity-0 pointer-events-none transition-all duration-300" id="toastNotification">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed">check_circle</span>
+<span id="toastMsg">Answer saved. Proceeding to Question 15</span>
+</div>
+</div>
+<script>
+  (function initExamInteractions() {
+    const modal = document.getElementById('paletteModal');
+    const openBtn = document.getElementById('openGridBtn');
+    const closeBtn = document.getElementById('closeGridBtn');
+    const flagBtn = document.getElementById('flagBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const saveNextBtn = document.getElementById('saveNextBtn');
+    const toast = document.getElementById('toastNotification');
+    const toastMsg = document.getElementById('toastMsg');
+    const pip = document.getElementById('biometricPip');
+    const radioLabels = document.querySelectorAll('.option-label');
+
+    function showToast(message) {
+      if (!toast) return;
+      toastMsg.textContent = message;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 2200);
+    }
+
+    if (openBtn && modal) {
+      openBtn.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      });
+    }
+
+    if (closeBtn && modal) {
+      closeBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      });
+    }
+
+    // Radio option interaction & visual update
+    radioLabels.forEach((label) => {
+      label.addEventListener('click', () => {
+        radioLabels.forEach(l => {
+          l.classList.remove('bg-surface-container', 'shadow-sm');
+          l.classList.add('bg-surface-container-low');
+          const ind = l.querySelector('.radio-indicator');
+          if (ind) {
+            ind.className = 'radio-indicator w-5 h-5 rounded-full bg-surface-container-highest flex items-center justify-center flex-shrink-0 mt-0.5';
+            ind.innerHTML = '<span class="w-2 h-2 rounded-full bg-transparent"></span>';
+          }
+        });
+
+        label.classList.remove('bg-surface-container-low');
+        label.classList.add('bg-surface-container', 'shadow-sm');
+        const indicator = label.querySelector('.radio-indicator');
+        if (indicator) {
+          indicator.className = 'radio-indicator w-5 h-5 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-0.5 shadow-sm';
+          indicator.innerHTML = '<span class="material-symbols-outlined text-[15px] text-on-primary">check</span>';
+        }
+      });
+    });
+
+    // Clear Button
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        radioLabels.forEach(l => {
+          l.classList.remove('bg-surface-container', 'shadow-sm');
+          l.classList.add('bg-surface-container-low');
+          const input = l.querySelector('input');
+          if (input) input.checked = false;
+          const ind = l.querySelector('.radio-indicator');
+          if (ind) {
+            ind.className = 'radio-indicator w-5 h-5 rounded-full bg-surface-container-highest flex items-center justify-center flex-shrink-0 mt-0.5';
+            ind.innerHTML = '<span class="w-2 h-2 rounded-full bg-transparent"></span>';
+          }
+        });
+        showToast('Question 14 response cleared');
+      });
+    }
+
+    // Flag for review toggle
+    let isFlagged = false;
+    if (flagBtn) {
+      flagBtn.addEventListener('click', () => {
+        isFlagged = !isFlagged;
+        const icon = flagBtn.querySelector('.material-symbols-outlined');
+        if (isFlagged) {
+          flagBtn.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+          flagBtn.classList.add('bg-secondary-container', 'text-on-secondary-container');
+          if (icon) icon.textContent = 'bookmark';
+          showToast('Question 14 marked for review');
+        } else {
+          flagBtn.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+          flagBtn.classList.remove('bg-secondary-container', 'text-on-secondary-container');
+          if (icon) icon.textContent = 'bookmark_border';
+          showToast('Question 14 unflagged');
+        }
+      });
+    }
+
+    // Next button
+    if (saveNextBtn) {
+      saveNextBtn.addEventListener('click', () => {
+        showToast('Response saved! Navigating to Q 15...');
+      });
+    }
+
+    // Biometric PiP trigger
+    if (pip) {
+      pip.addEventListener('click', () => {
+        showToast('Biometrics healthy: Face verified, microphone nominal.');
+      });
+    }
+
+    // Terminate trigger test
+    const endBtn = document.getElementById('endExamTrigger');
+    if (endBtn) {
+      endBtn.addEventListener('click', () => {
+        showToast('Submission requires finishing all flagged items.');
+      });
+    }
+  })();
+</script></main></body></html>

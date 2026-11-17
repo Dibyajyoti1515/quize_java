@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"tertiary":"#005338","on-tertiary-fixed":"#002113","on-surface":"#0b1c30","surface-container-lowest":"#ffffff","on-secondary-container":"#fffbff","error":"#ba1a1a","primary-container":"#4f46e5","surface-container":"#e5eeff","inverse-on-surface":"#eaf1ff","primary-fixed":"#e2dfff","surface-tint":"#4d44e3","inverse-primary":"#c3c0ff","primary-fixed-dim":"#c3c0ff","surface-container-low":"#eff4ff","surface-container-high":"#dce9ff","on-primary-fixed-variant":"#3323cc","secondary-fixed-dim":"#c0c1ff","secondary-fixed":"#e1e0ff","on-background":"#0b1c30","on-error-container":"#93000a","on-secondary":"#ffffff","tertiary-fixed-dim":"#4edea3","surface-bright":"#f8f9ff","outline":"#777587","on-tertiary":"#ffffff","on-error":"#ffffff","on-secondary-fixed":"#07006c","inverse-surface":"#213145","surface-variant":"#d3e4fe","surface-dim":"#cbdbf5","background":"#f8f9ff","on-tertiary-container":"#67f4b7","primary":"#3525cd","tertiary-container":"#006e4b","secondary":"#4648d4","surface-container-highest":"#d3e4fe","on-tertiary-fixed-variant":"#005236","secondary-container":"#6063ee","tertiary-fixed":"#6ffbbe","outline-variant":"#c7c4d8","on-surface-variant":"#464555","on-secondary-fixed-variant":"#2f2ebe","error-container":"#ffdad6","on-primary-fixed":"#0f0069","on-primary":"#ffffff","surface":"#f8f9ff","on-primary-container":"#dad7ff"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"gutter-sm":"1rem","space-xl":"2rem","margin":"2rem","space-md":"1rem","space-sm":"0.5rem","margin-sm":"1rem","space-lg":"1.5rem","gutter":"1.5rem","space-xs":"0.25rem"},"fontFamily":{"label-md":["Inter"],"body-lg":["Inter"],"body-md":["Inter"],"title-lg":["Plus Jakarta Sans"],"display":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"body-sm":["Inter"],"display-mobile":["Plus Jakarta Sans"],"label-sm":["Inter"],"headline-lg":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"title-md":["Inter"],"code-telemetry":["JetBrains Mono"],"headline-md":["Plus Jakarta Sans"]},"fontSize":{"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"title-lg":["18px",{"lineHeight":"26px","fontWeight":"600"}],"display":["48px",{"lineHeight":"56px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-sm":["13px",{"lineHeight":"18px","fontWeight":"400"}],"display-mobile":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"700"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.015em","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"title-md":["16px",{"lineHeight":"24px","fontWeight":"600"}],"code-telemetry":["12px",{"lineHeight":"16px","fontWeight":"500"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}]}}}}</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-screen w-72 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="h-16 px-gutter flex items-center gap-space-sm bg-surface-container-lowest"><img alt="QuizTrack Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrA30bBua_g6A6vuE-PWIeVjHX9rNix0yD0ltIG56xjoJn3kiUGdhd5DrbPhA9lR6kCCsGL5Q9ywB0oN4hrA25RrYMEz8XcPtSduzFCql26W5BCLFrpssKWjLrEdk_InL9X4CoqHXiPAKgSvn0w25KQtnX7y3kQZeJRxv0JuCGaZMNM3OFctRY-45a917hJlPp1fHF0TUkoRhZlIsQiKwOeXI0zIYP_sMHk1JlPN9N5T"/><div class="flex flex-col"><span class="font-title-lg text-title-lg tracking-tight text-primary leading-none">QuizTrack</span><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Faculty Portal</span></div></div><div class="px-gutter pt-space-md pb-space-sm"><div class="px-space-sm py-space-xs rounded-lg bg-surface-container-low flex items-center justify-between"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Navigation</span><span class="font-code-telemetry text-code-telemetry text-primary">v4.2.1-EE</span></div></div><nav class="flex flex-col px-gutter gap-space-xs" data-active-classes="bg-primary-container text-on-primary font-bold rounded-lg shadow-sm"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-md text-body-md" data-path="overview" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span>Overview</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-md text-body-md" data-path="my-subjects" href="#"><span class="material-symbols-outlined text-[20px]">menu_book</span><span>My Subjects</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-md text-body-md" data-path="create-quiz" href="#"><span class="material-symbols-outlined text-[20px]">add_circle</span><span>Create Quiz</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-md text-body-md" data-path="question-bank" href="#"><span class="material-symbols-outlined text-[20px]">quiz</span><span>Question Bank</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-md text-body-md" data-path="scheduled-quizzes" href="#"><span class="material-symbols-outlined text-[20px]">event_available</span><span>Scheduled Quizzes</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-md text-body-md" data-path="live-monitoring" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">visibility</span><span>Live Monitoring</span></div><span class="flex items-center gap-1.5 px-space-xs py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm"><span class="h-1.5 w-1.5 rounded-full bg-error animate-pulse"></span>LIVE</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-md text-body-md" data-path="student-management" href="#"><span class="material-symbols-outlined text-[20px]">group</span><span>Student Management</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-md text-body-md" data-path="results-analytics" href="#"><span class="material-symbols-outlined text-[20px]">insights</span><span>Results &amp; Analytics</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-md text-body-md" data-path="reports" href="#"><span class="material-symbols-outlined text-[20px]">assessment</span><span>Reports</span></a><a class="flex items-center justify-between px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-md text-body-md" data-path="notifications" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">notifications</span><span>Notifications</span></div><span class="px-1.5 py-0.5 rounded-full bg-surface-container-high text-on-surface font-code-telemetry text-code-telemetry">3</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-body-md text-body-md" data-path="settings" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span>Settings</span></a></nav></div><div class="p-gutter"><div class="p-space-sm rounded-xl bg-surface-container-low flex items-center justify-between"><div class="flex flex-col"><span class="font-label-sm text-label-sm text-on-surface-variant">Proctoring Engine</span><span class="font-body-sm text-body-sm font-semibold text-tertiary flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-tertiary-fixed-dim"></span>Operational</span></div><span class="material-symbols-outlined text-outline text-[20px]">verified_user</span></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40"><div class="h-16 w-full px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-md"><div class="hidden sm:flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-surface-container-high text-on-surface"><span class="material-symbols-outlined text-[16px] text-primary">school</span><span class="font-label-md text-label-md">Spring 2025 Semester</span></div><div class="flex items-center gap-space-xs px-space-md py-1.5 rounded-lg bg-surface-container-low text-on-surface cursor-pointer"><span class="material-symbols-outlined text-[18px] text-on-surface-variant">assignment</span><span class="font-body-sm text-body-sm font-semibold">CS402: Distributed Systems Midterm</span><span class="material-symbols-outlined text-[18px] text-on-surface-variant">unfold_more</span></div></div><div class="flex items-center gap-space-md"><div class="hidden lg:flex items-center gap-space-xs px-space-sm py-1 rounded-md bg-surface-container text-on-surface"><span class="material-symbols-outlined text-[16px] text-secondary">timer</span><span class="font-code-telemetry text-code-telemetry text-on-surface">01:24:39 ELAPSED</span></div><button class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">emergency_home</span><span class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-error ring-2 ring-surface-container-lowest"></span></button><div class="h-8 w-px bg-surface-container-high"></div><div class="flex items-center gap-space-sm cursor-pointer"><div class="flex flex-col text-right hidden md:block"><span class="font-title-md text-title-md text-on-surface leading-tight">Prof. Ronald Vance</span><span class="font-label-sm text-label-sm text-on-surface-variant">Chief Proctor</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxv8XEeIlJLxUR9mb15UqUCh_z0bu6hTnqRtTN_aI6D939LUP2PjWmU5nnVWIp5T5MeGUw00mXPU375rZz7cPYonLuMtAzBE54wIYHZZXBg2S_Lbe5yYRIg8Q7w_RL05pkLML-Gk7N_OviwcZu3DlV4-5P5V7F2e2ogqUVX3g21PJgz_oGf5Fd4Csfbddl3B7PZR7hiQ7Zat7A5iGguP0ll7gyhIf94sY3VxlJgIg"/><span class="material-symbols-outlined text-[18px] text-on-surface-variant">expand_more</span></div></div></div></header><main class="w-full pt-16 bg-surface"><div class="flex flex-col w-full">
+<!-- Top Breadcrumb & Action Command Bar -->
+<section class="bg-surface-container-lowest px-gutter py-space-md shadow-sm">
+<div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-space-md">
+<!-- Breadcrumb & Autosave -->
+<div class="flex flex-col gap-1 min-w-0">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+<span class="hover:text-primary cursor-pointer transition-colors">Faculty Portal</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="hover:text-primary cursor-pointer transition-colors">Examinations &amp; Assessment</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-semibold">Create New Quiz</span>
+</div>
+<div class="flex items-center gap-space-sm pt-0.5">
+<span class="font-headline-sm text-headline-sm text-on-surface">Quiz Architect &amp; Item Bank Matrix</span>
+<div class="inline-flex items-center gap-1.5 px-space-xs py-0.5 rounded-full bg-surface-container text-on-surface-variant font-code-telemetry text-code-telemetry">
+<span class="h-2 w-2 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
+<span>Draft auto-saved 14s ago • PostgreSQL Session Store</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<button class="inline-flex items-center gap-space-xs px-space-md py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-md text-label-md" id="openQuestionBankBtn" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">inventory_2</span>
+<span>Import from Question Bank</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-container-highest text-primary font-code-telemetry text-code-telemetry">320+</span>
+</button>
+<button class="inline-flex items-center gap-space-xs px-space-md py-2 rounded-lg bg-surface-container-lowest text-on-surface shadow-sm hover:bg-surface-container-low transition-colors font-label-md text-label-md" type="button">
+<span class="material-symbols-outlined text-[18px] text-secondary">visibility</span>
+<span>Preview Student View</span>
+</button>
+<div class="inline-flex items-stretch rounded-lg shadow-sm">
+<button class="inline-flex items-center gap-space-xs px-space-md py-2 rounded-l-lg bg-primary text-on-primary hover:bg-on-primary-fixed-variant transition-colors font-label-md text-label-md" type="button">
+<span class="material-symbols-outlined text-[18px]">publish</span>
+<span>Publish Quiz &amp; Schedule</span>
+</button>
+<button class="px-space-xs bg-primary text-on-primary hover:bg-on-primary-fixed-variant rounded-r-lg transition-colors flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Stepper Navigation -->
+<div class="mt-space-lg pt-space-sm">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-sm">
+<!-- Step 1 -->
+<div class="flex items-center gap-space-sm p-space-sm rounded-lg bg-surface-container-low transition-all">
+<div class="h-8 w-8 rounded-full bg-tertiary-container text-on-tertiary flex items-center justify-center font-bold text-[13px]">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Step 1 • Completed</span>
+<span class="font-title-md text-title-md text-on-surface truncate">Basic Info &amp; Settings</span>
+</div>
+</div>
+<!-- Step 2 (Active) -->
+<div class="flex items-center gap-space-sm p-space-sm rounded-lg bg-primary-container text-on-primary shadow-sm">
+<div class="h-8 w-8 rounded-full bg-on-primary text-primary flex items-center justify-center font-bold text-[13px]">
+            2
+          </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-primary-container uppercase tracking-wider">Step 2 • Active</span>
+<span class="font-title-md text-title-md text-on-primary truncate">Question Builder &amp; Bank</span>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="flex items-center gap-space-sm p-space-sm rounded-lg bg-surface-container-low transition-all">
+<div class="h-8 w-8 rounded-full bg-tertiary-container text-on-tertiary flex items-center justify-center font-bold text-[13px]">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Step 3 • Verified</span>
+<span class="font-title-md text-title-md text-on-surface truncate">Anti-Cheat &amp; Lockout</span>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="flex items-center gap-space-sm p-space-sm rounded-lg bg-surface-container-low transition-all">
+<div class="h-8 w-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-[13px]">
+            4
+          </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Step 4 • Scheduled</span>
+<span class="font-title-md text-title-md text-on-surface truncate">Cohorts &amp; Proctor Slates</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Workspace: Split Content Engine (72% Main / 28% Sidebar) -->
+<div class="p-gutter grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- LEFT / MAIN REGION (lg:col-span-8 xl:col-span-8) -->
+<div class="lg:col-span-8 flex flex-col gap-gutter">
+<!-- Quiz Configuration Summary Card (Collapsible) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<div class="p-space-md bg-surface-container-low flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm min-w-0">
+<span class="material-symbols-outlined text-primary text-[24px]">tune</span>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">CS402: Midterm Exam - Distributed Systems &amp; Concurrency</span>
+<span class="material-symbols-outlined text-[18px] text-tertiary">verified</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Course Category: Computer Science &amp; Systems Engineering</span>
+</div>
+</div>
+<button class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors" id="toggleConfigBtn" type="button">
+<span id="configToggleText">Hide Parameters</span>
+<span class="material-symbols-outlined text-[18px]" id="configToggleIcon">keyboard_arrow_up</span>
+</button>
+</div>
+<div class="p-space-md space-y-space-md transition-all" id="quizConfigBody">
+<!-- Parameter Metrics & Toggles -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-space-sm">
+<div class="p-space-sm rounded-lg bg-surface-container flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Time Duration</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="font-title-lg text-title-lg text-primary font-bold">90</span>
+<span class="font-label-md text-label-md text-on-surface">Mins</span>
+</div>
+<span class="font-code-telemetry text-[11px] text-on-surface-variant">Strict Auto-Submit</span>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Total Questions</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="font-title-lg text-title-lg text-on-surface font-bold">35</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Items</span>
+</div>
+<span class="font-code-telemetry text-[11px] text-tertiary font-semibold">100% Configured</span>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Marks Aggregate</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="font-title-lg text-title-lg text-secondary font-bold">140</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Pts</span>
+</div>
+<span class="font-code-telemetry text-[11px] text-on-surface-variant">Pass Benchmark: 56 (40%)</span>
+</div>
+<div class="p-space-sm rounded-lg bg-error-container text-on-error-container flex flex-col justify-between">
+<span class="font-label-sm text-label-sm">Negative Marking</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="font-title-lg text-title-lg font-bold">-1.00</span>
+<span class="font-label-md text-label-md">/ item</span>
+</div>
+<span class="font-code-telemetry text-[11px] font-semibold text-error">Correct: +4.00 Marks</span>
+</div>
+</div>
+<!-- Randomization & Integrity Toggles -->
+<div class="pt-space-xs flex flex-wrap items-center gap-space-md text-on-surface-variant font-body-sm text-body-sm">
+<label class="flex items-center gap-2 cursor-pointer">
+<input checked="" class="h-4 w-4 rounded accent-primary cursor-pointer" type="checkbox"/>
+<span class="text-on-surface font-medium">Randomize Question Sequence per Seat</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input checked="" class="h-4 w-4 rounded accent-primary cursor-pointer" type="checkbox"/>
+<span class="text-on-surface font-medium">Shuffle Choice / Option Ordering</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input checked="" class="h-4 w-4 rounded accent-primary cursor-pointer" type="checkbox"/>
+<span class="text-on-surface font-medium">Allow Embedded Scientific Calculator</span>
+</label>
+</div>
+</div>
+</div>
+<!-- Interactive Question Builder Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm flex flex-col">
+<!-- Builder Header -->
+<div class="p-space-md bg-surface-container-lowest flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-container text-on-primary font-headline-sm text-headline-sm">
+              14
+            </span>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-title-md text-title-md text-on-surface">Question #14 (Multiple Choice - Single Select)</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm font-semibold">Editing Active</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Tagged: Distributed Consensus, Raft Algorithm, Fault Tolerance</p>
+</div>
+</div>
+<!-- Question Type Switcher Pills -->
+<div class="flex items-center bg-surface-container-low p-1 rounded-lg gap-1">
+<button class="px-space-sm py-1 rounded-md bg-primary text-on-primary font-label-sm text-label-sm shadow-sm transition-all" type="button">
+              MCQ (Single)
+            </button>
+<button class="px-space-sm py-1 rounded-md text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-sm text-label-sm" type="button">
+              Multi-Correct
+            </button>
+<button class="px-space-sm py-1 rounded-md text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-sm text-label-sm" type="button">
+              True/False
+            </button>
+<button class="px-space-sm py-1 rounded-md text-on-surface-variant hover:bg-surface-container-high transition-colors font-label-sm text-label-sm" type="button">
+              Numerical / Code
+            </button>
+</div>
+</div>
+<!-- Question Attributes Strip -->
+<div class="px-space-md py-space-sm bg-surface-container-low flex flex-wrap items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Correct Weight:</span>
+<input class="w-16 px-space-xs py-1 text-center font-code-telemetry text-code-telemetry rounded-lg bg-surface-container-lowest text-tertiary font-bold focus:outline-none focus:ring-1 focus:ring-primary shadow-xs" type="text" value="+4.00"/>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Negative Penalty:</span>
+<input class="w-16 px-space-xs py-1 text-center font-code-telemetry text-code-telemetry rounded-lg bg-surface-container-lowest text-error font-bold focus:outline-none focus:ring-1 focus:ring-primary shadow-xs" type="text" value="-1.00"/>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Cognitive Depth:</span>
+<span class="px-space-sm py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="h-1.5 w-1.5 rounded-full bg-secondary"></span>
+              Medium (Application Level)
+            </span>
+</div>
+</div>
+<!-- Rich Text / Code Formulation Toolbar -->
+<div class="px-space-md py-space-xs bg-surface-container flex flex-wrap items-center gap-1 text-on-surface-variant">
+<button class="p-1.5 rounded hover:bg-surface-container-highest transition-colors" title="Bold" type="button"><span class="material-symbols-outlined text-[18px]">format_bold</span></button>
+<button class="p-1.5 rounded hover:bg-surface-container-highest transition-colors" title="Italic" type="button"><span class="material-symbols-outlined text-[18px]">format_italic</span></button>
+<button class="p-1.5 rounded hover:bg-surface-container-highest transition-colors" title="Code Format" type="button"><span class="material-symbols-outlined text-[18px]">code</span></button>
+<div class="h-4 w-px bg-outline-variant mx-1"></div>
+<button class="p-1.5 rounded hover:bg-surface-container-highest transition-colors text-primary" title="Insert LaTeX / Math" type="button"><span class="material-symbols-outlined text-[18px]">functions</span></button>
+<button class="p-1.5 rounded hover:bg-surface-container-highest transition-colors" title="Attach Architecture Diagram" type="button"><span class="material-symbols-outlined text-[18px]">image</span></button>
+<button class="p-1.5 rounded hover:bg-surface-container-highest transition-colors" title="Embed Code Sandbox" type="button"><span class="material-symbols-outlined text-[18px]">terminal</span></button>
+<div class="h-4 w-px bg-outline-variant mx-1"></div>
+<span class="font-code-telemetry text-[11px] text-on-surface-variant ml-auto">Markdown &amp; KaTeX Supported</span>
+</div>
+<!-- Question Prompt Area -->
+<div class="p-space-md flex flex-col gap-space-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Problem Statement / Question Prompt</label>
+<textarea class="w-full p-space-md bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:outline-none transition-all shadow-inner leading-relaxed resize-none" rows="3">In the Raft distributed consensus protocol, which prerequisite invariant must be met before a candidate node can transition into a cluster leader?</textarea>
+<!-- Mathematical / Algorithm Context Snippet -->
+<div class="p-space-sm rounded-lg bg-surface-container text-on-surface font-code-telemetry text-code-telemetry flex items-center justify-between">
+<span class="truncate">Invariant: votes_received &gt; floor(N / 2) &amp;&amp; term == currentTerm</span>
+<span class="text-primary font-semibold cursor-pointer">Syntax Verified</span>
+</div>
+</div>
+<!-- Interactive Options Builder -->
+<div class="px-space-md pb-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Answer Choices (Radio indicates correct solution)</span>
+<span class="font-label-sm text-label-sm text-tertiary font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+              1 Correct Option Designated
+            </span>
+</div>
+<!-- Option A -->
+<div class="p-space-sm rounded-xl bg-surface-container-low flex flex-col gap-space-xs transition-all hover:bg-surface-container">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-outline cursor-grab text-[20px]">drag_indicator</span>
+<input class="h-4 w-4 accent-primary cursor-pointer" name="raft_answer" type="radio"/>
+<span class="font-bold text-on-surface w-6">A.</span>
+<input class="flex-1 bg-surface-container-lowest px-space-sm py-1.5 rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-1 focus:ring-primary shadow-xs" type="text" value="Receive AppendEntries RPC heartbeats from at least two follower nodes in succession."/>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1" type="button"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+</div>
+</div>
+<!-- Option B (Correct) -->
+<div class="p-space-sm rounded-xl bg-surface-container-high shadow-xs flex flex-col gap-space-xs transition-all">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-outline cursor-grab text-[20px]">drag_indicator</span>
+<input checked="" class="h-4 w-4 accent-primary cursor-pointer" name="raft_answer" type="radio"/>
+<span class="font-bold text-primary w-6">B.</span>
+<input class="flex-1 bg-surface-container-lowest px-space-sm py-1.5 rounded-lg font-body-md text-body-md text-primary font-semibold focus:outline-none focus:ring-2 focus:ring-primary shadow-xs" type="text" value="Obtain votes from a strict majority (quorum) of cluster nodes in the same election term."/>
+<span class="px-2 py-0.5 rounded bg-tertiary-container text-on-tertiary font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">done_all</span> Correct
+              </span>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1" type="button"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+</div>
+<!-- Rationale / Explanation Field -->
+<div class="ml-9 pl-space-xs flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">lightbulb</span>
+<input class="w-full text-on-surface-variant bg-transparent font-body-sm text-body-sm focus:outline-none focus:text-on-surface" type="text" value="Rationale: Section 5.2 of the Raft specification requires a candidate to receive affirmative votes from a strict majority (quorum) before leader transition."/>
+</div>
+</div>
+<!-- Option C -->
+<div class="p-space-sm rounded-xl bg-surface-container-low flex flex-col gap-space-xs transition-all hover:bg-surface-container">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-outline cursor-grab text-[20px]">drag_indicator</span>
+<input class="h-4 w-4 accent-primary cursor-pointer" name="raft_answer" type="radio"/>
+<span class="font-bold text-on-surface w-6">C.</span>
+<input class="flex-1 bg-surface-container-lowest px-space-sm py-1.5 rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-1 focus:ring-primary shadow-xs" type="text" value="Broadcast a state machine snapshot directly to all observer replica nodes."/>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1" type="button"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+</div>
+</div>
+<!-- Option D -->
+<div class="p-space-sm rounded-xl bg-surface-container-low flex flex-col gap-space-xs transition-all hover:bg-surface-container">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-outline cursor-grab text-[20px]">drag_indicator</span>
+<input class="h-4 w-4 accent-primary cursor-pointer" name="raft_answer" type="radio"/>
+<span class="font-bold text-on-surface w-6">D.</span>
+<input class="flex-1 bg-surface-container-lowest px-space-sm py-1.5 rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-1 focus:ring-primary shadow-xs" type="text" value="Ensure log index matches the previous term's committed index unconditionally."/>
+<button class="text-on-surface-variant hover:text-error transition-colors p-1" type="button"><span class="material-symbols-outlined text-[20px]">delete</span></button>
+</div>
+</div>
+<div class="pt-space-xs">
+<button class="inline-flex items-center gap-space-xs px-space-sm py-1.5 rounded-lg text-primary hover:bg-surface-container transition-colors font-label-md text-label-md" type="button">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+<span>Add Another Choice Option</span>
+</button>
+</div>
+</div>
+<!-- Question Card Action Footer -->
+<div class="p-space-md bg-surface-container-low flex flex-wrap items-center justify-between gap-space-sm rounded-b-xl">
+<div class="flex items-center gap-space-xs">
+<button class="px-space-md py-2 rounded-lg bg-surface-container-lowest text-on-surface shadow-xs hover:bg-surface-container transition-colors font-label-md text-label-md flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-[18px] text-secondary">content_copy</span>
+<span>Duplicate Question</span>
+</button>
+<button class="px-space-md py-2 rounded-lg text-error hover:bg-error-container transition-colors font-label-md text-label-md flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+<span>Delete</span>
+</button>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-space-md py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-md text-label-md" type="button">
+              Save Draft
+            </button>
+<button class="px-space-md py-2 rounded-lg bg-primary text-on-primary hover:bg-on-primary-fixed-variant transition-colors font-label-md text-label-md shadow-sm flex items-center gap-1.5" type="button">
+<span>Save &amp; Advance to Q15</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Question Bank Inline Browser / Slide Widget -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden" id="bankContainer">
+<div class="p-space-md bg-surface-container flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="h-9 w-9 rounded-lg bg-primary text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface">Departmental Item Bank: CS402 Questions Repository</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Access peer-reviewed questions with calibrated empirical difficulty</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="px-space-sm py-1 rounded-full bg-surface-container-high text-primary font-code-telemetry text-code-telemetry">
+              Showing 4 of 328 Indexed Items
+            </span>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="p-space-md bg-surface-container-low flex flex-wrap items-center gap-space-sm">
+<div class="flex-1 min-w-[200px] relative">
+<span class="material-symbols-outlined absolute left-3 top-2 text-on-surface-variant text-[18px]">search</span>
+<input class="w-full pl-9 pr-space-md py-1.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-1 focus:ring-primary shadow-xs" placeholder="Search by topic, keyword, or concept (e.g., Paxos, Mutex, Byzantine)..." type="text"/>
+</div>
+<select class="px-space-sm py-1.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-sm text-body-sm focus:outline-none shadow-xs">
+<option>All Modules (1 - 6)</option>
+<option selected="">Module 3: Consensus &amp; Replication</option>
+<option>Module 4: Distributed Locks</option>
+</select>
+<select class="px-space-sm py-1.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-sm text-body-sm focus:outline-none shadow-xs">
+<option>All Difficulties</option>
+<option>Easy (&gt;80% Pass)</option>
+<option selected="">Medium (50-80% Pass)</option>
+<option>Hard (&lt;50% Pass)</option>
+</select>
+<button class="px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md" type="button">
+            Filter Results
+          </button>
+</div>
+<!-- Question Bank Items List -->
+<div class="divide-y divide-surface-container-high">
+<!-- Item 1 -->
+<div class="p-space-md flex flex-col md:flex-row md:items-center justify-between gap-space-md hover:bg-surface-container-low transition-colors">
+<div class="flex flex-col gap-1 min-w-0 flex-1">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface font-code-telemetry text-[11px]">CS402-QB-881</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">• 2-Phase Commit</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-[11px]">Medium</span>
+<span class="font-label-sm text-label-sm text-tertiary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">history</span> Fall 2024 Exam (74% accuracy)
+                </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface font-medium mt-1">
+                Under which coordinator failure circumstance does the classic Two-Phase Commit protocol incur synchronous blocking indefinitely?
+              </p>
+</div>
+<button class="inline-flex items-center gap-1 px-space-md py-1.5 rounded-lg bg-surface-container-high text-primary hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md shrink-0" type="button">
+<span class="material-symbols-outlined text-[16px]">add</span>
+<span>Add to Exam</span>
+</button>
+</div>
+<!-- Item 2 -->
+<div class="p-space-md flex flex-col md:flex-row md:items-center justify-between gap-space-md hover:bg-surface-container-low transition-colors">
+<div class="flex flex-col gap-1 min-w-0 flex-1">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface font-code-telemetry text-[11px]">CS402-QB-912</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">• Vector Clocks</span>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-[11px]">Easy</span>
+<span class="font-label-sm text-label-sm text-tertiary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">history</span> Spring 2024 Exam (89% accuracy)
+                </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface font-medium mt-1">
+                Given two timestamps V(a) and V(b) in an N-node system, which condition confirms that event A causally preceded event B?
+              </p>
+</div>
+<button class="inline-flex items-center gap-1 px-space-md py-1.5 rounded-lg bg-surface-container-high text-primary hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md shrink-0" type="button">
+<span class="material-symbols-outlined text-[16px]">add</span>
+<span>Add to Exam</span>
+</button>
+</div>
+<!-- Item 3 -->
+<div class="p-space-md flex flex-col md:flex-row md:items-center justify-between gap-space-md hover:bg-surface-container-low transition-colors">
+<div class="flex flex-col gap-1 min-w-0 flex-1">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface font-code-telemetry text-[11px]">CS402-QB-1044</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">• CAP Theorem</span>
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-[11px]">Hard</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">history</span> Final 2023 (41% accuracy)
+                </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface font-medium mt-1">
+                In PACELC theorem, what does the system trade off in the absence of a network partition?
+              </p>
+</div>
+<button class="inline-flex items-center gap-1 px-space-md py-1.5 rounded-lg bg-surface-container-high text-primary hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md shrink-0" type="button">
+<span class="material-symbols-outlined text-[16px]">add</span>
+<span>Add to Exam</span>
+</button>
+</div>
+<!-- Item 4 -->
+<div class="p-space-md flex flex-col md:flex-row md:items-center justify-between gap-space-md hover:bg-surface-container-low transition-colors">
+<div class="flex flex-col gap-1 min-w-0 flex-1">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface font-code-telemetry text-[11px]">CS402-QB-1102</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">• Byzantine Generals</span>
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-[11px]">Hard</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">history</span> Fall 2023 Exam (52% accuracy)
+                </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface font-medium mt-1">
+                What is the minimum number of total nodes required to tolerate m Byzantine nodes in an unauthenticated message passing system?
+              </p>
+</div>
+<button class="inline-flex items-center gap-1 px-space-md py-1.5 rounded-lg bg-surface-container-high text-primary hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md shrink-0" type="button">
+<span class="material-symbols-outlined text-[16px]">add</span>
+<span>Add to Exam</span>
+</button>
+</div>
+</div>
+<div class="p-space-sm bg-surface-container text-center">
+<button class="font-label-md text-label-md text-primary hover:underline" type="button">
+            Load Next 20 Questions from Repository Database...
+          </button>
+</div>
+</div>
+</div>
+<!-- RIGHT / SIDEBAR INSPECTOR (lg:col-span-4 xl:col-span-4) -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<!-- Live Scoring & Mark Breakdown Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">Assessment Balance</span>
+<span class="px-2 py-0.5 rounded-full bg-tertiary text-on-tertiary font-label-sm text-label-sm font-semibold">140 / 140 Allocated</span>
+</div>
+<!-- Metric visual distribution chart (SVG spark-ring/bar) -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Item Type Proportions</span>
+<span class="font-code-telemetry text-on-surface font-bold">35 Total</span>
+</div>
+<!-- Stacked Bar representation -->
+<div class="h-3 w-full rounded-full bg-surface-container flex overflow-hidden">
+<div class="h-full bg-primary" style="width: 80%;" title="28 Single MCQs (80%)"></div>
+<div class="h-full bg-secondary" style="width: 14%;" title="5 Multi-Select (14%)"></div>
+<div class="h-full bg-tertiary" style="width: 6%;" title="2 True/False (6%)"></div>
+</div>
+<div class="flex items-center justify-between text-[11px] font-label-sm text-on-surface-variant pt-1">
+<span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-primary"></span> 28 MCQs (112 pts)</span>
+<span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-secondary"></span> 5 Multi (20 pts)</span>
+<span class="flex items-center gap-1"><span class="h-2 w-2 rounded-full bg-tertiary"></span> 2 T/F (8 pts)</span>
+</div>
+</div>
+<!-- Risk Exposure Metric -->
+<div class="p-space-sm rounded-lg bg-error-container/30 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error text-[20px]">warning</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">Maximum Risk Drawdown</span>
+<span class="font-code-telemetry text-[11px] text-on-surface-variant">If all answered incorrectly</span>
+</div>
+</div>
+<span class="font-code-telemetry text-title-md font-bold text-error">-35.00</span>
+</div>
+</div>
+<!-- Question Sequence Navigator -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm flex flex-col overflow-hidden">
+<div class="p-space-md bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-md text-title-md text-on-surface">Question Palette</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface font-code-telemetry text-[11px]">35 Total</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant" title="Randomize Sequence" type="button"><span class="material-symbols-outlined text-[18px]">shuffle</span></button>
+<button class="p-1 rounded hover:bg-surface-container text-on-surface-variant" title="Bulk Weights" type="button"><span class="material-symbols-outlined text-[18px]">balance</span></button>
+</div>
+</div>
+<!-- Reorderable Scrollable List -->
+<div class="max-h-[380px] overflow-y-auto divide-y divide-surface-container-low p-space-xs">
+<!-- Question 1 -->
+<div class="p-space-sm rounded-lg flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-2">
+<span class="font-code-telemetry text-label-md font-bold text-on-surface w-6">01</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px] font-semibold">MCQ</span>
+<span class="font-body-sm text-body-sm text-on-surface truncate max-w-[140px]">Byzantine General Basics</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-code-telemetry text-[11px] text-tertiary">+4, -1</span>
+<span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+</div>
+</div>
+<!-- Question 2 -->
+<div class="p-space-sm rounded-lg flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-2">
+<span class="font-code-telemetry text-label-md font-bold text-on-surface w-6">02</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px] font-semibold">MCQ</span>
+<span class="font-body-sm text-body-sm text-on-surface truncate max-w-[140px]">Lamport Logical Clock</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-code-telemetry text-[11px] text-tertiary">+4, -1</span>
+<span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+</div>
+</div>
+<!-- Question 3 -->
+<div class="p-space-sm rounded-lg flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-2">
+<span class="font-code-telemetry text-label-md font-bold text-on-surface w-6">03</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px] font-semibold">T/F</span>
+<span class="font-body-sm text-body-sm text-on-surface truncate max-w-[140px]">CAP Availability Invariant</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-code-telemetry text-[11px] text-tertiary">+4, -1</span>
+<span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+</div>
+</div>
+<!-- Active Question 14 (Highlighted) -->
+<div class="p-space-sm rounded-lg flex items-center justify-between bg-primary-container text-on-primary shadow-sm cursor-pointer">
+<div class="flex items-center gap-2">
+<span class="font-code-telemetry text-label-md font-bold text-on-primary w-6">14</span>
+<span class="px-1.5 py-0.5 rounded bg-on-primary text-primary text-[11px] font-bold">MCQ</span>
+<span class="font-body-sm text-body-sm text-on-primary font-semibold truncate max-w-[140px]">Raft Quorum Election</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-code-telemetry text-[11px] text-on-primary-container">+4, -1</span>
+<span class="h-2 w-2 rounded-full bg-tertiary-fixed-dim animate-ping"></span>
+</div>
+</div>
+<!-- Question 15 -->
+<div class="p-space-sm rounded-lg flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-2">
+<span class="font-code-telemetry text-label-md font-bold text-on-surface w-6">15</span>
+<span class="px-1.5 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed text-[11px] font-semibold">Multi</span>
+<span class="font-body-sm text-body-sm text-on-surface truncate max-w-[140px]">Distributed Snapshot Chandy</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-code-telemetry text-[11px] text-on-surface-variant">+5, -2</span>
+<span class="material-symbols-outlined text-[16px] text-outline">pending</span>
+</div>
+</div>
+<!-- Question 16 -->
+<div class="p-space-sm rounded-lg flex items-center justify-between hover:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex items-center gap-2">
+<span class="font-code-telemetry text-label-md font-bold text-on-surface w-6">16</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant text-[11px] font-semibold">MCQ</span>
+<span class="font-body-sm text-body-sm text-on-surface truncate max-w-[140px]">Gossip Protocol Spread</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-code-telemetry text-[11px] text-tertiary">+4, -1</span>
+<span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+</div>
+</div>
+</div>
+<!-- Bulk Action Tools -->
+<div class="p-space-sm bg-surface-container flex items-center justify-between">
+<button class="text-primary hover:text-on-primary-fixed-variant font-label-sm text-label-sm font-semibold flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">format_list_numbered</span>
+<span>Re-Index 1 to 35</span>
+</button>
+<button class="text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>Export QTI XML</span>
+</button>
+</div>
+</div>
+<!-- Cohort Scheduling & Security Presets Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">Target Cohorts &amp; Security</span>
+<span class="material-symbols-outlined text-primary text-[20px]">security</span>
+</div>
+<div class="space-y-space-sm pt-1">
+<!-- Class Assignment -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Assigned Classes</span>
+<div class="flex items-center gap-2 flex-wrap">
+<span class="px-2 py-1 rounded bg-surface-container text-on-surface font-body-sm text-body-sm font-medium">CS402-A (62 Students)</span>
+<span class="px-2 py-1 rounded bg-surface-container text-on-surface font-body-sm text-body-sm font-medium">CS402-B (58 Students)</span>
+</div>
+</div>
+<!-- Exam Window -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[22px]">calendar_clock</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Scheduled Window</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">March 24, 2025 • 10:00 - 11:30 AM UTC</span>
+</div>
+</div>
+<!-- Proctor Policy Level -->
+<div class="p-space-sm rounded-lg bg-tertiary-container text-on-tertiary flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">lock</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-semibold">Strict Proctoring Preset</span>
+<span class="font-code-telemetry text-[11px] text-on-tertiary-container">Webcam HUD + Screen Lock Active</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded bg-surface-container-lowest text-tertiary font-bold text-[11px]">Level 3</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function () {
+    // Collapsible Config logic
+    const toggleBtn = document.getElementById('toggleConfigBtn');
+    const configBody = document.getElementById('quizConfigBody');
+    const toggleText = document.getElementById('configToggleText');
+    const toggleIcon = document.getElementById('configToggleIcon');
+
+    if (toggleBtn && configBody) {
+      let isCollapsed = false;
+      toggleBtn.addEventListener('click', function () {
+        isCollapsed = !isCollapsed;
+        if (isCollapsed) {
+          configBody.classList.add('hidden');
+          toggleText.textContent = 'Show Parameters';
+          toggleIcon.textContent = 'keyboard_arrow_down';
+        } else {
+          configBody.classList.remove('hidden');
+          toggleText.textContent = 'Hide Parameters';
+          toggleIcon.textContent = 'keyboard_arrow_up';
+        }
+      });
+    }
+
+    // Scroll smoothly to question bank on toolbar button click
+    const openBankBtn = document.getElementById('openQuestionBankBtn');
+    const bankContainer = document.getElementById('bankContainer');
+    if (openBankBtn && bankContainer) {
+      openBankBtn.addEventListener('click', function () {
+        bankContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+  })();
+</script></main></div></body></html>

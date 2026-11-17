@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"tertiary":"#005338","on-tertiary-fixed":"#002113","on-surface":"#0b1c30","surface-container-lowest":"#ffffff","on-secondary-container":"#fffbff","error":"#ba1a1a","primary-container":"#4f46e5","surface-container":"#e5eeff","inverse-on-surface":"#eaf1ff","primary-fixed":"#e2dfff","surface-tint":"#4d44e3","inverse-primary":"#c3c0ff","primary-fixed-dim":"#c3c0ff","surface-container-low":"#eff4ff","surface-container-high":"#dce9ff","on-primary-fixed-variant":"#3323cc","secondary-fixed-dim":"#c0c1ff","secondary-fixed":"#e1e0ff","on-background":"#0b1c30","on-error-container":"#93000a","on-secondary":"#ffffff","tertiary-fixed-dim":"#4edea3","surface-bright":"#f8f9ff","outline":"#777587","on-tertiary":"#ffffff","on-error":"#ffffff","on-secondary-fixed":"#07006c","inverse-surface":"#213145","surface-variant":"#d3e4fe","surface-dim":"#cbdbf5","background":"#f8f9ff","on-tertiary-container":"#67f4b7","primary":"#3525cd","tertiary-container":"#006e4b","secondary":"#4648d4","surface-container-highest":"#d3e4fe","on-tertiary-fixed-variant":"#005236","secondary-container":"#6063ee","tertiary-fixed":"#6ffbbe","outline-variant":"#c7c4d8","on-surface-variant":"#464555","on-secondary-fixed-variant":"#2f2ebe","error-container":"#ffdad6","on-primary-fixed":"#0f0069","on-primary":"#ffffff","surface":"#f8f9ff","on-primary-container":"#dad7ff"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"gutter-sm":"1rem","space-xl":"2rem","margin":"2rem","space-md":"1rem","space-sm":"0.5rem","margin-sm":"1rem","space-lg":"1.5rem","gutter":"1.5rem","space-xs":"0.25rem"},"fontFamily":{"label-md":["Inter"],"body-lg":["Inter"],"body-md":["Inter"],"title-lg":["Plus Jakarta Sans"],"display":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"body-sm":["Inter"],"display-mobile":["Plus Jakarta Sans"],"label-sm":["Inter"],"headline-lg":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"title-md":["Inter"],"code-telemetry":["JetBrains Mono"],"headline-md":["Plus Jakarta Sans"]},"fontSize":{"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"title-lg":["18px",{"lineHeight":"26px","fontWeight":"600"}],"display":["48px",{"lineHeight":"56px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-sm":["13px",{"lineHeight":"18px","fontWeight":"400"}],"display-mobile":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"700"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.015em","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"title-md":["16px",{"lineHeight":"24px","fontWeight":"600"}],"code-telemetry":["12px",{"lineHeight":"16px","fontWeight":"500"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}]}}}}</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><header class="fixed top-0 w-full z-50 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 w-full px-gutter flex items-center justify-between"><div class="flex items-center gap-space-md"><img alt="QuizTrack Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrA30bBua_g6A6vuE-PWIeVjHX9rNix0yD0ltIG56xjoJn3kiUGdhd5DrbPhA9lR6kCCsGL5Q9ywB0oN4hrA25RrYMEz8XcPtSduzFCql26W5BCLFrpssKWjLrEdk_InL9X4CoqHXiPAKgSvn0w25KQtnX7y3kQZeJRxv0JuCGaZMNM3OFctRY-45a917hJlPp1fHF0TUkoRhZlIsQiKwOeXI0zIYP_sMHk1JlPN9N5T"/><span class="font-title-lg text-title-lg tracking-tight text-primary">QuizTrack</span><span class="hidden sm:inline-flex px-space-sm py-0.5 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm">Spring 2025 Semester</span></div><nav class="hidden md:flex items-center gap-space-lg" data-active-classes="text-primary font-bold"><a aria-current="page" class="transition-colors text-primary font-bold" data-path="candidate-exam-hall" href="#">Exam Hall</a><a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-md text-body-md" data-path="system-diagnostics" href="#">System Check</a><a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-md text-body-md" data-path="code-of-conduct" href="#">Testing Guidelines</a><a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-md text-body-md" data-path="candidate-support" href="#">Emergency Help</a></nav><div class="flex items-center gap-space-md"><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxv8XEeIlJLxUR9mb15UqUCh_z0bu6hTnqRtTN_aI6D939LUP2PjWmU5nnVWIp5T5MeGUw00mXPU375rZz7cPYonLuMtAzBE54wIYHZZXBg2S_Lbe5yYRIg8Q7w_RL05pkLML-Gk7N_OviwcZu3DlV4-5P5V7F2e2ogqUVX3g21PJgz_oGf5Fd4Csfbddl3B7PZR7hiQ7Zat7A5iGguP0ll7gyhIf94sY3VxlJgIg"/></div></div></header><main class="w-full pt-16 bg-surface"><div class="flex flex-col w-full">
+<!-- Interactive Warning Floating Toast / Modal Anchor -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-space-md bg-inverse-surface/60 backdrop-blur-sm transition-opacity duration-200" id="proctor-warning-modal">
+<div class="w-full max-w-xl bg-surface-container-lowest rounded-xl shadow-xl overflow-hidden p-space-xl flex flex-col gap-space-lg">
+<div class="flex items-start gap-space-md">
+<div class="w-12 h-12 rounded-full bg-error-container text-error flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-headline-sm" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div class="flex flex-col gap-space-xs flex-1">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-error font-bold">Proctoring Telemetry Alert</span>
+<span class="font-code-telemetry text-code-telemetry bg-error-container text-on-error-container px-space-sm py-0.5 rounded-full font-semibold">INCIDENT #01</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface font-semibold">Browser Window Focus Lost</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            You exited the secured exam view or minimized the browser at <span class="font-code-telemetry text-code-telemetry text-primary font-bold">14:52:04 UTC</span>. This anomaly has been synchronized to your proctor's live audit ledger with a screen capture. Repeated focus losses will trigger automatic session suspension.
+          </p>
+</div>
+</div>
+<div class="p-space-md bg-surface-container-low rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-outline text-title-md">fingerprint</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface-variant">Session ID: <strong class="text-on-surface">QT-8842-DISTRIB</strong></span>
+</div>
+<span class="font-code-telemetry text-code-telemetry text-tertiary font-bold">Integrity Level: 96%</span>
+</div>
+<div class="flex items-center justify-end gap-space-md pt-space-xs">
+<button class="px-space-xl py-space-sm bg-primary text-on-primary font-title-md text-title-md rounded-lg shadow hover:bg-on-primary-fixed-variant transition-colors flex items-center gap-space-sm cursor-pointer" onclick="document.getElementById('proctor-warning-modal').classList.add('hidden')">
+<span>I Understand &amp; Return to Exam</span>
+<span class="material-symbols-outlined text-body-md">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Sub-Header: Live Exam Control & Telemetry Bar -->
+<div class="sticky top-16 z-40 w-full bg-surface-container-lowest shadow-sm py-space-sm px-gutter flex flex-wrap items-center justify-between gap-space-md">
+<!-- Left: Exam Metadata -->
+<div class="flex items-center gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm">
+<span class="font-title-md text-title-md text-on-surface font-bold tracking-tight">CS402: Advanced Distributed Systems</span>
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm uppercase tracking-wider font-bold">Computer Science</span>
+</div>
+<div class="flex items-center gap-space-sm font-body-sm text-body-sm text-on-surface-variant">
+<span>Midterm Examination</span>
+<span>•</span>
+<span>Spring Cohort 2025</span>
+<span>•</span>
+<span class="font-code-telemetry text-code-telemetry text-primary">Hall 04B</span>
+</div>
+</div>
+</div>
+<!-- Center: Countdown & Autosave -->
+<div class="flex items-center gap-space-lg bg-surface-container-low px-space-lg py-space-xs rounded-full shadow-inner">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-error animate-pulse text-headline-sm">timer</span>
+<div class="flex flex-col">
+<span class="font-code-telemetry text-title-md font-bold text-error tracking-tight" id="live-timer">00:41:35</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">REMAINING TIME</span>
+</div>
+</div>
+<div class="h-6 w-px bg-outline-variant"></div>
+<div class="flex items-center gap-space-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-tertiary text-body-md" style="font-variation-settings: 'FILL' 1;">cloud_done</span>
+<span class="font-body-sm text-body-sm">Auto-saved <span class="font-code-telemetry text-code-telemetry font-semibold text-on-surface">14:52:18</span></span>
+</div>
+</div>
+<!-- Right: Proctor Mode, Stats & Submit -->
+<div class="flex items-center gap-space-md">
+<div class="hidden xl:flex items-center gap-space-sm px-space-md py-space-xs bg-tertiary-container/10 text-tertiary rounded-lg">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-ping"></span>
+<span class="material-symbols-outlined text-title-md">shield</span>
+<span class="font-label-md text-label-md">Secure Fullscreen Active</span>
+</div>
+<div class="px-space-md py-space-xs bg-surface-container text-on-surface rounded-lg flex items-center gap-space-xs">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Progress:</span>
+<span class="font-title-md text-title-md text-primary font-bold">28</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ 45</span>
+</div>
+<button class="px-space-lg py-space-sm bg-error text-on-error font-title-md text-title-md rounded-lg shadow hover:bg-on-error-container transition-all flex items-center gap-space-xs cursor-pointer">
+<span class="material-symbols-outlined text-body-md">lock</span>
+<span>Finish &amp; Submit</span>
+</button>
+</div>
+</div>
+<!-- Main Split Examination Layout -->
+<div class="w-full max-w-[1720px] mx-auto p-gutter flex flex-col lg:flex-row gap-space-lg">
+<!-- LEFT 72% COLUMN: Active Question Workspace -->
+<div class="flex-1 lg:w-[72%] flex flex-col gap-space-lg">
+<!-- Question Card Level 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-xl shadow-sm flex flex-col gap-space-xl">
+<!-- Question Meta Header -->
+<div class="flex flex-wrap items-center justify-between gap-space-md pb-space-md">
+<div class="flex items-center gap-space-md">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">Question 14</span>
+<span class="font-body-md text-body-md text-on-surface-variant">of 45</span>
+<span class="px-space-sm py-0.5 rounded bg-surface-container-high text-primary font-label-md text-label-md font-semibold">Multiple Choice (Single Correct)</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="px-space-sm py-0.5 rounded bg-surface-container text-on-surface-variant font-code-telemetry text-code-telemetry">Topic: Raft Consensus</span>
+<span class="px-space-sm py-0.5 rounded bg-tertiary-container/10 text-tertiary font-code-telemetry text-code-telemetry font-bold">+4.00 / -1.00 Marks</span>
+</div>
+</div>
+<!-- Question Prompt -->
+<div class="flex flex-col gap-space-md">
+<p class="font-title-lg text-title-lg text-on-surface leading-relaxed font-semibold">
+            In the Raft distributed consensus algorithm, which condition must be fully satisfied before a leader node is permitted to commit a log entry to its state machine and safely reply with success to the client?
+          </p>
+<!-- Rich Visual Technical Architecture Diagram Box -->
+<div class="w-full bg-surface-container-low rounded-lg p-space-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-body-md text-primary">account_tree</span>
+                Raft State Machine Log Replication Flow • Term 4 Cluster Architecture
+              </span>
+<span class="font-code-telemetry text-code-telemetry text-primary font-semibold">Quorum = ⌈(N+1)/2⌉</span>
+</div>
+<!-- Inline Flow SVG Diagram -->
+<div class="w-full overflow-x-auto py-space-sm">
+<svg class="w-full h-auto max-h-[170px] select-none" viewbox="0 0 760 170" xmlns="http://www.w3.org/2000/svg">
+<!-- Leader Node Box -->
+<rect class="fill-surface-container" height="130" rx="8" width="160" x="10" y="20"></rect>
+<rect class="fill-primary" height="32" rx="8" width="160" x="10" y="20"></rect>
+<text class="fill-on-primary font-title-md text-title-md font-bold" text-anchor="middle" x="90" y="42">Leader (Node S1)</text>
+<text class="fill-on-surface font-code-telemetry text-code-telemetry" x="25" y="75">Term: 4</text>
+<text class="fill-on-surface font-code-telemetry text-code-telemetry" x="25" y="98">Log Index: 12</text>
+<rect class="fill-surface-container-lowest" height="24" rx="4" width="130" x="25" y="112"></rect>
+<text class="fill-primary font-code-telemetry text-code-telemetry font-bold" text-anchor="middle" x="90" y="128">Entry [v="x"] Pending</text>
+<!-- Arrows to Follower 1 -->
+<path class="text-tertiary" d="M 170 50 L 290 50" fill="none" marker-end="url(#arrow-green)" stroke="currentColor" stroke-width="2.5"></path>
+<text class="fill-tertiary font-code-telemetry text-code-telemetry font-bold" text-anchor="middle" x="230" y="42">AppendEntries(ACK)</text>
+<!-- Arrows to Follower 2 -->
+<path class="text-tertiary" d="M 170 120 L 290 120" fill="none" marker-end="url(#arrow-green)" stroke="currentColor" stroke-width="2.5"></path>
+<text class="fill-tertiary font-code-telemetry text-code-telemetry font-bold" text-anchor="middle" x="230" y="112">AppendEntries(ACK)</text>
+<!-- Follower 1 -->
+<rect class="fill-surface-container-lowest" height="65" rx="8" width="150" x="300" y="15"></rect>
+<text class="fill-on-surface font-title-md text-title-md font-bold" text-anchor="middle" x="375" y="38">Follower S2</text>
+<text class="fill-tertiary font-code-telemetry text-code-telemetry font-bold" text-anchor="middle" x="375" y="60">✓ Log Replicated</text>
+<!-- Follower 2 -->
+<rect class="fill-surface-container-lowest" height="65" rx="8" width="150" x="300" y="90"></rect>
+<text class="fill-on-surface font-title-md text-title-md font-bold" text-anchor="middle" x="375" y="113">Follower S3</text>
+<text class="fill-tertiary font-code-telemetry text-code-telemetry font-bold" text-anchor="middle" x="375" y="135">✓ Log Replicated</text>
+<!-- Follower 3 (Unreachable/Slow) -->
+<path class="text-error" d="M 170 85 L 530 85" fill="none" stroke="currentColor" stroke-dasharray="5 5" stroke-width="2"></path>
+<rect class="fill-surface-container-lowest opacity-75" height="65" rx="8" width="150" x="540" y="55"></rect>
+<text class="fill-on-surface-variant font-title-md text-title-md" text-anchor="middle" x="615" y="78">Follower S4</text>
+<text class="fill-error font-code-telemetry text-code-telemetry font-semibold" text-anchor="middle" x="615" y="100">⚠ Network Partition</text>
+<!-- State Commit Condition Indicator -->
+<rect class="fill-surface-container-high" height="30" rx="4" width="240" x="500" y="130"></rect>
+<text class="fill-on-surface font-body-sm text-body-sm font-semibold" text-anchor="middle" x="620" y="150">Cluster Quorum: 3 of 5 nodes acknowledged</text>
+<defs>
+<marker id="arrow-green" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="6" refy="5" viewbox="0 0 10 10">
+<path class="fill-tertiary" d="M 0 0 L 10 5 L 0 10 z"></path>
+</marker>
+</defs>
+</svg>
+</div>
+</div>
+</div>
+<!-- 4 Multiple Choice Option Cards -->
+<div aria-label="Question Options" class="flex flex-col gap-space-md" role="radiogroup">
+<!-- Option A -->
+<label class="group flex items-start gap-space-md p-space-lg rounded-xl bg-surface-container-low hover:bg-surface-container transition-all cursor-pointer">
+<input class="mt-1 w-5 h-5 accent-primary cursor-pointer" name="raft-option" type="radio" value="A"/>
+<div class="flex flex-col gap-space-xs flex-1">
+<div class="flex items-center gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-bold flex items-center justify-center">A</span>
+<span class="font-body-lg text-body-lg text-on-surface">The entry has been successfully transmitted and replicated on at least one follower node in the cluster.</span>
+</div>
+</div>
+</label>
+<!-- Option B (SELECTED STATE) -->
+<label class="group flex items-start gap-space-md p-space-lg rounded-xl bg-surface-container shadow-md transition-all cursor-pointer">
+<input checked="" class="mt-1 w-5 h-5 accent-primary cursor-pointer" name="raft-option" type="radio" value="B"/>
+<div class="flex flex-col gap-space-xs flex-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-primary text-on-primary font-code-telemetry text-code-telemetry font-bold flex items-center justify-center">B</span>
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">The entry has been replicated on a majority (quorum) of cluster nodes and at least one entry from the current leader's term is also committed.</span>
+</div>
+<span class="px-space-sm py-0.5 bg-primary text-on-primary font-label-sm text-label-sm rounded-full flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-label-sm" style="font-variation-settings: 'FILL' 1;">check</span>
+                  Selected Answer
+                </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant pl-8 pt-space-xs">
+                Matches Raft Safety Invariant §5.4.2: Leaders never commit log entries from previous terms by counting replicas directly.
+              </p>
+</div>
+</label>
+<!-- Option C -->
+<label class="group flex items-start gap-space-md p-space-lg rounded-xl bg-surface-container-low hover:bg-surface-container transition-all cursor-pointer">
+<input class="mt-1 w-5 h-5 accent-primary cursor-pointer" name="raft-option" type="radio" value="C"/>
+<div class="flex flex-col gap-space-xs flex-1">
+<div class="flex items-center gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-bold flex items-center justify-center">C</span>
+<span class="font-body-lg text-body-lg text-on-surface">Every follower node in the cluster must acknowledge receipt via AppendEntries RPC without any network timeouts or dropped packets.</span>
+</div>
+</div>
+</label>
+<!-- Option D -->
+<label class="group flex items-start gap-space-md p-space-lg rounded-xl bg-surface-container-low hover:bg-surface-container transition-all cursor-pointer">
+<input class="mt-1 w-5 h-5 accent-primary cursor-pointer" name="raft-option" type="radio" value="D"/>
+<div class="flex flex-col gap-space-xs flex-1">
+<div class="flex items-center gap-space-sm">
+<span class="w-6 h-6 rounded-full bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-bold flex items-center justify-center">D</span>
+<span class="font-body-lg text-body-lg text-on-surface">The candidate node steps down to follower upon receiving heartbeats from the previous term leader and executes an fsync barrier.</span>
+</div>
+</div>
+</label>
+</div>
+<!-- Question Navigation & Action Footer -->
+<div class="flex flex-wrap items-center justify-between gap-space-md pt-space-lg bg-surface-container-lowest">
+<div class="flex items-center gap-space-sm">
+<button class="px-space-md py-space-sm bg-surface-container text-on-surface-variant hover:text-on-surface font-title-md text-title-md rounded-lg transition-colors flex items-center gap-space-xs cursor-pointer">
+<span class="material-symbols-outlined text-body-md">backspace</span>
+<span>Clear Selection</span>
+</button>
+<button class="px-space-md py-space-sm bg-secondary-fixed text-on-secondary-fixed hover:bg-secondary-fixed-dim font-title-md text-title-md rounded-lg transition-colors flex items-center gap-space-xs cursor-pointer">
+<span class="material-symbols-outlined text-body-md" style="font-variation-settings: 'FILL' 1;">flag</span>
+<span>Mark for Review &amp; Next</span>
+</button>
+</div>
+<div class="flex items-center gap-space-md">
+<button class="px-space-lg py-space-sm bg-surface-container-high text-on-surface font-title-md text-title-md rounded-lg hover:bg-surface-container-highest transition-colors flex items-center gap-space-xs cursor-pointer">
+<span class="material-symbols-outlined text-body-md">arrow_back</span>
+<span>Previous</span>
+</button>
+<button class="px-space-xl py-space-sm bg-primary text-on-primary font-title-md text-title-md rounded-lg shadow hover:bg-on-primary-fixed-variant transition-colors flex items-center gap-space-sm cursor-pointer">
+<span>Save &amp; Next Question</span>
+<span class="material-symbols-outlined text-body-md">arrow_forward</span>
+<kbd class="hidden sm:inline-block px-1.5 py-0.5 bg-on-primary-fixed-variant/40 rounded text-label-sm font-code-telemetry">Enter</kbd>
+</button>
+</div>
+</div>
+</div>
+<!-- Live Anti-Tamper & Audio Telemetry Micro-Widget -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-headline-sm">videocam</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface font-semibold">Webcam Feed #01 • Biometric Tracking OK</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Face in bounding box (Confidence: 99.4%) • 30 FPS Encrypted Stream</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-code-telemetry text-code-telemetry text-on-surface-variant">Mic Audio:</span>
+<div class="flex items-end gap-1 h-5 w-16 bg-surface-container p-1 rounded">
+<div class="w-2 h-2 bg-tertiary rounded-sm"></div>
+<div class="w-2 h-3.5 bg-tertiary rounded-sm"></div>
+<div class="w-2 h-1.5 bg-tertiary rounded-sm"></div>
+<div class="w-2 h-4 bg-tertiary rounded-sm"></div>
+</div>
+</div>
+<button class="px-space-sm py-1 bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-sm text-label-sm rounded cursor-pointer" onclick="document.getElementById('proctor-warning-modal').classList.toggle('hidden')">
+            Test Alert Modal
+          </button>
+</div>
+</div>
+</div>
+<!-- RIGHT 28% COLUMN: Question Palette & Navigation Panel -->
+<div class="w-full lg:w-[28%] flex flex-col gap-space-lg">
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col gap-space-lg sticky top-36">
+<!-- Palette Header -->
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-title-md">grid_view</span>
+<span class="font-title-md text-title-md text-on-surface font-bold">Question Palette</span>
+</div>
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container text-primary font-code-telemetry text-code-telemetry font-bold">45 Total</span>
+</div>
+<!-- Legend -->
+<div class="grid grid-cols-2 gap-space-sm p-space-md bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-space-xs">
+<span class="w-3.5 h-3.5 rounded-full bg-tertiary"></span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Answered (27)</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="w-3.5 h-3.5 rounded-full bg-secondary-fixed-dim flex items-center justify-center text-on-secondary-fixed">
+<span class="material-symbols-outlined text-[10px]" style="font-variation-settings: 'FILL' 1;">flag</span>
+</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Flagged (3)</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="w-3.5 h-3.5 rounded-full bg-surface-container-highest"></span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium">Unvisited (12)</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="w-3.5 h-3.5 rounded-full bg-secondary-container"></span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Unanswered (3)</span>
+</div>
+</div>
+<!-- 45 Question Number Pill Matrix -->
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Select Question to Jump:</span>
+<div class="grid grid-cols-5 gap-2 max-h-[380px] overflow-y-auto pr-1">
+<!-- Q1 - Q13: Answered (Tertiary Green Fill) -->
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm hover:opacity-90 transition-opacity">01</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm hover:opacity-90 transition-opacity">02</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm hover:opacity-90 transition-opacity">03</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm hover:opacity-90 transition-opacity">04</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm hover:opacity-90 transition-opacity">05</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm hover:opacity-90 transition-opacity">06</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm hover:opacity-90 transition-opacity">07</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm hover:opacity-90 transition-opacity">08</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm hover:opacity-90 transition-opacity">09</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm hover:opacity-90 transition-opacity">10</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm hover:opacity-90 transition-opacity">11</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm hover:opacity-90 transition-opacity">12</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm hover:opacity-90 transition-opacity">13</button>
+<!-- Q14: CURRENT ACTIVE (Primary Highlight with Elevation) -->
+<button class="h-9 rounded-lg bg-primary text-on-primary font-code-telemetry text-code-telemetry font-bold shadow-md scale-105 transition-transform flex items-center justify-center">14</button>
+<!-- Q15: Flagged for Review (Purple Flag) -->
+<button class="h-9 rounded-lg bg-secondary-fixed-dim text-on-secondary-fixed font-code-telemetry text-code-telemetry font-bold shadow-sm flex items-center justify-center gap-0.5">
+<span>15</span>
+<span class="material-symbols-outlined text-[10px]" style="font-variation-settings: 'FILL' 1;">flag</span>
+</button>
+<!-- Q16 - Q20: Answered -->
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm">16</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm">17</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm">18</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm">19</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm">20</button>
+<!-- Q21 - Q23: Answered & Flagged -->
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm">21</button>
+<button class="h-9 rounded-lg bg-secondary-fixed-dim text-on-secondary-fixed font-code-telemetry text-code-telemetry font-bold shadow-sm flex items-center justify-center gap-0.5">
+<span>22</span>
+<span class="material-symbols-outlined text-[10px]" style="font-variation-settings: 'FILL' 1;">flag</span>
+</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm">23</button>
+<!-- Q24 - Q26: Unanswered Visited (Amber Tint / Secondary Container) -->
+<button class="h-9 rounded-lg bg-secondary-container text-on-secondary-container font-code-telemetry text-code-telemetry font-bold shadow-sm">24</button>
+<button class="h-9 rounded-lg bg-secondary-container text-on-secondary-container font-code-telemetry text-code-telemetry font-bold shadow-sm">25</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm">26</button>
+<!-- Q27 - Q30: Answered / Flagged -->
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm">27</button>
+<button class="h-9 rounded-lg bg-tertiary text-on-tertiary font-code-telemetry text-code-telemetry font-bold shadow-sm">28</button>
+<button class="h-9 rounded-lg bg-secondary-fixed-dim text-on-secondary-fixed font-code-telemetry text-code-telemetry font-bold shadow-sm flex items-center justify-center gap-0.5">
+<span>29</span>
+<span class="material-symbols-outlined text-[10px]" style="font-variation-settings: 'FILL' 1;">flag</span>
+</button>
+<button class="h-9 rounded-lg bg-secondary-container text-on-secondary-container font-code-telemetry text-code-telemetry font-bold shadow-sm">30</button>
+<!-- Q31 - Q45: Unvisited (Surface Container Highest) -->
+<button class="h-9 rounded-lg bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-medium hover:bg-surface-variant transition-colors">31</button>
+<button class="h-9 rounded-lg bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-medium hover:bg-surface-variant transition-colors">32</button>
+<button class="h-9 rounded-lg bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-medium hover:bg-surface-variant transition-colors">33</button>
+<button class="h-9 rounded-lg bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-medium hover:bg-surface-variant transition-colors">34</button>
+<button class="h-9 rounded-lg bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-medium hover:bg-surface-variant transition-colors">35</button>
+<button class="h-9 rounded-lg bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-medium hover:bg-surface-variant transition-colors">36</button>
+<button class="h-9 rounded-lg bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-medium hover:bg-surface-variant transition-colors">37</button>
+<button class="h-9 rounded-lg bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-medium hover:bg-surface-variant transition-colors">38</button>
+<button class="h-9 rounded-lg bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-medium hover:bg-surface-variant transition-colors">39</button>
+<button class="h-9 rounded-lg bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-medium hover:bg-surface-variant transition-colors">40</button>
+<button class="h-9 rounded-lg bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-medium hover:bg-surface-variant transition-colors">41</button>
+<button class="h-9 rounded-lg bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-medium hover:bg-surface-variant transition-colors">42</button>
+<button class="h-9 rounded-lg bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-medium hover:bg-surface-variant transition-colors">43</button>
+<button class="h-9 rounded-lg bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-medium hover:bg-surface-variant transition-colors">44</button>
+<button class="h-9 rounded-lg bg-surface-container-highest text-on-surface font-code-telemetry text-code-telemetry font-medium hover:bg-surface-variant transition-colors">45</button>
+</div>
+</div>
+<!-- Student Context & Network Diagnostics -->
+<div class="pt-space-md bg-surface-container-low p-space-md rounded-lg flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant">Candidate:</span>
+<span class="font-title-md text-title-md text-on-surface font-bold">Jordan Lee</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant">Roll ID:</span>
+<span class="font-code-telemetry text-code-telemetry text-on-surface font-semibold">CS-2022-094</span>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-md text-label-md text-on-surface-variant">Server Link:</span>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span class="font-code-telemetry text-code-telemetry text-tertiary font-bold">Optimal • 24ms</span>
+</div>
+</div>
+</div>
+<!-- Quick Help & Emergency Proctor Communication Link -->
+<div class="flex items-center justify-between pt-space-xs">
+<button class="font-body-sm text-body-sm text-primary hover:text-on-primary-fixed-variant flex items-center gap-space-xs font-semibold cursor-pointer">
+<span class="material-symbols-outlined text-body-md">headset_mic</span>
+<span>Call Live Proctor</span>
+</button>
+<span class="font-code-telemetry text-code-telemetry text-on-surface-variant">v4.1.9-STABLE</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple countdown timer decrement
+  let totalSeconds = 41 * 60 + 35;
+  const timerElem = document.getElementById('live-timer');
+  if (timerElem) {
+    setInterval(() => {
+      if (totalSeconds > 0) {
+        totalSeconds--;
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        timerElem.textContent = 
+          String(hours).padStart(2, '0') + ':' + 
+          String(minutes).padStart(2, '0') + ':' + 
+          String(seconds).padStart(2, '0');
+      }
+    }, 1000);
+  }
+</script></main><footer class="w-full bg-surface-container-lowest py-space-xl shadow-[0_-1px_8px_rgba(0,0,0,0.02)]"><div class="w-full px-gutter flex flex-col md:flex-row items-center justify-between gap-space-md"><div class="flex items-center gap-space-sm"><span class="font-title-md text-title-md text-primary font-bold">QuizTrack Enterprise</span><span class="font-body-sm text-body-sm text-on-surface-variant">© 2025 Institutional Assessment &amp; Anti-Fraud Systems.</span></div><div class="flex items-center gap-space-lg font-body-sm text-body-sm text-on-surface-variant"><span class="hover:text-primary cursor-pointer">Compliance &amp; FERPA</span><span class="hover:text-primary cursor-pointer">Security Protocol</span><span class="hover:text-primary cursor-pointer">SLA Telemetry</span></div></div></footer></body></html>

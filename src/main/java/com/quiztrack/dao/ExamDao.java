@@ -32,6 +32,8 @@ public interface ExamDao {
 
     boolean saveOrUpdateAnswer(int attemptId, int questionId, Integer selectedOptionId, String textResponse, boolean isFlagged);
 
+    boolean saveOrUpdateAnswer(int attemptId, int questionId, List<Integer> selectedOptionIds, String textResponse, boolean isFlagged);
+
     boolean toggleFlagForReview(int attemptId, int questionId, boolean isFlagged);
 
     boolean recordTelemetryEvent(int attemptId, int userId, String eventType, String severity, String details);

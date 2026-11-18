@@ -36,6 +36,11 @@ public interface ProctorDao {
     List<ProctorActivityEventDto> getRecentEventsForQuiz(int quizId, int limit);
 
     /**
+     * Retrieves violation activity logs filtered by teacher and optional severity.
+     */
+    List<ProctorActivityEventDto> getViolationLogs(Integer teacherId, String severityFilter, int limit);
+
+    /**
      * Retrieves complete chronological event timeline for a specific student attempt.
      */
     List<ProctorActivityEventDto> getStudentEventsTimeline(int attemptId);

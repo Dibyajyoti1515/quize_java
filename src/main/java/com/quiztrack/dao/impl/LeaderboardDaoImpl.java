@@ -217,11 +217,11 @@ public class LeaderboardDaoImpl implements LeaderboardDao {
         StringBuilder sql = new StringBuilder(
                 "SELECT q.quiz_id, q.title, q.description, q.subject_id, q.teacher_id, q.duration_minutes, " +
                 "       q.total_marks, q.pass_percentage, q.status, q.start_time, q.end_time, " +
-                "       q.negative_marking, q.negative_mark_value, q.instructions, q.is_active, " +
+                "       q.negative_marking, q.negative_mark_value, " +
                 "       q.created_at, q.updated_at, s.subject_name, s.subject_code " +
                 "FROM quizzes q " +
                 "JOIN subjects s ON q.subject_id = s.subject_id " +
-                "WHERE q.status IN ('PUBLISHED', 'COMPLETED') ");
+                "WHERE (q.status IN ('ACTIVE', 'COMPLETED', 'PUBLISHED') OR q.quiz_id IN (SELECT DISTINCT quiz_id FROM quiz_attempts WHERE status = 'SUBMITTED')) ");
 
         if (subjectId != null && subjectId > 0) {
             sql.append(" AND q.subject_id = ? ");
@@ -260,7 +260,7 @@ public class LeaderboardDaoImpl implements LeaderboardDao {
         String sql = "SELECT DISTINCT s.subject_id, s.subject_code, s.subject_name, s.department " +
                      "FROM subjects s " +
                      "JOIN quizzes q ON s.subject_id = q.subject_id " +
-                     "WHERE q.status IN ('PUBLISHED', 'COMPLETED') " +
+                     "WHERE (q.status IN ('ACTIVE', 'COMPLETED', 'PUBLISHED') OR q.quiz_id IN (SELECT DISTINCT quiz_id FROM quiz_attempts WHERE status = 'SUBMITTED')) " +
                      "ORDER BY s.subject_code ASC";
 
         List<Subject> list = new ArrayList<>();

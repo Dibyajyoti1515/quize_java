@@ -54,17 +54,33 @@ public class StudentExamAutosaveServlet extends HttpServlet {
         try {
             int attemptId = Integer.parseInt(request.getParameter("attemptId"));
             int questionId = Integer.parseInt(request.getParameter("questionId"));
-            String selectedOptStr = request.getParameter("selectedOptionId");
             boolean isFlagged = "true".equalsIgnoreCase(request.getParameter("isFlagged"));
 
-            Integer selectedOptId = null;
-            if (selectedOptStr != null && !selectedOptStr.trim().isEmpty() && !"0".equals(selectedOptStr.trim())) {
-                try {
-                    selectedOptId = Integer.parseInt(selectedOptStr.trim());
-                } catch (NumberFormatException ignored) {}
+            java.util.List<Integer> selectedOptionIds = new java.util.ArrayList<>();
+            String[] multiParamValues = request.getParameterValues("selectedOptionId");
+            if (multiParamValues != null) {
+                for (String v : multiParamValues) {
+                    if (v != null && !v.trim().isEmpty() && !"0".equals(v.trim())) {
+                        try {
+                            int id = Integer.parseInt(v.trim());
+                            if (!selectedOptionIds.contains(id)) selectedOptionIds.add(id);
+                        } catch (NumberFormatException ignored) {}
+                    }
+                }
+            }
+            String commaList = request.getParameter("selectedOptionIds");
+            if (commaList != null && !commaList.trim().isEmpty()) {
+                for (String part : commaList.split(",")) {
+                    if (part != null && !part.trim().isEmpty() && !"0".equals(part.trim())) {
+                        try {
+                            int id = Integer.parseInt(part.trim());
+                            if (!selectedOptionIds.contains(id)) selectedOptionIds.add(id);
+                        } catch (NumberFormatException ignored) {}
+                    }
+                }
             }
 
-            boolean saved = examService.saveAnswer(attemptId, studentId, questionId, selectedOptId, isFlagged);
+            boolean saved = examService.saveAnswer(attemptId, studentId, questionId, selectedOptionIds, isFlagged);
             Optional<QuizAttempt> attemptOpt = examService.getAttemptById(attemptId, studentId);
 
             long remainingSec = 0;

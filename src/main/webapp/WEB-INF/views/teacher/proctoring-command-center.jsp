@@ -59,76 +59,31 @@
                     fontFamily: {
                         display: ['Plus Jakarta Sans', 'sans-serif'],
                         body: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace']
+                        mono: ['JetBrains Mono', 'monospace'],
+                        'code-telemetry': ['JetBrains Mono', 'monospace'],
+                        'label-md': ['Inter', 'sans-serif'],
+                        'label-sm': ['Inter', 'sans-serif']
                     }
                 }
             }
         };
     </script>
 </head>
-<body class="bg-surface font-body text-sm text-on-surface antialiased min-h-screen flex">
+<body class="bg-surface font-body text-sm text-on-surface antialiased min-h-screen">
 
-    <!-- DESKTOP SIDEBAR -->
-    <aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest border-r border-surface-container-high z-40 hidden lg:flex flex-col justify-between">
-        <div class="flex flex-col">
-            <div class="h-16 px-6 flex items-center gap-3 border-b border-surface-container">
-                <div class="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-sm">
-                    <span class="material-symbols-outlined text-[20px]">security</span>
-                </div>
-                <div class="flex flex-col">
-                    <span class="font-display font-bold text-base text-on-surface leading-tight">QuizTrack</span>
-                    <span class="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider">Faculty Proctor Console</span>
-                </div>
-            </div>
-
-            <nav class="p-4 flex flex-col gap-1.5">
-                <a href="${pageContext.request.contextPath}/teacher/dashboard" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all">
-                    <span class="material-symbols-outlined text-[20px]">space_dashboard</span>
-                    <span>Dashboard</span>
-                </a>
-                <a href="${pageContext.request.contextPath}/teacher/quizzes" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all">
-                    <span class="material-symbols-outlined text-[20px]">quiz</span>
-                    <span>My Assessments</span>
-                </a>
-                <a href="${pageContext.request.contextPath}/teacher/question-bank" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all">
-                    <span class="material-symbols-outlined text-[20px]">database</span>
-                    <span>Question Bank</span>
-                </a>
-                <a href="${pageContext.request.contextPath}/teacher/proctoring" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold bg-primary-fixed text-on-primary-fixed shadow-sm transition-all">
-                    <span class="material-symbols-outlined text-[20px]">monitoring</span>
-                    <span>Live Monitoring</span>
-                </a>
-                <a href="${pageContext.request.contextPath}/teacher/students" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all">
-                    <span class="material-symbols-outlined text-[20px]">groups</span>
-                    <span>Student Roster</span>
-                </a>
-            </nav>
-        </div>
-
-        <div class="p-4 border-t border-surface-container-high flex flex-col gap-3">
-            <div class="flex items-center gap-3 px-2">
-                <div class="w-10 h-10 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-sm">
-                    ${currentUser.fullName.substring(0, 1)}
-                </div>
-                <div class="flex flex-col overflow-hidden">
-                    <span class="font-semibold text-xs text-on-surface truncate">${currentUser.fullName}</span>
-                    <span class="font-mono text-[11px] text-on-surface-variant">${currentUser.identifier}</span>
-                </div>
-            </div>
-            <a href="${pageContext.request.contextPath}/auth/logout" class="flex items-center justify-center gap-2 w-full py-2 rounded-xl text-error bg-error-container/20 hover:bg-error-container/40 font-semibold text-xs transition-colors">
-                <span class="material-symbols-outlined text-[16px]">logout</span>
-                <span>Sign Out</span>
-            </a>
-        </div>
-    </aside>
+    <!-- Reusable Teacher Sidebar -->
+    <jsp:include page="components/sidebar.jsp"/>
 
     <!-- MAIN WORKSPACE -->
-    <div class="flex-1 lg:pl-64 flex flex-col min-h-screen">
+    <div class="lg:pl-64 flex flex-col min-h-screen">
 
         <!-- Top Header Navigation -->
         <header class="h-16 bg-surface-container-lowest/80 backdrop-blur-md border-b border-surface-container-high sticky top-0 z-30 px-4 sm:px-8 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-surface-container-low text-primary flex items-center justify-center lg:hidden">
+                <button type="button" onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" aria-label="Toggle navigation">
+                    <span class="material-symbols-outlined text-[24px]">menu</span>
+                </button>
+                <div class="w-8 h-8 rounded-lg bg-surface-container-low text-primary hidden sm:flex items-center justify-center">
                     <span class="material-symbols-outlined text-[20px]">monitoring</span>
                 </div>
                 <div>
@@ -561,13 +516,17 @@
             if (!reason) return;
 
             const formData = new URLSearchParams();
+            formData.append("csrfToken", '${sessionScope.csrfToken}');
             formData.append("action", "flag");
             formData.append("attemptId", attemptId);
             formData.append("reason", reason);
 
             fetch(CONTEXT_PATH + '/teacher/proctoring/action', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-Token': '${sessionScope.csrfToken}'
+                },
                 body: formData
             }).then(r => r.json()).then(res => {
                 if (res.status === 'SUCCESS') {
@@ -585,13 +544,17 @@
             if (!reason) return;
 
             const formData = new URLSearchParams();
+            formData.append("csrfToken", '${sessionScope.csrfToken}');
             formData.append("action", "clear_flag");
             formData.append("attemptId", attemptId);
             formData.append("reason", reason);
 
             fetch(CONTEXT_PATH + '/teacher/proctoring/action', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-Token': '${sessionScope.csrfToken}'
+                },
                 body: formData
             }).then(r => r.json()).then(res => {
                 if (res.status === 'SUCCESS') {
@@ -609,13 +572,17 @@
             if (notes === null) return;
 
             const formData = new URLSearchParams();
+            formData.append("csrfToken", '${sessionScope.csrfToken}');
             formData.append("action", "review_event");
             formData.append("logId", logId);
             formData.append("notes", notes || "Reviewed by proctor.");
 
             fetch(CONTEXT_PATH + '/teacher/proctoring/action', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-Token': '${sessionScope.csrfToken}'
+                },
                 body: formData
             }).then(r => r.json()).then(res => {
                 if (res.status === 'SUCCESS') {
@@ -635,13 +602,17 @@
             if (!msg) return;
 
             const formData = new URLSearchParams();
+            formData.append("csrfToken", '${sessionScope.csrfToken}');
             formData.append("action", "broadcast");
             formData.append("quizId", QUIZ_ID);
             formData.append("message", msg);
 
             fetch(CONTEXT_PATH + '/teacher/proctoring/action', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-Token': '${sessionScope.csrfToken}'
+                },
                 body: formData
             }).then(r => r.json()).then(res => {
                 if (res.status === 'SUCCESS') {
@@ -670,6 +641,15 @@
                     }
                 }).catch(err => {});
         }, 10000);
+        // 9. Mobile Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('teacher-sidebar');
+            const backdrop = document.getElementById('mobile-sidebar-backdrop');
+            if (sidebar) {
+                sidebar.classList.toggle('-translate-x-full');
+                if (backdrop) backdrop.classList.toggle('hidden');
+            }
+        }
     </script>
 
 </body>

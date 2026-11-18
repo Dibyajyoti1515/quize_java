@@ -1,15 +1,14 @@
 package com.quiztrack.filter;
 
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
  * Prevents client-side caching on sensitive student, teacher, and admin console pages.
  * Ensures the browser 'Back' button cannot be used to view confidential exam or proctor data after logout.
+ * Configured canonically in web.xml (B14).
  */
-@WebFilter(filterName = "NoCacheFilter", urlPatterns = {"/admin/*", "/teacher/*", "/student/*", "/api/*"})
 public class NoCacheFilter implements Filter {
 
     @Override

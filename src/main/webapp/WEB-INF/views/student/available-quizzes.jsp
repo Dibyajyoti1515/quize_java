@@ -109,35 +109,8 @@
 
     <!-- Main Content Area offset by Sidebar (64 = 16rem = 256px) -->
     <div class="lg:pl-64">
-        <!-- Top App Header -->
-        <header class="fixed top-0 left-0 lg:left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-4 sm:px-space-lg border-b border-surface-container-high/60">
-            <div class="flex items-center gap-space-md">
-                <div class="flex items-center gap-2 px-space-sm py-1 rounded-full bg-surface-container-low text-tertiary font-label-md text-label-md">
-                    <span class="w-2 h-2 rounded-full bg-tertiary-container animate-pulse"></span>
-                    <span class="font-semibold">System Healthy &amp; Verified</span>
-                </div>
-            </div>
-            <div class="flex items-center gap-space-md">
-                <a href="${pageContext.request.contextPath}/student/notifications" class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors" title="Notifications">
-                    <span class="material-symbols-outlined text-[22px]">notifications</span>
-                    <span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-error ring-2 ring-surface-container-lowest"></span>
-                </a>
-                <div class="h-6 w-px bg-surface-container-high"></div>
-                <div class="flex items-center gap-3 pl-1">
-                    <div class="flex flex-col text-right">
-                        <span class="font-title-md text-title-md text-on-surface leading-tight font-semibold">
-                            <c:out value="${sessionScope.userFullName != null ? sessionScope.userFullName : 'Alex Mercer'}"/>
-                        </span>
-                        <span class="font-code-telemetry text-code-telemetry text-on-surface-variant">
-                            <c:out value="${sessionScope.userIdentifier != null ? sessionScope.userIdentifier : 'CS-2022-041'}"/>
-                        </span>
-                    </div>
-                    <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-sm text-on-primary font-bold text-xs">
-                        AM
-                    </div>
-                </div>
-            </div>
-        </header>
+        <!-- Reusable Student Header -->
+        <jsp:include page="components/header.jsp"/>
 
         <!-- Main Body -->
         <main class="w-full pt-16 bg-surface min-h-screen px-4 sm:px-space-lg py-space-lg">
@@ -175,7 +148,7 @@
                             <div class="flex flex-col">
                                 <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-medium">Ready to Launch</span>
                                 <div class="flex items-baseline gap-2 mt-1">
-                                    <span class="font-headline-md text-2xl text-primary font-bold">0<c:out value="${dashboardData.readyToLaunchCount > 0 ? dashboardData.readyToLaunchCount : 1}"/></span>
+                                    <span class="font-headline-md text-2xl text-primary font-bold"><c:out value="${dashboardData.readyToLaunchCount}"/></span>
                                     <span class="font-label-sm text-label-sm text-primary font-semibold">Assessments</span>
                                 </div>
                                 <span class="font-label-sm text-label-sm text-on-surface-variant mt-1">Window open right now</span>
@@ -189,10 +162,10 @@
                             <div class="flex flex-col">
                                 <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-medium">Scheduled Ahead</span>
                                 <div class="flex items-baseline gap-2 mt-1">
-                                    <span class="font-headline-md text-2xl text-on-surface font-bold">0<c:out value="${dashboardData.scheduledAheadCount > 0 ? dashboardData.scheduledAheadCount : 2}"/></span>
+                                    <span class="font-headline-md text-2xl text-on-surface font-bold"><c:out value="${dashboardData.scheduledAheadCount}"/></span>
                                     <span class="font-label-sm text-label-sm text-outline font-semibold">Pending</span>
                                 </div>
-                                <span class="font-label-sm text-label-sm text-on-surface-variant mt-1">CS505 &amp; CS490 Finals</span>
+                                <span class="font-label-sm text-label-sm text-on-surface-variant mt-1">Upcoming Exam Slates</span>
                             </div>
                             <div class="w-12 h-12 rounded-xl bg-surface-container-low text-on-surface flex items-center justify-center">
                                 <span class="material-symbols-outlined text-[26px]">calendar_clock</span>
@@ -203,8 +176,13 @@
                             <div class="flex flex-col">
                                 <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-medium">Cohort Standing</span>
                                 <div class="flex items-baseline gap-2 mt-1">
-                                    <span class="font-headline-md text-2xl text-tertiary font-bold"><c:out value="${dashboardData.cohortPercentile > 0 ? dashboardData.cohortPercentile : 94.2}"/>%</span>
-                                    <span class="font-label-sm text-label-sm text-tertiary font-semibold">Verified</span>
+                                    <span class="font-headline-md text-2xl text-tertiary font-bold">
+                                        <c:choose>
+                                            <c:when test="${dashboardData.cohortPercentile > 0}"><fmt:formatNumber value="${dashboardData.cohortPercentile}" minFractionDigits="1" maxFractionDigits="1"/>%</c:when>
+                                            <c:otherwise>Verified</c:otherwise>
+                                        </c:choose>
+                                    </span>
+                                    <span class="font-label-sm text-label-sm text-tertiary font-semibold">Eligibility</span>
                                 </div>
                                 <span class="font-label-sm text-label-sm text-on-surface-variant mt-1">Full eligibility verified</span>
                             </div>
@@ -255,12 +233,17 @@
                                             <c:when test="${card.status == 'ACTIVE'}">
                                                 <span class="px-2.5 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold uppercase flex items-center gap-1.5">
                                                     <span class="w-1.5 h-1.5 rounded-full bg-error animate-ping"></span>
-                                                    Closes in 2h 15m
+                                                    <c:choose>
+                                                        <c:when test="${card.formattedDueAt != null}">
+                                                            Due: <c:out value="${card.formattedDueAt}"/>
+                                                        </c:when>
+                                                        <c:otherwise>Live Exam Chamber</c:otherwise>
+                                                    </c:choose>
                                                 </span>
                                             </c:when>
                                             <c:otherwise>
                                                 <span class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm font-semibold uppercase">
-                                                    <c:out value="${card.formattedDueAt != null ? card.formattedDueAt : 'Scheduled Ahead'}"/>
+                                                    <c:out value="${card.formattedDueAt != null ? 'Opens: '.concat(card.formattedDueAt) : 'Scheduled Ahead'}"/>
                                                 </span>
                                             </c:otherwise>
                                         </c:choose>
@@ -297,8 +280,14 @@
                                 </div>
                                 
                                 <c:choose>
+                                    <c:when test="${card.attemptStatus == 'SUBMITTED'}">
+                                        <a href="${pageContext.request.contextPath}/student/results?quizId=${card.quizId}&attemptId=${card.attemptId}" class="w-full mt-5 py-2.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-title-md text-title-md font-semibold flex items-center justify-center gap-2 shadow-xs transition-all">
+                                            <span class="material-symbols-outlined text-[18px] text-tertiary">check_circle</span>
+                                            <span>Completed • View Result</span>
+                                        </a>
+                                    </c:when>
                                     <c:when test="${card.status == 'ACTIVE'}">
-                                        <button type="button" class="w-full mt-5 py-2.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary font-title-md text-title-md font-semibold flex items-center justify-center gap-2 shadow-sm transition-all" onclick="openPreflightModal(${card.quizId})">
+                                        <button type="button" class="w-full mt-5 py-2.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary font-title-md text-title-md font-semibold flex items-center justify-center gap-2 shadow-sm transition-all" onclick="openPreflightModal(${card.quizId}, '<c:out value="${card.quizCode}"/>', '<c:out value="${card.title}"/>', ${card.durationMinutes}, ${card.totalQuestions}, ${card.totalMarks}, ${card.negativeMarking}, ${card.negativeMarkValue}, '<c:out value="${card.teacherName}"/>', ${card.maxTabSwitches}, ${card.fullscreenRequired}, ${card.webcamRequired})">
                                             <span>Start Examination</span>
                                             <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
                                         </button>

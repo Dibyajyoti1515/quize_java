@@ -35,7 +35,24 @@ public class DatabaseConnection {
         }
 
         Properties props = new Properties();
-        try (InputStream is = DatabaseConnection.class.getClassLoader().getResourceAsStream(CONFIG_FILE)) {
+        InputStream is = null;
+        try {
+            ClassLoader ccl = Thread.currentThread().getContextClassLoader();
+            if (ccl != null) {
+                is = ccl.getResourceAsStream(CONFIG_FILE);
+            }
+            if (is == null) {
+                is = DatabaseConnection.class.getResourceAsStream("/" + CONFIG_FILE);
+            }
+            if (is == null && DatabaseConnection.class.getClassLoader() != null) {
+                is = DatabaseConnection.class.getClassLoader().getResourceAsStream(CONFIG_FILE);
+            }
+            if (is == null) {
+                java.io.File fallbackFile = new java.io.File("src/main/resources/" + CONFIG_FILE);
+                if (fallbackFile.exists()) {
+                    is = new java.io.FileInputStream(fallbackFile);
+                }
+            }
             if (is != null) {
                 props.load(is);
                 logger.info("Loaded database configuration from {}", CONFIG_FILE);
@@ -44,6 +61,10 @@ public class DatabaseConnection {
             }
         } catch (IOException e) {
             logger.error("Failed to read {} file: {}", CONFIG_FILE, e.getMessage());
+        } finally {
+            if (is != null) {
+                try { is.close(); } catch (IOException ignored) {}
+            }
         }
 
         String jdbcUrl = System.getenv("QUIZTRACK_DB_URL");

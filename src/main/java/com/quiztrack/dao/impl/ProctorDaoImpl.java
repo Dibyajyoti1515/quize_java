@@ -27,7 +27,7 @@ public class ProctorDaoImpl implements ProctorDao {
     @Override
     public boolean isTeacherAuthorizedForQuiz(int quizId, int teacherId) {
         String sql = "SELECT 1 FROM quizzes q " +
-                     "WHERE q.quiz_id = ? AND (q.teacher_id = ? OR EXISTS (SELECT 1 FROM users u WHERE u.user_id = ? AND u.role_id = 1))";
+                     "WHERE q.quiz_id = ? AND (q.teacher_id = ? OR EXISTS (SELECT 1 FROM users u JOIN roles r ON u.role_id = r.role_id WHERE u.user_id = ? AND r.role_name = 'ADMIN'))";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, quizId);
@@ -48,7 +48,7 @@ public class ProctorDaoImpl implements ProctorDao {
                      "       q.total_marks, q.status, q.start_time, q.end_time, s.subject_code, s.subject_name " +
                      "FROM quizzes q " +
                      "JOIN subjects s ON q.subject_id = s.subject_id " +
-                     "WHERE (q.teacher_id = ? OR EXISTS (SELECT 1 FROM users u WHERE u.user_id = ? AND u.role_id = 1)) " +
+                     "WHERE (q.teacher_id = ? OR EXISTS (SELECT 1 FROM users u JOIN roles r ON u.role_id = r.role_id WHERE u.user_id = ? AND r.role_name = 'ADMIN')) " +
                      "ORDER BY (CASE WHEN q.status = 'ACTIVE' THEN 1 WHEN q.status = 'SCHEDULED' THEN 2 ELSE 3 END), q.quiz_id ASC";
 
         List<Quiz> quizzes = new ArrayList<>();
@@ -195,6 +195,49 @@ public class ProctorDaoImpl implements ProctorDao {
             logger.error("Error retrieving student events timeline for attempt {}", attemptId, e);
         }
         return timeline;
+    }
+
+    @Override
+    public List<ProctorActivityEventDto> getViolationLogs(Integer teacherId, String severityFilter, int limit) {
+        StringBuilder sql = new StringBuilder(
+                "SELECT al.log_id, al.attempt_id, al.user_id, al.event_type, al.severity, al.details, al.event_timestamp, " +
+                "       al.is_reviewed, al.reviewed_by, al.reviewed_at, al.review_notes, " +
+                "       u.full_name, u.identifier, u_rev.full_name AS reviewer_name " +
+                "FROM activity_logs al " +
+                "JOIN users u ON al.user_id = u.user_id " +
+                "LEFT JOIN users u_rev ON al.reviewed_by = u_rev.user_id " +
+                "LEFT JOIN quiz_attempts qa ON al.attempt_id = qa.attempt_id " +
+                "LEFT JOIN quizzes q ON qa.quiz_id = q.quiz_id " +
+                "WHERE 1=1 "
+        );
+
+        List<Object> params = new ArrayList<>();
+        if (teacherId != null && teacherId > 0) {
+            sql.append("AND (q.teacher_id = ? OR qa.quiz_id IS NULL) ");
+            params.add(teacherId);
+        }
+        if (severityFilter != null && !severityFilter.isBlank() && !"ALL".equalsIgnoreCase(severityFilter)) {
+            sql.append("AND UPPER(al.severity) = UPPER(?) ");
+            params.add(severityFilter);
+        }
+        sql.append("ORDER BY al.event_timestamp DESC LIMIT ?");
+        params.add(limit > 0 ? limit : 100);
+
+        List<ProctorActivityEventDto> list = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapActivityEvent(rs));
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Error retrieving violation logs", e);
+        }
+        return list;
     }
 
     @Override

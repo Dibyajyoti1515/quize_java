@@ -52,7 +52,15 @@ public class StudentExamTelemetryServlet extends HttpServlet {
             String details = request.getParameter("details");
 
             examService.recordTelemetry(attemptId, studentId, eventType, "CAUTION", details);
-            out.print("{\"status\":\"RECORDED\"}");
+
+            int currentTabSwitches = 0;
+            int maxTabSwitches = 3;
+            java.util.Optional<com.quiztrack.model.QuizAttempt> attemptOpt = examService.getAttemptById(attemptId, studentId);
+            if (attemptOpt.isPresent()) {
+                currentTabSwitches = attemptOpt.get().getTabSwitchCount();
+                maxTabSwitches = attemptOpt.get().getMaxTabSwitches() > 0 ? attemptOpt.get().getMaxTabSwitches() : 3;
+            }
+            out.print("{\"status\":\"RECORDED\",\"tabSwitches\":" + currentTabSwitches + ",\"maxTabSwitches\":" + maxTabSwitches + "}");
         } catch (Exception e) {
             logger.error("Telemetry logging error", e);
             out.print("{\"status\":\"ERROR\"}");

@@ -105,4 +105,10 @@ public interface AdminDao {
      * Inserts an administrative or security audit trail record into activity_logs.
      */
     void logAdminAudit(int actingAdminId, Integer targetUserId, String eventType, String severity, String details, String ipAddress);
+
+    /**
+     * Compiles detailed department summaries including faculty rosters, top 5 student rankings,
+     * and examination metrics by academic branch.
+     */
+    List<DepartmentSummaryDto> getDepartmentSummaries();
 }

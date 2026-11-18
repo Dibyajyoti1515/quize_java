@@ -15,9 +15,13 @@ public interface QuizDao {
 
     Optional<Quiz> findActiveQuiz();
 
+    Optional<Quiz> findActiveQuizByTeacher(int teacherId);
+
     Optional<Quiz> findById(int quizId);
 
     int countQuizzesByStatus(String status);
+
+    int countQuizzesByStatusAndTeacher(String status, int teacherId);
 
     int countTotalQuizzes();
 
@@ -37,9 +41,32 @@ public interface QuizDao {
     boolean delete(int quizId, int teacherId);
 
     /**
+     * Administratively deletes a quiz regardless of author.
+     */
+    boolean delete(int quizId);
+
+    /**
      * Updates the lifecycle status of a quiz ('DRAFT', 'SCHEDULED', 'ACTIVE', 'COMPLETED', 'ARCHIVED').
      */
     boolean updateStatus(int quizId, int teacherId, String status);
+
+    /**
+     * Administratively updates the lifecycle status of a quiz.
+     */
+    boolean updateStatus(int quizId, String status);
+
+    /**
+     * Automatically synchronizes time-driven status lifecycle across all quizzes:
+     * - Transitions SCHEDULED to ACTIVE when start_time has arrived.
+     * - Transitions ACTIVE/SCHEDULED to COMPLETED when end_time has passed.
+     * Returns the total count of transitioned quiz records.
+     */
+    int syncQuizStatusLifecycle();
+
+    /**
+     * Synchronizes quizzes.total_marks with the sum of question points from quiz_questions.
+     */
+    boolean syncTotalMarks(int quizId);
 
     /**
      * Verifies whether a quiz belongs to the specified teacher.

@@ -133,6 +133,8 @@ public class ExamDaoImpl implements ExamDao {
     public boolean isStudentEligible(int quizId, int studentId) {
         String sql = "SELECT 1 FROM quizzes q " +
                      "WHERE q.quiz_id = ? AND q.status = 'ACTIVE' " +
+                     "AND (q.start_time IS NULL OR q.start_time <= CURRENT_TIMESTAMP) " +
+                     "AND (q.end_time IS NULL OR q.end_time > CURRENT_TIMESTAMP) " +
                      "AND ( " +
                      "  EXISTS ( " +
                      "    SELECT 1 FROM quiz_assignments qa " +
@@ -255,6 +257,25 @@ public class ExamDaoImpl implements ExamDao {
                     map.put(ans.getQuestionId(), ans);
                 }
             }
+
+            // Load multi-answer options
+            String optSql = "SELECT sao.option_id, sa.question_id " +
+                            "FROM student_answer_options sao " +
+                            "JOIN student_answers sa ON sao.answer_id = sa.answer_id " +
+                            "WHERE sa.attempt_id = ?";
+            try (PreparedStatement psOpt = conn.prepareStatement(optSql)) {
+                psOpt.setInt(1, attemptId);
+                try (ResultSet rsOpt = psOpt.executeQuery()) {
+                    while (rsOpt.next()) {
+                        int qId = rsOpt.getInt("question_id");
+                        int optId = rsOpt.getInt("option_id");
+                        StudentAnswer a = map.get(qId);
+                        if (a != null) {
+                            a.addSelectedOptionId(optId);
+                        }
+                    }
+                }
+            }
         } catch (SQLException e) {
             logger.error("Error retrieving student answers for attemptId: {}", attemptId, e);
         }
@@ -263,28 +284,76 @@ public class ExamDaoImpl implements ExamDao {
 
     @Override
     public boolean saveOrUpdateAnswer(int attemptId, int questionId, Integer selectedOptionId, String textResponse, boolean isFlagged) {
+        List<Integer> list = (selectedOptionId != null && selectedOptionId > 0) ? Collections.singletonList(selectedOptionId) : Collections.emptyList();
+        return saveOrUpdateAnswer(attemptId, questionId, list, textResponse, isFlagged);
+    }
+
+    @Override
+    public boolean saveOrUpdateAnswer(int attemptId, int questionId, List<Integer> selectedOptionIds, String textResponse, boolean isFlagged) {
         String sql = "INSERT INTO student_answers (attempt_id, question_id, selected_option_id, text_response, is_flagged_for_review, answered_at, last_updated_at) " +
                      "VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) " +
                      "ON CONFLICT (attempt_id, question_id) DO UPDATE SET " +
                      "selected_option_id = EXCLUDED.selected_option_id, " +
                      "text_response = EXCLUDED.text_response, " +
                      "is_flagged_for_review = EXCLUDED.is_flagged_for_review, " +
-                     "last_updated_at = CURRENT_TIMESTAMP";
+                     "last_updated_at = CURRENT_TIMESTAMP " +
+                     "RETURNING answer_id";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, attemptId);
-            ps.setInt(2, questionId);
-            if (selectedOptionId != null && selectedOptionId > 0) {
-                ps.setInt(3, selectedOptionId);
-            } else {
-                ps.setNull(3, Types.INTEGER);
+        Integer primaryOptId = (selectedOptionIds != null && !selectedOptionIds.isEmpty()) ? selectedOptionIds.get(0) : null;
+
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                int answerId = 0;
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setInt(1, attemptId);
+                    ps.setInt(2, questionId);
+                    if (primaryOptId != null && primaryOptId > 0) {
+                        ps.setInt(3, primaryOptId);
+                    } else {
+                        ps.setNull(3, Types.INTEGER);
+                    }
+                    ps.setString(4, textResponse);
+                    ps.setBoolean(5, isFlagged);
+
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            answerId = rs.getInt(1);
+                        }
+                    }
+                }
+
+                if (answerId > 0) {
+                    // Update student_answer_options
+                    String delOptSql = "DELETE FROM student_answer_options WHERE answer_id = ?";
+                    try (PreparedStatement psDel = conn.prepareStatement(delOptSql)) {
+                        psDel.setInt(1, answerId);
+                        psDel.executeUpdate();
+                    }
+
+                    if (selectedOptionIds != null && !selectedOptionIds.isEmpty()) {
+                        String insOptSql = "INSERT INTO student_answer_options (answer_id, option_id) VALUES (?, ?) ON CONFLICT DO NOTHING";
+                        try (PreparedStatement psIns = conn.prepareStatement(insOptSql)) {
+                            for (Integer optId : selectedOptionIds) {
+                                if (optId != null && optId > 0) {
+                                    psIns.setInt(1, answerId);
+                                    psIns.setInt(2, optId);
+                                    psIns.addBatch();
+                                }
+                            }
+                            psIns.executeBatch();
+                        }
+                    }
+                }
+
+                conn.commit();
+                return true;
+            } catch (SQLException ex) {
+                conn.rollback();
+                throw ex;
+            } finally {
+                conn.setAutoCommit(true);
             }
-            ps.setString(4, textResponse);
-            ps.setBoolean(5, isFlagged);
-
-            int affected = ps.executeUpdate();
-            return affected > 0;
         } catch (SQLException e) {
             logger.error("Error saving answer for attemptId: {} questionId: {}", attemptId, questionId, e);
         }
@@ -317,8 +386,8 @@ public class ExamDaoImpl implements ExamDao {
                            "VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
 
         String updateAttemptSql = "UPDATE quiz_attempts SET " +
-                                  "tab_switch_count = tab_switch_count + (CASE WHEN ? = 'TAB_SWITCH' THEN 1 ELSE 0 END), " +
-                                  "blur_count = blur_count + (CASE WHEN ? = 'FOCUS_LOST' THEN 1 ELSE 0 END), " +
+                                  "tab_switch_count = tab_switch_count + (CASE WHEN ? IN ('TAB_SWITCH', 'FOCUS_LOST') THEN 1 ELSE 0 END), " +
+                                  "blur_count = blur_count + (CASE WHEN ? IN ('FOCUS_LOST', 'BLUR') THEN 1 ELSE 0 END), " +
                                   "fullscreen_exit_count = fullscreen_exit_count + (CASE WHEN ? = 'FULLSCREEN_EXIT' THEN 1 ELSE 0 END) " +
                                   "WHERE attempt_id = ?";
 
@@ -380,15 +449,16 @@ public class ExamDaoImpl implements ExamDao {
         try (Connection conn = DatabaseConnection.getConnection()) {
             conn.setAutoCommit(false);
             try {
-                // 1. Fetch questions with correct answers
-                String qSql = "SELECT q.question_id, COALESCE(qq.points_override, q.points) AS points, qo.option_id AS correct_option_id " +
+                // 1. Fetch questions with types, points, and all correct options
+                String qSql = "SELECT q.question_id, q.question_type, COALESCE(qq.points_override, q.points) AS points, qo.option_id AS correct_option_id " +
                               "FROM quiz_questions qq " +
                               "JOIN questions q ON qq.question_id = q.question_id " +
                               "JOIN question_options qo ON q.question_id = qo.question_id " +
                               "WHERE qq.quiz_id = ? AND qo.is_correct = TRUE";
 
                 Map<Integer, BigDecimal> questionPoints = new HashMap<>();
-                Map<Integer, Integer> correctOptions = new HashMap<>();
+                Map<Integer, String> questionTypes = new HashMap<>();
+                Map<Integer, Set<Integer>> correctOptions = new HashMap<>();
 
                 try (PreparedStatement psQ = conn.prepareStatement(qSql)) {
                     psQ.setInt(1, quizId);
@@ -396,63 +466,125 @@ public class ExamDaoImpl implements ExamDao {
                         while (rsQ.next()) {
                             int qId = rsQ.getInt("question_id");
                             questionPoints.put(qId, rsQ.getBigDecimal("points"));
-                            correctOptions.put(qId, rsQ.getInt("correct_option_id"));
+                            questionTypes.put(qId, rsQ.getString("question_type"));
+                            correctOptions.computeIfAbsent(qId, k -> new HashSet<>()).add(rsQ.getInt("correct_option_id"));
                         }
                     }
                 }
 
-                // 2. Fetch student answers for attempt
-                String ansSql = "SELECT question_id, selected_option_id FROM student_answers WHERE attempt_id = ?";
-                Map<Integer, Integer> studentSelected = new HashMap<>();
+                // 2. Fetch student answers for attempt (including student_answer_options)
+                String ansSql = "SELECT a.answer_id, a.question_id, a.selected_option_id, sao.option_id AS multi_option_id " +
+                                "FROM student_answers a " +
+                                "LEFT JOIN student_answer_options sao ON a.answer_id = sao.answer_id " +
+                                "WHERE a.attempt_id = ?";
+                Map<Integer, Set<Integer>> studentSelected = new HashMap<>();
+                Map<Integer, Integer> existingAnswerIds = new HashMap<>();
+
                 try (PreparedStatement psA = conn.prepareStatement(ansSql)) {
                     psA.setInt(1, attemptId);
                     try (ResultSet rsA = psA.executeQuery()) {
                         while (rsA.next()) {
                             int qId = rsA.getInt("question_id");
-                            int optId = rsA.getInt("selected_option_id");
-                            if (!rsA.wasNull()) {
-                                studentSelected.put(qId, optId);
+                            existingAnswerIds.put(qId, rsA.getInt("answer_id"));
+
+                            int multiOpt = rsA.getInt("multi_option_id");
+                            if (!rsA.wasNull() && multiOpt > 0) {
+                                studentSelected.computeIfAbsent(qId, k -> new HashSet<>()).add(multiOpt);
+                            } else {
+                                int singleOpt = rsA.getInt("selected_option_id");
+                                if (!rsA.wasNull() && singleOpt > 0) {
+                                    studentSelected.computeIfAbsent(qId, k -> new HashSet<>()).add(singleOpt);
+                                }
                             }
                         }
                     }
                 }
 
-                // 3. Compute score
+                // 3. Compute score and record answer evaluation for EVERY question
                 BigDecimal totalScore = BigDecimal.ZERO;
                 boolean negativeMarking = attempt.isNegativeMarking();
                 BigDecimal negPenalty = attempt.getNegativeMarkValue() != null ? attempt.getNegativeMarkValue() : BigDecimal.ZERO;
 
-                String updateAnsSql = "UPDATE student_answers SET is_correct = ?, marks_awarded = ? " +
-                                      "WHERE attempt_id = ? AND question_id = ?";
+                String upsertAnsSql = "INSERT INTO student_answers (attempt_id, question_id, selected_option_id, is_correct, marks_awarded, answered_at, last_updated_at) " +
+                                      "VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) " +
+                                      "ON CONFLICT (attempt_id, question_id) DO UPDATE SET " +
+                                      "is_correct = EXCLUDED.is_correct, " +
+                                      "marks_awarded = EXCLUDED.marks_awarded, " +
+                                      "last_updated_at = CURRENT_TIMESTAMP";
 
-                try (PreparedStatement psUpAns = conn.prepareStatement(updateAnsSql)) {
+                try (PreparedStatement psUpAns = conn.prepareStatement(upsertAnsSql)) {
                     for (Map.Entry<Integer, BigDecimal> entry : questionPoints.entrySet()) {
                         int qId = entry.getKey();
                         BigDecimal pts = entry.getValue() != null ? entry.getValue() : BigDecimal.ZERO;
-                        Integer correctOptId = correctOptions.get(qId);
-                        Integer selectedOptId = studentSelected.get(qId);
+                        String qType = questionTypes.getOrDefault(qId, "SINGLE_CHOICE");
+                        Set<Integer> correctSet = correctOptions.getOrDefault(qId, Collections.emptySet());
+                        Set<Integer> selectedSet = studentSelected.getOrDefault(qId, Collections.emptySet());
 
                         boolean isCorrect = false;
                         BigDecimal awarded = BigDecimal.ZERO;
+                        Integer primaryOpt = null;
 
-                        if (selectedOptId != null && correctOptId != null) {
-                            if (selectedOptId.equals(correctOptId)) {
+                        if (selectedSet.isEmpty()) {
+                            // Unanswered question
+                            isCorrect = false;
+                            awarded = BigDecimal.ZERO;
+                            primaryOpt = null;
+                        } else if ("MULTI_CHOICE".equalsIgnoreCase(qType)) {
+                            primaryOpt = selectedSet.iterator().next();
+                            int totalCorrect = correctSet.size();
+                            long matches = selectedSet.stream().filter(correctSet::contains).count();
+                            long wrong = selectedSet.size() - matches;
+
+                            if (wrong == 0 && matches == totalCorrect) {
+                                isCorrect = true;
+                                awarded = pts;
+                            } else if (matches > 0 && wrong == 0) {
+                                // Partial credit (no wrong selections)
+                                isCorrect = false;
+                                awarded = pts.multiply(BigDecimal.valueOf(matches))
+                                             .divide(BigDecimal.valueOf(totalCorrect), 2, RoundingMode.HALF_UP);
+                            } else if (matches > wrong) {
+                                // Partial credit penalized by wrong selections
+                                isCorrect = false;
+                                long net = matches - wrong;
+                                awarded = pts.multiply(BigDecimal.valueOf(net))
+                                             .divide(BigDecimal.valueOf(totalCorrect), 2, RoundingMode.HALF_UP);
+                            } else {
+                                isCorrect = false;
+                                if (negativeMarking) {
+                                    awarded = negPenalty.negate();
+                                } else {
+                                    awarded = BigDecimal.ZERO;
+                                }
+                            }
+                        } else {
+                            // SINGLE_CHOICE or TRUE_FALSE
+                            primaryOpt = selectedSet.iterator().next();
+                            if (correctSet.contains(primaryOpt)) {
                                 isCorrect = true;
                                 awarded = pts;
                             } else {
                                 isCorrect = false;
                                 if (negativeMarking) {
                                     awarded = negPenalty.negate();
+                                } else {
+                                    awarded = BigDecimal.ZERO;
                                 }
                             }
-                            totalScore = totalScore.add(awarded);
-
-                            psUpAns.setBoolean(1, isCorrect);
-                            psUpAns.setBigDecimal(2, awarded);
-                            psUpAns.setInt(3, attemptId);
-                            psUpAns.setInt(4, qId);
-                            psUpAns.addBatch();
                         }
+
+                        totalScore = totalScore.add(awarded);
+
+                        psUpAns.setInt(1, attemptId);
+                        psUpAns.setInt(2, qId);
+                        if (primaryOpt != null && primaryOpt > 0) {
+                            psUpAns.setInt(3, primaryOpt);
+                        } else {
+                            psUpAns.setNull(3, Types.INTEGER);
+                        }
+                        psUpAns.setBoolean(4, isCorrect);
+                        psUpAns.setBigDecimal(5, awarded);
+                        psUpAns.addBatch();
                     }
                     psUpAns.executeBatch();
                 }
@@ -462,9 +594,14 @@ public class ExamDaoImpl implements ExamDao {
                     totalScore = BigDecimal.ZERO;
                 }
 
-                BigDecimal totalMarks = attempt.getTotalMarks();
-                if (totalMarks == null || totalMarks.compareTo(BigDecimal.ZERO) <= 0) {
-                    totalMarks = new BigDecimal("100.00");
+                BigDecimal sumPoints = questionPoints.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
+                BigDecimal totalMarks;
+                if (attempt.getQuizId() > 3 && sumPoints.compareTo(BigDecimal.ZERO) > 0) {
+                    totalMarks = sumPoints;
+                } else {
+                    totalMarks = (attempt.getTotalMarks() != null && attempt.getTotalMarks().compareTo(BigDecimal.ZERO) > 0)
+                                 ? attempt.getTotalMarks()
+                                 : (sumPoints.compareTo(BigDecimal.ZERO) > 0 ? sumPoints : new BigDecimal("100.00"));
                 }
 
                 BigDecimal percentage = totalScore.divide(totalMarks, 4, RoundingMode.HALF_UP)

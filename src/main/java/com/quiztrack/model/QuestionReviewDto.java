@@ -76,11 +76,19 @@ public class QuestionReviewDto implements Serializable {
             return isSelected;
         }
 
+        public boolean getIsSelected() {
+            return isSelected;
+        }
+
         public void setSelected(boolean selected) {
             isSelected = selected;
         }
 
         public boolean isCorrect() {
+            return isCorrect;
+        }
+
+        public boolean getIsCorrect() {
             return isCorrect;
         }
 

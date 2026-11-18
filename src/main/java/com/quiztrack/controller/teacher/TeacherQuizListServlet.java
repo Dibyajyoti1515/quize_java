@@ -38,7 +38,14 @@ public class TeacherQuizListServlet extends HttpServlet {
         }
 
         int teacherId = (Integer) session.getAttribute("userId");
-        List<Quiz> quizzes = teacherService.getQuizzesByTeacher(teacherId);
+        com.quiztrack.model.User currentUser = (com.quiztrack.model.User) session.getAttribute("currentUser");
+
+        List<Quiz> quizzes;
+        if (currentUser != null && currentUser.isAdmin()) {
+            quizzes = teacherService.getAllQuizzes();
+        } else {
+            quizzes = teacherService.getQuizzesByTeacher(teacherId);
+        }
 
         request.setAttribute("quizzes", quizzes);
         request.getRequestDispatcher("/WEB-INF/views/teacher/quiz-list.jsp").forward(request, response);

@@ -120,13 +120,30 @@ public class StudentExamServlet extends HttpServlet {
 
                 if (questionIdStr != null && !questionIdStr.trim().isEmpty()) {
                     int questionId = Integer.parseInt(questionIdStr.trim());
-                    Integer selectedOptId = null;
-                    if (selectedOptStr != null && !selectedOptStr.trim().isEmpty() && !"0".equals(selectedOptStr.trim())) {
-                        try {
-                            selectedOptId = Integer.parseInt(selectedOptStr.trim());
-                        } catch (NumberFormatException ignored) {}
+                    java.util.List<Integer> selectedOptionIds = new java.util.ArrayList<>();
+                    String[] multiParamValues = request.getParameterValues("selectedOptionId");
+                    if (multiParamValues != null) {
+                        for (String v : multiParamValues) {
+                            if (v != null && !v.trim().isEmpty() && !"0".equals(v.trim())) {
+                                try {
+                                    int id = Integer.parseInt(v.trim());
+                                    if (!selectedOptionIds.contains(id)) selectedOptionIds.add(id);
+                                } catch (NumberFormatException ignored) {}
+                            }
+                        }
                     }
-                    examService.saveAnswer(attemptId, studentId, questionId, selectedOptId, isFlagged);
+                    String commaList = request.getParameter("selectedOptionIds");
+                    if (commaList != null && !commaList.trim().isEmpty()) {
+                        for (String part : commaList.split(",")) {
+                            if (part != null && !part.trim().isEmpty() && !"0".equals(part.trim())) {
+                                try {
+                                    int id = Integer.parseInt(part.trim());
+                                    if (!selectedOptionIds.contains(id)) selectedOptionIds.add(id);
+                                } catch (NumberFormatException ignored) {}
+                            }
+                        }
+                    }
+                    examService.saveAnswer(attemptId, studentId, questionId, selectedOptionIds, isFlagged);
                 }
 
                 String targetQStr = request.getParameter("targetQ");

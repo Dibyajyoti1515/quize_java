@@ -1,13 +1,12 @@
 package com.quiztrack.filter;
 
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
 import java.io.IOException;
 
 /**
  * Ensures all HTTP requests and responses use UTF-8 character encoding.
+ * Configured canonically in web.xml (B14).
  */
-@WebFilter(filterName = "CharacterEncodingFilter", urlPatterns = "/*")
 public class CharacterEncodingFilter implements Filter {
 
     private static final String ENCODING = "UTF-8";

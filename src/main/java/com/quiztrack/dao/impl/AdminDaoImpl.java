@@ -616,6 +616,175 @@ public class AdminDaoImpl implements AdminDao {
         }
     }
 
+    @Override
+    public List<DepartmentSummaryDto> getDepartmentSummaries() {
+        List<DepartmentSummaryDto> list = new ArrayList<>();
+        List<String> departments = new ArrayList<>();
+
+        String deptSql = "SELECT DISTINCT department FROM (" +
+                         "    SELECT department FROM users WHERE department IS NOT NULL AND TRIM(department) <> '' AND department <> 'Administration' " +
+                         "    UNION " +
+                         "    SELECT department FROM subjects WHERE department IS NOT NULL AND TRIM(department) <> '' " +
+                         "    UNION " +
+                         "    SELECT department FROM cohorts WHERE department IS NOT NULL AND TRIM(department) <> '' " +
+                         ") d ORDER BY department;";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(deptSql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                String d = rs.getString("department");
+                if (d != null && !d.trim().isEmpty() && !departments.contains(d.trim())) {
+                    departments.add(d.trim());
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Error fetching distinct academic departments", e);
+        }
+
+        if (departments.isEmpty()) {
+            departments.add("Computer Science");
+            departments.add("Mathematics");
+        }
+
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            for (String dept : departments) {
+                DepartmentSummaryDto summary = new DepartmentSummaryDto(dept);
+
+                // 1. Faculty Teachers
+                String teacherSql = "SELECT u.user_id, u.full_name, u.email, u.identifier, u.status, " +
+                                   "       COUNT(q.quiz_id) AS quiz_count " +
+                                   "FROM users u " +
+                                   "JOIN roles r ON u.role_id = r.role_id " +
+                                   "LEFT JOIN quizzes q ON q.teacher_id = u.user_id " +
+                                   "WHERE r.role_name = 'TEACHER' AND u.department = ? " +
+                                   "GROUP BY u.user_id, u.full_name, u.email, u.identifier, u.status " +
+                                   "ORDER BY quiz_count DESC, u.full_name ASC;";
+                try (PreparedStatement ps = conn.prepareStatement(teacherSql)) {
+                    ps.setString(1, dept);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                            DepartmentSummaryDto.DepartmentTeacherDto t = new DepartmentSummaryDto.DepartmentTeacherDto(
+                                rs.getInt("user_id"),
+                                rs.getString("full_name"),
+                                rs.getString("email"),
+                                rs.getString("identifier"),
+                                rs.getString("status"),
+                                rs.getInt("quiz_count")
+                            );
+                            summary.getTeachers().add(t);
+                        }
+                    }
+                }
+                summary.setTeacherCount(summary.getTeachers().size());
+
+                // 2. Total Students
+                String studentCountSql = "SELECT COUNT(*) FROM users u " +
+                                        "JOIN roles r ON u.role_id = r.role_id " +
+                                        "WHERE r.role_name = 'STUDENT' AND u.department = ?;";
+                try (PreparedStatement ps = conn.prepareStatement(studentCountSql)) {
+                    ps.setString(1, dept);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            summary.setStudentCount(rs.getInt(1));
+                        }
+                    }
+                }
+
+                // 3. Total Quizzes Organized
+                String quizCountSql = "SELECT COUNT(DISTINCT q.quiz_id) FROM quizzes q " +
+                                     "JOIN users u ON q.teacher_id = u.user_id " +
+                                     "WHERE u.department = ?;";
+                try (PreparedStatement ps = conn.prepareStatement(quizCountSql)) {
+                    ps.setString(1, dept);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            summary.setQuizCount(rs.getInt(1));
+                        }
+                    }
+                }
+
+                // 4. Department Average Score
+                String avgScoreSql = "SELECT ROUND(AVG(r.percentage), 2) FROM results r " +
+                                     "JOIN users u ON r.student_id = u.user_id " +
+                                     "WHERE u.department = ?;";
+                try (PreparedStatement ps = conn.prepareStatement(avgScoreSql)) {
+                    ps.setString(1, dept);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            summary.setAverageScore(rs.getDouble(1));
+                        }
+                    }
+                }
+
+                // 5. Top 5 Students by Performance
+                String topStudentsSql = "SELECT u.user_id, u.full_name, u.identifier, u.cohort, " +
+                                        "       COUNT(r.result_id) AS attempts_count, " +
+                                        "       COALESCE(ROUND(AVG(r.percentage), 2), 0.0) AS avg_percentage, " +
+                                        "       COALESCE(ROUND(MAX(r.percentage), 2), 0.0) AS highest_percentage, " +
+                                        "       COALESCE(ROUND(SUM(r.score), 2), 0.0) AS total_score " +
+                                        "FROM users u " +
+                                        "JOIN roles ro ON u.role_id = ro.role_id " +
+                                        "LEFT JOIN results r ON r.student_id = u.user_id " +
+                                        "WHERE ro.role_name = 'STUDENT' AND u.department = ? " +
+                                        "GROUP BY u.user_id, u.full_name, u.identifier, u.cohort " +
+                                        "ORDER BY avg_percentage DESC, attempts_count DESC, u.full_name ASC " +
+                                        "LIMIT 5;";
+                try (PreparedStatement ps = conn.prepareStatement(topStudentsSql)) {
+                    ps.setString(1, dept);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        int rank = 1;
+                        while (rs.next()) {
+                            DepartmentSummaryDto.DepartmentTopStudentDto s = new DepartmentSummaryDto.DepartmentTopStudentDto();
+                            s.setStudentId(rs.getInt("user_id"));
+                            s.setFullName(rs.getString("full_name"));
+                            s.setIdentifier(rs.getString("identifier"));
+                            s.setCohort(rs.getString("cohort"));
+                            s.setAttemptsCount(rs.getInt("attempts_count"));
+                            s.setAveragePercentage(rs.getDouble("avg_percentage"));
+                            s.setHighestPercentage(rs.getDouble("highest_percentage"));
+                            s.setTotalScore(rs.getDouble("total_score"));
+                            s.setRank(rank++);
+                            summary.getTopStudents().add(s);
+                        }
+                    }
+                }
+
+                // 6. Quizzes in this department
+                String quizzesSql = "SELECT q.quiz_id, q.title, u.full_name AS teacher_name, q.status, q.total_marks, " +
+                                    "       (SELECT COUNT(*) FROM quiz_questions qq WHERE qq.quiz_id = q.quiz_id) AS question_count, " +
+                                    "       (SELECT COUNT(*) FROM quiz_attempts qa WHERE qa.quiz_id = q.quiz_id) AS attempts_count " +
+                                    "FROM quizzes q " +
+                                    "JOIN users u ON q.teacher_id = u.user_id " +
+                                    "WHERE u.department = ? " +
+                                    "ORDER BY q.created_at DESC LIMIT 10;";
+                try (PreparedStatement ps = conn.prepareStatement(quizzesSql)) {
+                    ps.setString(1, dept);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                            DepartmentSummaryDto.DepartmentQuizDto q = new DepartmentSummaryDto.DepartmentQuizDto();
+                            q.setQuizId(rs.getInt("quiz_id"));
+                            q.setTitle(rs.getString("title"));
+                            q.setTeacherName(rs.getString("teacher_name"));
+                            q.setStatus(rs.getString("status"));
+                            q.setTotalMarks(rs.getDouble("total_marks"));
+                            q.setQuestionCount(rs.getInt("question_count"));
+                            q.setAttemptsCount(rs.getInt("attempts_count"));
+                            summary.getQuizzes().add(q);
+                        }
+                    }
+                }
+
+                list.add(summary);
+            }
+        } catch (SQLException e) {
+            logger.error("Error compiling department summaries", e);
+        }
+
+        return list;
+    }
+
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         User u = new User();
         u.setUserId(rs.getInt("user_id"));

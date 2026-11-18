@@ -97,7 +97,12 @@ public class ResultDaoImpl implements ResultDao {
                      "JOIN quiz_attempts a ON qq.quiz_id = a.quiz_id " +
                      "LEFT JOIN student_answers ans ON (ans.attempt_id = a.attempt_id AND ans.question_id = q.question_id) " +
                      "LEFT JOIN question_options sel_opt ON ans.selected_option_id = sel_opt.option_id " +
-                     "LEFT JOIN question_options corr_opt ON (corr_opt.question_id = q.question_id AND corr_opt.is_correct = TRUE) " +
+                     "LEFT JOIN LATERAL (" +
+                     "  SELECT option_id, option_letter, option_text " +
+                     "  FROM question_options " +
+                     "  WHERE question_id = q.question_id AND is_correct = TRUE " +
+                     "  ORDER BY sort_order ASC, option_letter ASC LIMIT 1" +
+                     ") corr_opt ON TRUE " +
                      "WHERE a.attempt_id = ? " +
                      "ORDER BY qq.sort_order ASC, q.question_id ASC";
 
@@ -338,6 +343,43 @@ public class ResultDaoImpl implements ResultDao {
             }
         } catch (SQLException e) {
             logger.error("Error retrieving all results for studentId: {}", studentId, e);
+        }
+        return list;
+    }
+
+    @Override
+    public List<StudentResultDto> getResultsByQuizId(int quizId) {
+        List<StudentResultDto> list = new ArrayList<>();
+        String sql = "SELECT a.attempt_id, a.quiz_id, a.student_id, a.start_time, a.end_time, " +
+                     "a.total_score, a.percentage, a.grade, a.passed, " +
+                     "a.tab_switch_count, a.blur_count, a.fullscreen_exit_count, a.integrity_index, " +
+                     "r.result_id, r.score as res_score, r.max_score as res_max_score, " +
+                     "r.cohort_rank, r.cohort_percentile, r.certificate_hash, r.certified_at, " +
+                     "q.title as quiz_title, q.description as quiz_description, " +
+                     "q.duration_minutes, q.total_marks, q.pass_percentage, q.negative_marking, q.negative_mark_value, " +
+                     "s.subject_code, s.subject_name, " +
+                     "u.full_name as student_name, u.identifier as student_identifier, " +
+                     "t.full_name as teacher_name " +
+                     "FROM quiz_attempts a " +
+                     "JOIN quizzes q ON a.quiz_id = q.quiz_id " +
+                     "JOIN subjects s ON q.subject_id = s.subject_id " +
+                     "JOIN users u ON a.student_id = u.user_id " +
+                     "JOIN users t ON q.teacher_id = t.user_id " +
+                     "LEFT JOIN results r ON a.attempt_id = r.attempt_id " +
+                     "WHERE a.quiz_id = ? AND a.status = 'SUBMITTED' " +
+                     "ORDER BY a.total_score DESC, a.end_time ASC";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, quizId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    StudentResultDto dto = mapResultDto(rs);
+                    list.add(dto);
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Error retrieving results for quizId: {}", quizId, e);
         }
         return list;
     }

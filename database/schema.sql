@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS notifications CASCADE;
 DROP TABLE IF EXISTS results CASCADE;
 DROP TABLE IF EXISTS proctor_interventions CASCADE;
 DROP TABLE IF EXISTS activity_logs CASCADE;
+DROP TABLE IF EXISTS student_answer_options CASCADE;
 DROP TABLE IF EXISTS student_answers CASCADE;
 DROP TABLE IF EXISTS quiz_attempts CASCADE;
 DROP TABLE IF EXISTS quiz_assignments CASCADE;
@@ -222,6 +223,16 @@ CREATE TABLE student_answers (
 
 CREATE INDEX idx_student_answers_attempt ON student_answers(attempt_id);
 CREATE INDEX idx_student_answers_question ON student_answers(question_id);
+
+-- 11b. MULTI-ANSWER SELECTIONS (JOIN TABLE FOR MULTI-CHOICE QUESTIONS)
+CREATE TABLE student_answer_options (
+    answer_id INT NOT NULL REFERENCES student_answers(answer_id) ON DELETE CASCADE,
+    option_id INT NOT NULL REFERENCES question_options(option_id) ON DELETE CASCADE,
+    PRIMARY KEY (answer_id, option_id)
+);
+
+CREATE INDEX idx_student_answer_options_ans ON student_answer_options(answer_id);
+CREATE INDEX idx_student_answer_options_opt ON student_answer_options(option_id);
 
 -- 12. PROCTORING & TELEMETRY ACTIVITY LOGS
 CREATE TABLE activity_logs (

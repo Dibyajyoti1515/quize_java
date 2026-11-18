@@ -2,7 +2,6 @@ package com.quiztrack.filter;
 
 import com.quiztrack.model.User;
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -14,8 +13,8 @@ import java.io.IOException;
 /**
  * Enforces session authentication for all protected dashboard and API paths.
  * Redirects unauthenticated requests to the login gateway.
+ * Configured canonically in web.xml (B14).
  */
-@WebFilter(filterName = "AuthenticationFilter", urlPatterns = {"/admin/*", "/teacher/*", "/student/*", "/api/*"})
 public class AuthenticationFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);

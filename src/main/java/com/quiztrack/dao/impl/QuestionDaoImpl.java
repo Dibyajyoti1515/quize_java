@@ -76,6 +76,7 @@ public class QuestionDaoImpl implements QuestionDao {
             // Insert Options
             if (questionId > 0 && question.getOptions() != null && !question.getOptions().isEmpty()) {
                 insertOptions(conn, questionId, question.getOptions());
+                question.setOptions(findOptionsByQuestionId(conn, questionId));
             }
 
             // Link into quiz_questions if quizId is provided
@@ -152,18 +153,33 @@ public class QuestionDaoImpl implements QuestionDao {
 
     @Override
     public boolean delete(int questionId, int teacherId) {
-        String sql = "DELETE FROM questions WHERE question_id = ? AND (created_by = ? OR created_by IS NULL OR ? = 1)";
+        String sql = "DELETE FROM questions WHERE question_id = ? AND created_by = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, questionId);
             ps.setInt(2, teacherId);
-            ps.setInt(3, teacherId);
 
             int affected = ps.executeUpdate();
             return affected > 0;
         } catch (SQLException e) {
             logger.error("Error deleting question ID: {}", questionId, e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean delete(int questionId) {
+        String sql = "DELETE FROM questions WHERE question_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, questionId);
+
+            int affected = ps.executeUpdate();
+            return affected > 0;
+        } catch (SQLException e) {
+            logger.error("Error administratively deleting question ID: {}", questionId, e);
         }
         return false;
     }
@@ -454,13 +470,12 @@ public class QuestionDaoImpl implements QuestionDao {
 
     @Override
     public boolean isOwnedBy(int questionId, int teacherId) {
-        String sql = "SELECT 1 FROM questions WHERE question_id = ? AND (created_by = ? OR ? = 1)";
+        String sql = "SELECT 1 FROM questions WHERE question_id = ? AND created_by = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, questionId);
             ps.setInt(2, teacherId);
-            ps.setInt(3, teacherId);
 
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();

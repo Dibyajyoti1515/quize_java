@@ -22,9 +22,14 @@ public interface QuestionDao {
     boolean update(Question question);
 
     /**
-     * Deletes a question and its options.
+     * Deletes a question and its options if created by the teacher.
      */
     boolean delete(int questionId, int teacherId);
+
+    /**
+     * Administratively deletes a question and its options regardless of author.
+     */
+    boolean delete(int questionId);
 
     /**
      * Finds a single question with its options by ID.

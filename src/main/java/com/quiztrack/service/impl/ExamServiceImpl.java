@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,22 +32,9 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public QuizAttempt startOrResumeExam(int quizId, int studentId, String ipAddress, String userAgent) {
-        // 1. Verify eligibility and quiz availability
-        if (!examDao.isStudentEligible(quizId, studentId)) {
-            logger.warn("Student {} is not eligible or quiz {} is not currently available/active.", studentId, quizId);
-            throw new SecurityException("Candidate not enrolled or examination window is closed.");
-        }
-
-        // 2. Check for previously submitted attempt
-        Optional<QuizAttempt> submittedOpt = examDao.findSubmittedAttempt(quizId, studentId);
-        if (submittedOpt.isPresent()) {
-            logger.warn("Student {} has already submitted an attempt for quiz {}", studentId, quizId);
-            throw new IllegalStateException("Examination already completed and submitted. Duplicate attempts forbidden.");
-        }
-
         long now = System.currentTimeMillis();
 
-        // 3. Check for existing in-flight attempt
+        // 1. Check for existing in-flight attempt (allow resuming even if entry window has closed, as long as attempt is not expired!)
         Optional<QuizAttempt> activeOpt = examDao.findActiveAttempt(quizId, studentId);
         if (activeOpt.isPresent()) {
             QuizAttempt active = activeOpt.get();
@@ -58,6 +46,19 @@ public class ExamServiceImpl implements ExamService {
             }
             logger.info("Resuming active examination attempt {} for student {}", active.getAttemptId(), studentId);
             return active;
+        }
+
+        // 2. Check for previously submitted attempt
+        Optional<QuizAttempt> submittedOpt = examDao.findSubmittedAttempt(quizId, studentId);
+        if (submittedOpt.isPresent()) {
+            logger.warn("Student {} has already submitted an attempt for quiz {}", studentId, quizId);
+            throw new IllegalStateException("Examination already completed and submitted. Duplicate attempts forbidden.");
+        }
+
+        // 3. Verify eligibility and quiz entry window for starting a new attempt
+        if (!examDao.isStudentEligible(quizId, studentId)) {
+            logger.warn("Student {} is not eligible or quiz {} entry window is closed.", studentId, quizId);
+            throw new SecurityException("Candidate not enrolled or examination entry window is closed.");
         }
 
         // 4. Create new attempt
@@ -127,6 +128,7 @@ public class ExamServiceImpl implements ExamService {
             StudentAnswer ans = answersMap.get(q.getQuestionId());
             if (ans != null) {
                 dto.setSelectedOptionId(ans.getSelectedOptionId());
+                dto.setSelectedOptionIds(ans.getSelectedOptionIds());
                 dto.setFlaggedForReview(ans.isFlaggedForReview());
             }
             dto.updateStatus();
@@ -152,6 +154,12 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public boolean saveAnswer(int attemptId, int studentId, int questionId, Integer selectedOptionId, boolean isFlagged) {
+        List<Integer> list = (selectedOptionId != null && selectedOptionId > 0) ? Collections.singletonList(selectedOptionId) : Collections.emptyList();
+        return saveAnswer(attemptId, studentId, questionId, list, isFlagged);
+    }
+
+    @Override
+    public boolean saveAnswer(int attemptId, int studentId, int questionId, List<Integer> selectedOptionIds, boolean isFlagged) {
         Optional<QuizAttempt> opt = examDao.findAttemptById(attemptId);
         if (opt.isEmpty() || opt.get().getStudentId() != studentId) {
             logger.warn("Security rejection: student {} attempted to save answer on attempt {}", studentId, attemptId);
@@ -171,7 +179,7 @@ public class ExamServiceImpl implements ExamService {
             return false;
         }
 
-        return examDao.saveOrUpdateAnswer(attemptId, questionId, selectedOptionId, null, isFlagged);
+        return examDao.saveOrUpdateAnswer(attemptId, questionId, selectedOptionIds, null, isFlagged);
     }
 
     @Override

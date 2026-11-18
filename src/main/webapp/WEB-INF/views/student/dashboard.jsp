@@ -98,101 +98,100 @@
         };
     </script>
 </head>
-<body class="bg-background font-body-md text-on-surface antialiased">
+<body class="bg-surface font-body-md text-on-surface antialiased min-h-screen">
 
-    <!-- Top Universal Header -->
-    <jsp:include page="components/header.jsp"/>
+    <!-- Reusable Student Sidebar Component -->
+    <jsp:include page="components/sidebar.jsp">
+        <jsp:param name="activeNav" value="overview"/>
+    </jsp:include>
 
-    <main class="w-full pt-16 bg-surface min-h-screen">
-        <div class="flex flex-col w-full">
-            
-            <!-- Sub-Header Command Bar / Secondary Telemetry Strip -->
-            <div class="w-full bg-surface-container-lowest px-4 sm:px-gutter py-space-sm shadow-sm flex flex-wrap items-center justify-between gap-space-md border-b border-surface-container-high/40">
-                <div class="flex items-center gap-space-lg flex-wrap">
-                    <div class="flex items-center gap-space-xs bg-surface-container-low px-space-md py-space-xs rounded-full">
-                        <span class="w-2.5 h-2.5 rounded-full bg-tertiary-container animate-ping"></span>
-                        <span class="font-label-md text-label-md text-on-surface font-semibold">System Ready &amp; Verified</span>
-                    </div>
-                    <div class="hidden sm:flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md">
-                        <span class="material-symbols-outlined text-[16px] text-primary">calendar_today</span>
-                        <span><c:out value="${dashboardData.semester != null ? dashboardData.semester : 'Spring 2025 Semester'}"/></span>
-                    </div>
-                    <div class="h-4 w-px bg-surface-container-high hidden md:block"></div>
-                    <div class="flex items-center gap-space-md">
-                        <button type="button" class="flex items-center gap-space-xs text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" onclick="openPreflightModal()">
-                            <span class="material-symbols-outlined text-[16px]">sensors</span>
-                            <span>System Hardware Pre-Check</span>
-                        </button>
-                        <button type="button" class="flex items-center gap-space-xs text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" onclick="openPreflightModal()">
-                            <span class="material-symbols-outlined text-[16px]">policy</span>
-                            <span>Integrity Rules v4.2</span>
-                        </button>
-                    </div>
-                </div>
+    <!-- Main Content Area offset by Sidebar (64 = 16rem = 256px) -->
+    <div class="lg:pl-64">
+        <!-- Top Universal Header -->
+        <jsp:include page="components/header.jsp"/>
 
-                <!-- Profile Info Strip -->
-                <div class="flex items-center gap-space-md ml-auto">
-                    <div class="text-right">
-                        <div class="font-title-md text-title-md text-on-surface leading-tight font-semibold">
-                            <c:out value="${sessionScope.userFullName != null ? sessionScope.userFullName : 'Alex Mercer'}"/>
-                        </div>
-                        <div class="font-code-telemetry text-code-telemetry text-on-surface-variant">
-                            <c:out value="${sessionScope.userIdentifier != null ? sessionScope.userIdentifier : 'CS-2022-041'}"/> • Dept of Computer Science
-                        </div>
-                    </div>
-                    <div class="relative">
-                        <div class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-title-lg text-title-lg shadow-sm font-bold">
-                            <c:choose>
-                                <c:when test="${not empty sessionScope.userFullName}">
-                                    <c:out value="${sessionScope.userFullName.substring(0, 1)}"/>
-                                </c:when>
-                                <c:otherwise>AM</c:otherwise>
-                            </c:choose>
-                        </div>
-                        <span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-tertiary-container ring-2 ring-surface-container-lowest"></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Primary Workspace Content -->
-            <div class="w-full px-4 sm:px-gutter py-space-lg flex flex-col gap-space-xl max-w-7xl mx-auto">
+        <main class="w-full pt-16 bg-surface min-h-screen px-4 sm:px-space-lg py-space-lg">
+            <div class="flex flex-col gap-space-lg w-full max-w-[1400px] mx-auto">
                 
                 <!-- Section 1: Urgent Action Chamber Banner -->
-                <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-secondary p-6 sm:p-space-xl text-on-primary shadow-xl">
-                    <!-- Ambient Visual Layer -->
-                    <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-white/10 blur-3xl pointer-events-none"></div>
-                    <div class="absolute right-12 bottom-0 opacity-10 pointer-events-none hidden lg:block">
-                        <span class="material-symbols-outlined text-[180px]">security_update_good</span>
-                    </div>
-
-                    <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-space-xl">
-                        <div class="flex flex-col gap-space-xs max-w-3xl">
-                            <div class="flex items-center gap-space-sm flex-wrap">
-                                <span class="bg-error-container text-on-error-container font-label-sm text-label-sm px-space-sm py-0.5 rounded-full flex items-center gap-1 font-bold">
-                                    <span class="w-2 h-2 rounded-full bg-error animate-pulse"></span> LIVE EXAM PORTAL
-                                </span>
-                                <span class="bg-surface-container-lowest/20 backdrop-blur-md text-on-primary font-code-telemetry text-code-telemetry px-space-sm py-0.5 rounded-full">
-                                    <c:out value="${dashboardData.cohortCode != null ? dashboardData.cohortCode : 'COHORT CS-2025-A'}"/>
-                                </span>
+                <c:choose>
+                    <c:when test="${dashboardData.readyToLaunchCount > 0 && dashboardData.activeQuiz != null}">
+                        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-secondary p-6 sm:p-space-xl text-on-primary shadow-xl">
+                            <!-- Ambient Visual Layer -->
+                            <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-white/10 blur-3xl pointer-events-none"></div>
+                            <div class="absolute right-12 bottom-0 opacity-10 pointer-events-none hidden lg:block">
+                                <span class="material-symbols-outlined text-[180px]">security_update_good</span>
                             </div>
-                            <h1 class="font-display text-3xl sm:text-4xl lg:text-5xl text-on-primary font-bold tracking-tight">
-                                Welcome back, <c:out value="${sessionScope.userFullName != null ? sessionScope.userFullName.split(' ')[0] : 'Alex'}"/>!
-                            </h1>
-                            <p class="font-body-lg text-body-lg text-primary-fixed leading-relaxed">
-                                <strong class="text-white font-semibold">
-                                    <c:out value="${dashboardData.activeQuiz != null ? dashboardData.activeQuiz.title : 'CS402 Midterm Exam'}"/>
-                                </strong> is currently <strong class="text-white font-semibold">LIVE</strong> and authenticated for your workstation. 
-                                Candidate admission window closes in <span class="font-code-telemetry font-bold text-tertiary-fixed" id="countdown">01h 44m 32s</span>.
-                            </p>
+
+                            <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-space-xl">
+                                <div class="flex flex-col gap-space-xs max-w-3xl">
+                                    <div class="flex items-center gap-space-sm flex-wrap">
+                                        <span class="bg-error-container text-on-error-container font-label-sm text-label-sm px-space-sm py-0.5 rounded-full flex items-center gap-1 font-bold">
+                                            <span class="w-2 h-2 rounded-full bg-error animate-pulse"></span> LIVE EXAM PORTAL
+                                        </span>
+                                        <span class="bg-surface-container-lowest/20 backdrop-blur-md text-on-primary font-code-telemetry text-code-telemetry px-space-sm py-0.5 rounded-full">
+                                            <c:out value="${dashboardData.cohortCode != null ? dashboardData.cohortCode : 'COHORT CS-2025-A'}"/>
+                                        </span>
+                                    </div>
+                                    <h1 class="font-display text-3xl sm:text-4xl lg:text-5xl text-on-primary font-bold tracking-tight">
+                                        Welcome back, <c:out value="${sessionScope.userFullName != null ? sessionScope.userFullName.split(' ')[0] : 'Alex'}"/>!
+                                    </h1>
+                                    <p class="font-body-lg text-body-lg text-primary-fixed leading-relaxed">
+                                        <strong class="text-white font-semibold">
+                                            <c:out value="${dashboardData.activeQuiz.title}"/>
+                                        </strong> is currently <strong class="text-white font-semibold">LIVE</strong> and authenticated for your workstation. 
+                                        Candidate admission window closes in <span class="font-code-telemetry font-bold text-tertiary-fixed" id="countdown">01h 44m 32s</span>.
+                                    </p>
+                                </div>
+                                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-space-md shrink-0">
+                                    <button type="button" class="flex items-center justify-center gap-space-sm px-6 py-3.5 bg-surface-container-lowest text-primary hover:bg-surface-container-low transition-all duration-200 rounded-xl shadow-md font-title-md text-title-md font-bold hover:scale-[1.02] active:scale-[0.98]" 
+                                            onclick="openPreflightModal(${dashboardData.activeQuiz.quizId}, '<c:out value="${dashboardData.activeQuiz.subjectCode}"/>', '<c:out value="${dashboardData.activeQuiz.title}"/>', ${dashboardData.activeQuiz.durationMinutes}, ${dashboardData.activeQuiz.totalQuestions}, ${dashboardData.activeQuiz.totalMarks}, ${dashboardData.activeQuiz.negativeMarking}, ${dashboardData.activeQuiz.negativeMarkValue}, '<c:out value="${dashboardData.activeQuiz.teacherName}"/>', ${dashboardData.activeQuiz.maxTabSwitches}, ${dashboardData.activeQuiz.fullscreenRequired}, ${dashboardData.activeQuiz.webcamRequired})">
+                                        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+                                        <span>Review Instructions &amp; Launch Pre-Flight Check</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-space-md shrink-0">
-                            <button type="button" class="flex items-center justify-center gap-space-sm px-6 py-3.5 bg-surface-container-lowest text-primary hover:bg-surface-container-low transition-all duration-200 rounded-xl shadow-md font-title-md text-title-md font-bold hover:scale-[1.02] active:scale-[0.98]" onclick="openPreflightModal(${dashboardData.activeQuiz != null ? dashboardData.activeQuiz.quizId : 1})">
-                                <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">play_circle</span>
-                                <span>Review Instructions &amp; Launch Pre-Flight Check</span>
-                            </button>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-secondary p-6 sm:p-space-xl text-on-primary shadow-xl">
+                            <!-- Ambient Visual Layer -->
+                            <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-white/10 blur-3xl pointer-events-none"></div>
+                            <div class="absolute right-12 bottom-0 opacity-10 pointer-events-none hidden lg:block">
+                                <span class="material-symbols-outlined text-[180px]">task_alt</span>
+                            </div>
+
+                            <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-space-xl">
+                                <div class="flex flex-col gap-space-xs max-w-3xl">
+                                    <div class="flex items-center gap-space-sm flex-wrap">
+                                        <span class="bg-surface-container-lowest/20 backdrop-blur-md text-on-primary font-label-sm text-label-sm px-space-sm py-0.5 rounded-full flex items-center gap-1 font-semibold">
+                                            <span class="material-symbols-outlined text-[14px] text-tertiary">check_circle</span> ALL ASSESSMENTS UP TO DATE
+                                        </span>
+                                        <span class="bg-surface-container-lowest/20 backdrop-blur-md text-on-primary font-code-telemetry text-code-telemetry px-space-sm py-0.5 rounded-full">
+                                            <c:out value="${dashboardData.cohortCode != null ? dashboardData.cohortCode : 'COHORT CS-2025-A'}"/>
+                                        </span>
+                                    </div>
+                                    <h1 class="font-display text-3xl sm:text-4xl lg:text-5xl text-on-primary font-bold tracking-tight">
+                                        Welcome back, <c:out value="${sessionScope.userFullName != null ? sessionScope.userFullName.split(' ')[0] : 'Alex'}"/>!
+                                    </h1>
+                                    <p class="font-body-lg text-body-lg text-primary-fixed leading-relaxed">
+                                        You are up to date on all active exam sessions. You can review your verified scores, check class rankings, or prepare for upcoming assessments.
+                                    </p>
+                                </div>
+                                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-space-md shrink-0">
+                                    <a href="${pageContext.request.contextPath}/student/results" class="flex items-center justify-center gap-space-sm px-6 py-3.5 bg-surface-container-lowest text-primary hover:bg-surface-container-low transition-all duration-200 rounded-xl shadow-md font-title-md text-title-md font-bold hover:scale-[1.02] active:scale-[0.98]">
+                                        <span class="material-symbols-outlined text-[20px]">assessment</span>
+                                        <span>View Verified Results</span>
+                                    </a>
+                                    <a href="${pageContext.request.contextPath}/student/upcoming" class="flex items-center justify-center gap-space-sm px-5 py-3.5 bg-white/10 hover:bg-white/20 text-on-primary border border-white/20 transition-all duration-200 rounded-xl font-title-md text-title-md font-semibold">
+                                        <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+                                        <span>Upcoming Schedule</span>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    </c:otherwise>
+                </c:choose>
 
                 <!-- Section 2: Student Diagnostic KPIs (Bento Rhythm) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
@@ -207,10 +206,10 @@
                         <div>
                             <div class="flex items-baseline gap-space-xs">
                                 <span class="font-headline-lg text-3xl font-bold text-on-surface">
-                                    <c:out value="${dashboardData.quizzesAttemptedCount > 0 ? dashboardData.quizzesAttemptedCount : 14}"/>
+                                    <c:out value="${dashboardData.quizzesAttemptedCount}"/>
                                 </span>
                                 <span class="font-body-md text-body-md text-on-surface-variant">
-                                    / <c:out value="${dashboardData.totalScheduledQuizzes > 0 ? dashboardData.totalScheduledQuizzes : 16}"/> Scheduled
+                                    / <c:out value="${dashboardData.totalScheduledQuizzes}"/> Scheduled
                                 </span>
                             </div>
                             <div class="mt-space-sm flex items-center gap-space-xs text-tertiary font-label-sm text-label-sm font-medium">
@@ -231,15 +230,20 @@
                         <div>
                             <div class="flex items-baseline gap-space-xs">
                                 <span class="font-headline-lg text-3xl font-bold text-on-surface">
-                                    <c:out value="${dashboardData.cumulativeScore > 0 ? dashboardData.cumulativeScore : 86.2}"/>%
+                                    <c:choose>
+                                        <c:when test="${dashboardData.cumulativeScore > 0}">
+                                            <fmt:formatNumber value="${dashboardData.cumulativeScore}" minFractionDigits="1" maxFractionDigits="1"/>%
+                                        </c:when>
+                                        <c:otherwise>--</c:otherwise>
+                                    </c:choose>
                                 </span>
                                 <span class="bg-surface-container px-space-xs py-0.5 rounded font-label-md text-label-md text-primary font-bold">
-                                    <c:out value="${dashboardData.gradeLetter != null ? dashboardData.gradeLetter : 'Grade A-'}"/>
+                                    <c:out value="${dashboardData.gradeLetter != null ? dashboardData.gradeLetter : 'N/A'}"/>
                                 </span>
                             </div>
                             <div class="mt-space-sm flex items-center gap-space-xs text-tertiary font-label-sm text-label-sm font-medium">
                                 <span class="material-symbols-outlined text-[14px]">trending_up</span>
-                                <span>+3.4% from Mid-Semester baseline</span>
+                                <span>Academic Progress Track</span>
                             </div>
                         </div>
                     </div>
@@ -255,15 +259,29 @@
                         <div>
                             <div class="flex items-baseline gap-space-xs">
                                 <span class="font-headline-lg text-3xl font-bold text-on-surface">
-                                    <c:out value="${dashboardData.cohortPercentile > 0 ? dashboardData.cohortPercentile : 94.2}"/><sup class="text-lg font-normal">th</sup>
+                                    <c:choose>
+                                        <c:when test="${dashboardData.cohortPercentile > 0}">
+                                            <fmt:formatNumber value="${dashboardData.cohortPercentile}" minFractionDigits="1" maxFractionDigits="1"/><sup class="text-lg font-normal">th</sup>
+                                        </c:when>
+                                        <c:otherwise>--</c:otherwise>
+                                    </c:choose>
                                 </span>
                                 <span class="font-body-md text-body-md text-on-surface-variant">Percentile</span>
                             </div>
                             <div class="mt-space-sm flex items-center gap-space-xs font-label-sm text-label-sm text-on-surface-variant">
-                                <span class="font-code-telemetry text-code-telemetry px-1.5 py-0.5 bg-surface-container rounded text-primary font-bold">
-                                    Rank #<c:out value="${dashboardData.cohortRank > 0 ? dashboardData.cohortRank : 3}"/>
-                                </span>
-                                <span>in CS402 (128 Students)</span>
+                                <c:choose>
+                                    <c:when test="${dashboardData.cohortRank > 0}">
+                                        <span class="font-code-telemetry text-code-telemetry px-1.5 py-0.5 bg-surface-container rounded text-primary font-bold">
+                                            Rank #<c:out value="${dashboardData.cohortRank}"/>
+                                        </span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="font-code-telemetry text-code-telemetry px-1.5 py-0.5 bg-surface-container rounded text-on-surface-variant font-bold">
+                                            Rank --
+                                        </span>
+                                    </c:otherwise>
+                                </c:choose>
+                                <span>in <c:out value="${sessionScope.userDepartment != null ? sessionScope.userDepartment : 'Academic Cohort'}"/></span>
                             </div>
                         </div>
                     </div>
@@ -279,7 +297,7 @@
                         <div>
                             <div class="flex items-baseline gap-space-xs">
                                 <span class="font-headline-lg text-3xl font-bold text-tertiary-container">
-                                    <c:out value="${dashboardData.integrityIndex > 0 ? dashboardData.integrityIndex : 99.1}"/>%
+                                    <c:out value="${dashboardData.integrityIndex > 0 ? dashboardData.integrityIndex : 100.0}"/>%
                                 </span>
                                 <span class="bg-surface-container-low text-tertiary-container px-space-xs py-0.5 rounded font-label-sm text-label-sm font-semibold">
                                     <c:out value="${dashboardData.integrityTier != null ? dashboardData.integrityTier : 'Tier 1'}"/>
@@ -287,7 +305,7 @@
                             </div>
                             <div class="mt-space-sm flex items-center gap-space-xs text-tertiary font-label-sm text-label-sm font-medium">
                                 <span class="material-symbols-outlined text-[14px]">shield</span>
-                                <span>Zero flagged incidents (14 audits)</span>
+                                <span><c:out value="${dashboardData.flaggedIncidentsCount}"/> flagged security incidents</span>
                             </div>
                         </div>
                     </div>
@@ -303,7 +321,7 @@
                                 <h2 class="font-headline-md text-2xl font-bold text-on-surface tracking-tight">Active &amp; Scheduled Assessments</h2>
                                 <p class="font-body-sm text-body-sm text-on-surface-variant">Live proctored exams and upcoming departmental certification modules</p>
                             </div>
-                            <div class="flex items-center gap-space-xs bg-surface-container-low p-1 rounded-xl">
+                            <div class="flex items-center gap-space-xs bg-surface-container-low p-1 rounded-xl flex-wrap">
                                 <button type="button" class="px-space-md py-1 bg-surface-container-lowest text-primary font-label-sm text-label-sm font-bold rounded-lg shadow-sm" onclick="filterQuizDeck('all', this)">
                                     All (<c:out value="${dashboardData.assignedQuizzes.size()}"/>)
                                 </button>
@@ -313,6 +331,11 @@
                                 <button type="button" class="px-space-md py-1 text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm font-medium rounded-lg" onclick="filterQuizDeck('upcoming', this)">
                                     Upcoming (<c:out value="${dashboardData.scheduledAheadCount}"/>)
                                 </button>
+                                <c:if test="${dashboardData.completedCount > 0}">
+                                    <button type="button" class="px-space-md py-1 text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm font-medium rounded-lg" onclick="filterQuizDeck('completed', this)">
+                                        Completed (<c:out value="${dashboardData.completedCount}"/>)
+                                    </button>
+                                </c:if>
                             </div>
                         </div>
 
@@ -394,9 +417,54 @@
                                                         <span class="material-symbols-outlined text-[16px] text-primary">verified_user</span>
                                                         <span>Requires Guardian Fullscreen Browser Lock • WebCam + Screen Feed Enabled</span>
                                                     </div>
-                                                    <button type="button" class="flex items-center gap-space-xs px-5 py-2.5 bg-primary text-on-primary hover:bg-secondary transition-colors rounded-xl font-title-md text-title-md font-semibold shadow-sm" onclick="openPreflightModal(${quizCard.quizId})">
+                                                    <button type="button" class="flex items-center gap-space-xs px-5 py-2.5 bg-primary text-on-primary hover:bg-secondary transition-colors rounded-xl font-title-md text-title-md font-semibold shadow-sm" onclick="openPreflightModal(${quizCard.quizId}, '<c:out value="${quizCard.quizCode}"/>', '<c:out value="${quizCard.title}"/>', ${quizCard.durationMinutes}, ${quizCard.totalQuestions}, ${quizCard.totalMarks}, ${quizCard.negativeMarking}, ${quizCard.negativeMarkValue}, '<c:out value="${quizCard.teacherName}"/>', ${quizCard.maxTabSwitches}, ${quizCard.fullscreenRequired}, ${quizCard.webcamRequired})">
                                                         <span>Start Quiz &amp; Enter Lockdown</span>
                                                         <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:when>
+                                    <c:when test="${quizCard.attemptStatus == 'SUBMITTED' || quizCard.status == 'COMPLETED'}">
+                                        <%-- COMPLETED CARD --%>
+                                        <div class="quiz-card-item bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-surface-container-high/60 hover:shadow-md transition-shadow" data-category="completed">
+                                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md">
+                                                <div class="flex flex-col gap-space-xs">
+                                                    <div class="flex items-center gap-space-sm flex-wrap">
+                                                        <span class="bg-surface-container text-on-surface-variant font-code-telemetry text-label-sm px-2.5 py-0.5 rounded font-bold">
+                                                            <c:out value="${quizCard.quizCode}"/>
+                                                        </span>
+                                                        <span class="bg-primary-container text-on-primary-container font-label-sm text-label-sm px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1">
+                                                            <span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                                            COMPLETED
+                                                        </span>
+                                                        <span class="font-label-sm text-label-sm text-on-surface-variant hidden sm:inline">
+                                                            Instructor: <c:out value="${quizCard.teacherName}"/>
+                                                        </span>
+                                                    </div>
+                                                    <h3 class="font-title-lg text-lg font-bold text-on-surface">
+                                                        <c:out value="${quizCard.title}"/>
+                                                    </h3>
+                                                    <p class="font-body-sm text-body-sm text-on-surface-variant">
+                                                        <c:out value="${quizCard.durationMinutes}"/> Minutes • <c:out value="${quizCard.totalQuestions}"/> Questions • <fmt:formatNumber value="${quizCard.totalMarks}" maxFractionDigits="0"/> Points • Proctor Level: <c:out value="${quizCard.proctorLevel}"/>
+                                                    </p>
+                                                </div>
+                                                <div class="flex items-center gap-space-sm w-full sm:w-auto shrink-0">
+                                                    <c:choose>
+                                                        <c:when test="${quizCard.attemptStatus == 'SUBMITTED'}">
+                                                            <a href="${pageContext.request.contextPath}/student/results?quizId=${quizCard.quizId}&attemptId=${quizCard.attemptId}" class="flex-1 sm:flex-initial flex items-center justify-center gap-space-xs px-4 py-2 bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded-xl font-label-md text-label-md font-semibold transition-colors shadow-xs">
+                                                                <span class="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
+                                                                <span>Completed • View Result</span>
+                                                            </a>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="px-3 py-2 bg-surface-container text-on-surface-variant rounded-xl font-label-md text-label-md font-medium">
+                                                                Window Closed
+                                                            </span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                    <button type="button" class="px-3 py-2 bg-surface-container-lowest text-on-surface-variant hover:text-on-surface font-label-md text-label-md font-medium" onclick="alert('Detailed Syllabus: Topics cover <c:out value="${quizCard.description}"/>')">
+                                                        Syllabus
                                                     </button>
                                                 </div>
                                             </div>
@@ -413,6 +481,9 @@
                                                         </span>
                                                         <span class="bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm px-2.5 py-0.5 rounded-full font-medium">
                                                             <c:out value="${quizCard.badgeText}"/>
+                                                        </span>
+                                                        <span class="font-label-sm text-label-sm text-on-surface-variant hidden sm:inline">
+                                                            Instructor: <c:out value="${quizCard.teacherName}"/>
                                                         </span>
                                                     </div>
                                                     <h3 class="font-title-lg text-lg font-bold text-on-surface">
@@ -438,36 +509,6 @@
                             </c:forEach>
                         </div>
 
-                        <!-- Section 4: Performance Trend & Subject Progress -->
-                        <div class="mt-space-md bg-surface-container-lowest rounded-2xl p-6 sm:p-space-xl shadow-sm border border-surface-container-high/40 flex flex-col gap-space-lg">
-                            <div class="flex items-center justify-between flex-wrap gap-space-sm">
-                                <div>
-                                    <h3 class="font-title-lg text-xl font-bold text-on-surface">Curricular Subject Mastery</h3>
-                                    <p class="font-body-sm text-body-sm text-on-surface-variant">Continuous performance evaluation across proctored core modules</p>
-                                </div>
-                                <span class="font-code-telemetry text-code-telemetry text-on-surface-variant bg-surface-container-low px-2.5 py-1 rounded-lg">
-                                    Updated 2 hours ago
-                                </span>
-                            </div>
-                            
-                            <!-- Progress Bars Grid -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
-                                <c:forEach var="mastery" items="${dashboardData.subjectMasteryList}">
-                                    <div class="flex flex-col gap-space-xs">
-                                        <div class="flex justify-between items-center font-label-md text-label-md">
-                                            <span class="text-on-surface font-semibold"><c:out value="${mastery.subjectName}"/></span>
-                                            <span class="font-code-telemetry text-primary font-bold">
-                                                <c:out value="${mastery.masteryPercentage}"/>% (<c:out value="${mastery.masteryLevel}"/>)
-                                            </span>
-                                        </div>
-                                        <div class="w-full h-2.5 bg-surface-container-low rounded-full overflow-hidden">
-                                            <div class="h-full rounded-full transition-all duration-500 bg-primary" 
-                                                 style="width: ${mastery.masteryPercentage}%"></div>
-                                        </div>
-                                    </div>
-                                </c:forEach>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Secondary Sidebar Column (Right 4 Cols): Pre-Flight Check & Recent Results -->
@@ -598,7 +639,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <a href="${pageContext.request.contextPath}/student/results" class="w-full flex items-center justify-center gap-space-xs py-2.5 bg-surface-container-low hover:bg-surface-container text-primary rounded-xl font-label-md text-label-md font-semibold transition-colors">
+                            <a href="${pageContext.request.contextPath}/student/results${dashboardData.latestResult != null ? '?quizId='.concat(dashboardData.latestResult.quizId) : ''}" class="w-full flex items-center justify-center gap-space-xs py-2.5 bg-surface-container-low hover:bg-surface-container text-primary rounded-xl font-label-md text-label-md font-semibold transition-colors">
                                 <span class="material-symbols-outlined text-[16px]">receipt_long</span>
                                 <span>View Detailed Scorecard &amp; Solutions</span>
                             </a>
@@ -621,6 +662,7 @@
             </div>
         </div>
     </main>
+    </div>
 
     <!-- Pre-Flight Readiness Modal Component -->
     <jsp:include page="components/instructions-modal.jsp"/>

@@ -19,6 +19,8 @@ public interface ExamService {
 
     boolean saveAnswer(int attemptId, int studentId, int questionId, Integer selectedOptionId, boolean isFlagged);
 
+    boolean saveAnswer(int attemptId, int studentId, int questionId, java.util.List<Integer> selectedOptionIds, boolean isFlagged);
+
     boolean toggleFlag(int attemptId, int studentId, int questionId, boolean isFlagged);
 
     QuizAttempt submitExam(int attemptId, int studentId);

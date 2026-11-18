@@ -3,6 +3,8 @@ package com.quiztrack.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Model representing an autosaved response for an individual question within an attempt.
@@ -14,6 +16,7 @@ public class StudentAnswer implements Serializable {
     private int attemptId;
     private int questionId;
     private Integer selectedOptionId;
+    private List<Integer> selectedOptionIds = new ArrayList<>();
     private String selectedOptionLetter;
     private String textResponse;
     private boolean isFlaggedForReview;
@@ -65,6 +68,29 @@ public class StudentAnswer implements Serializable {
 
     public void setSelectedOptionId(Integer selectedOptionId) {
         this.selectedOptionId = selectedOptionId;
+        if (selectedOptionId != null && !this.selectedOptionIds.contains(selectedOptionId)) {
+            this.selectedOptionIds.add(selectedOptionId);
+        }
+    }
+
+    public List<Integer> getSelectedOptionIds() {
+        return selectedOptionIds;
+    }
+
+    public void setSelectedOptionIds(List<Integer> selectedOptionIds) {
+        this.selectedOptionIds = selectedOptionIds != null ? selectedOptionIds : new ArrayList<>();
+        if (!this.selectedOptionIds.isEmpty() && this.selectedOptionId == null) {
+            this.selectedOptionId = this.selectedOptionIds.get(0);
+        }
+    }
+
+    public void addSelectedOptionId(int optionId) {
+        if (!this.selectedOptionIds.contains(optionId)) {
+            this.selectedOptionIds.add(optionId);
+        }
+        if (this.selectedOptionId == null) {
+            this.selectedOptionId = optionId;
+        }
     }
 
     public String getSelectedOptionLetter() {

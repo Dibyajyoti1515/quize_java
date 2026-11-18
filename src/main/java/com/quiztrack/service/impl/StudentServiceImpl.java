@@ -58,7 +58,7 @@ public class StudentServiceImpl implements StudentService {
         List<StudentQuizCard> assignedQuizzes = studentDao.getAssignedQuizzes(studentId);
         data.setAssignedQuizzes(assignedQuizzes);
 
-        // 3. Identify Banner Active Quiz
+        // 3. Identify Banner Active Quiz (prioritize active unsubmitted quiz assigned to student)
         for (StudentQuizCard card : assignedQuizzes) {
             if ("ACTIVE".equalsIgnoreCase(card.getStatus()) && !"SUBMITTED".equalsIgnoreCase(card.getAttemptStatus())) {
                 Optional<Quiz> qOpt = quizDao.findById(card.getQuizId());

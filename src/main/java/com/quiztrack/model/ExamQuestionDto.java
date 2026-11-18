@@ -25,6 +25,7 @@ public class ExamQuestionDto implements Serializable {
 
     // Student Attempt State for this question
     private Integer selectedOptionId;
+    private List<Integer> selectedOptionIds = new ArrayList<>();
     private boolean flaggedForReview;
     private String status; // 'ANSWERED', 'REVIEW', 'NOT_ANSWERED', 'NOT_VISITED'
 
@@ -111,7 +112,26 @@ public class ExamQuestionDto implements Serializable {
 
     public void setSelectedOptionId(Integer selectedOptionId) {
         this.selectedOptionId = selectedOptionId;
+        if (selectedOptionId != null && !this.selectedOptionIds.contains(selectedOptionId)) {
+            this.selectedOptionIds.add(selectedOptionId);
+        }
         updateStatus();
+    }
+
+    public List<Integer> getSelectedOptionIds() {
+        return selectedOptionIds;
+    }
+
+    public void setSelectedOptionIds(List<Integer> selectedOptionIds) {
+        this.selectedOptionIds = selectedOptionIds != null ? selectedOptionIds : new ArrayList<>();
+        if (!this.selectedOptionIds.isEmpty() && this.selectedOptionId == null) {
+            this.selectedOptionId = this.selectedOptionIds.get(0);
+        }
+        updateStatus();
+    }
+
+    public boolean isOptionSelected(int optionId) {
+        return (selectedOptionId != null && selectedOptionId == optionId) || (selectedOptionIds != null && selectedOptionIds.contains(optionId));
     }
 
     public boolean isFlaggedForReview() {
@@ -134,7 +154,7 @@ public class ExamQuestionDto implements Serializable {
     public void updateStatus() {
         if (flaggedForReview) {
             this.status = "REVIEW";
-        } else if (selectedOptionId != null && selectedOptionId > 0) {
+        } else if ((selectedOptionId != null && selectedOptionId > 0) || (selectedOptionIds != null && !selectedOptionIds.isEmpty())) {
             this.status = "ANSWERED";
         } else if ("NOT_VISITED".equalsIgnoreCase(this.status)) {
             // keep as is until visited

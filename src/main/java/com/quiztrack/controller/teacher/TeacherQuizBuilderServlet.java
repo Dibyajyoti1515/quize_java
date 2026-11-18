@@ -1,9 +1,12 @@
 package com.quiztrack.controller.teacher;
 
+import com.quiztrack.model.Cohort;
 import com.quiztrack.model.Question;
 import com.quiztrack.model.QuestionOption;
 import com.quiztrack.model.Quiz;
+import com.quiztrack.model.QuizAssignment;
 import com.quiztrack.model.Subject;
+import com.quiztrack.model.User;
 import com.quiztrack.service.TeacherService;
 import com.quiztrack.service.impl.TeacherServiceImpl;
 import jakarta.servlet.ServletException;
@@ -17,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -94,11 +98,28 @@ public class TeacherQuizBuilderServlet extends HttpServlet {
 
         // Load quiz questions
         List<Question> quizQuestions = teacherService.getQuestionsForQuiz(quizId);
+        Set<Integer> quizQuestionIds = new HashSet<>();
+        for (Question q : quizQuestions) {
+            quizQuestionIds.add(q.getQuestionId());
+        }
 
-        // Load question bank repository (for this subject)
+        // Load question bank repository (for this subject or all branches)
         String bankSearch = request.getParameter("bankSearch");
         String bankDifficulty = request.getParameter("bankDifficulty");
-        List<Question> bankQuestions = teacherService.getQuestionBank(quiz.getSubjectId(), bankDifficulty, null, bankSearch, 20, 0);
+        String bankSubjectIdStr = request.getParameter("bankSubjectId");
+        Integer bankSubjectId = null;
+        if (bankSubjectIdStr != null && !bankSubjectIdStr.trim().isEmpty() && !"ALL".equalsIgnoreCase(bankSubjectIdStr.trim())) {
+            try {
+                bankSubjectId = Integer.parseInt(bankSubjectIdStr.trim());
+            } catch (NumberFormatException ignored) {}
+        } else if (bankSubjectIdStr == null) {
+            bankSubjectId = quiz.getSubjectId();
+        }
+
+        List<Question> bankQuestions = teacherService.getQuestionBank(bankSubjectId, bankDifficulty, null, bankSearch, 50, 0);
+        for (Question bq : bankQuestions) {
+            bq.setInCurrentQuiz(quizQuestionIds.contains(bq.getQuestionId()));
+        }
 
         // Active question selection
         String activeQIdStr = request.getParameter("activeQuestionId");
@@ -158,10 +179,20 @@ public class TeacherQuizBuilderServlet extends HttpServlet {
             else mcqCount++;
         }
 
+        // Auto-compute total marks from question points for teacher authored quizzes (read-only in builder)
+        if (quizId > 3 && (quiz.getTotalMarks() == null || quiz.getTotalMarks().compareTo(allocatedPoints) != 0)) {
+            quiz.setTotalMarks(allocatedPoints);
+            teacherService.syncTotalMarks(quizId);
+        }
+
         List<Subject> subjects = teacherService.getAllSubjects();
+        List<QuizAssignment> assignedSlates = teacherService.getQuizAssignments(quizId, teacherId);
+        List<Cohort> availableCohorts = teacherService.getAvailableCohortsForTeacher(teacherId);
+        List<User> availableStudents = teacherService.getAvailableStudentsForTeacher(teacherId);
 
         request.setAttribute("quiz", quiz);
         request.setAttribute("quizQuestions", quizQuestions);
+        request.setAttribute("quizQuestionIds", quizQuestionIds);
         request.setAttribute("bankQuestions", bankQuestions);
         request.setAttribute("activeQuestion", activeQuestion);
         request.setAttribute("isNewItem", isNewItem);
@@ -170,6 +201,15 @@ public class TeacherQuizBuilderServlet extends HttpServlet {
         request.setAttribute("mcqCount", mcqCount);
         request.setAttribute("multiCount", multiCount);
         request.setAttribute("tfCount", tfCount);
+        request.setAttribute("assignedSlates", assignedSlates);
+        request.setAttribute("availableCohorts", availableCohorts);
+        request.setAttribute("availableStudents", availableStudents);
+
+        String activeTab = request.getParameter("tab");
+        if (activeTab == null || activeTab.trim().isEmpty()) {
+            activeTab = "questions";
+        }
+        request.setAttribute("activeTab", activeTab);
 
         request.getRequestDispatcher("/WEB-INF/views/teacher/quiz-builder.jsp").forward(request, response);
     }
@@ -229,17 +269,17 @@ public class TeacherQuizBuilderServlet extends HttpServlet {
                     teacherService.removeQuestionFromQuiz(questionId, quizId, teacherId);
                     session.setAttribute("flashSuccess", "Question removed from examination.");
                 }
-                response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId);
+                response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId + "&tab=questions");
                 return;
             } else if ("duplicate_question".equalsIgnoreCase(action)) {
                 int questionId = Integer.parseInt(request.getParameter("questionId"));
                 int newQId = teacherService.duplicateQuestion(questionId, quizId, teacherId);
                 if (newQId > 0) {
                     session.setAttribute("flashSuccess", "Question duplicated successfully.");
-                    response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId + "&activeQuestionId=" + newQId);
+                    response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId + "&activeQuestionId=" + newQId + "&tab=questions");
                 } else {
                     session.setAttribute("flashError", "Failed to duplicate question.");
-                    response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId);
+                    response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId + "&tab=questions");
                 }
                 return;
             } else if ("add_from_bank".equalsIgnoreCase(action)) {
@@ -247,26 +287,103 @@ public class TeacherQuizBuilderServlet extends HttpServlet {
                 boolean added = teacherService.addQuestionToQuiz(questionId, quizId, teacherId);
                 if (added) {
                     session.setAttribute("flashSuccess", "Question added to examination from Question Bank.");
-                    response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId + "&activeQuestionId=" + questionId);
+                    response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId + "&activeQuestionId=" + questionId + "&tab=questions");
                 } else {
                     session.setAttribute("flashError", "Failed to add question from Question Bank.");
-                    response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId);
+                    response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId + "&tab=questions");
                 }
                 return;
             } else if ("publish_quiz".equalsIgnoreCase(action)) {
-                teacherService.setQuizStatus(quizId, teacherId, "ACTIVE");
-                session.setAttribute("flashSuccess", "Quiz published successfully.");
-                response.sendRedirect(request.getContextPath() + "/teacher/quizzes?msg=published");
-                return;
+                try {
+                    teacherService.validateQuizForPublish(quizId, teacherId);
+                    Optional<Quiz> qOpt = teacherService.getQuizById(quizId);
+                    if (qOpt.isEmpty()) {
+                        session.setAttribute("flashError", "Quiz not found.");
+                        response.sendRedirect(request.getContextPath() + "/teacher/quizzes");
+                        return;
+                    }
+                    Quiz q = qOpt.get();
+                    Timestamp now = new Timestamp(System.currentTimeMillis());
+                    String targetStatus;
+                    String successMsg;
+                    if (q.getStartTime() != null && q.getStartTime().after(now)) {
+                        targetStatus = "SCHEDULED";
+                        successMsg = "Examination successfully verified and scheduled to open on " + q.getFormattedScheduleWindow() + ".";
+                    } else {
+                        targetStatus = "ACTIVE";
+                        successMsg = "Examination successfully verified and published. It is now active for candidates.";
+                    }
+                    teacherService.setQuizStatus(quizId, teacherId, targetStatus);
+                    session.setAttribute("flashSuccess", successMsg);
+                    response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId + "&tab=publish");
+                    return;
+                } catch (IllegalArgumentException e) {
+                    logger.warn("Publish validation failed for quiz ID {}: {}", quizId, e.getMessage());
+                    session.setAttribute("flashError", e.getMessage());
+                    response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId + "&tab=publish");
+                    return;
+                }
             } else if ("save_draft".equalsIgnoreCase(action)) {
                 teacherService.setQuizStatus(quizId, teacherId, "DRAFT");
-                session.setAttribute("flashSuccess", "Quiz status reverted to Draft.");
-                response.sendRedirect(request.getContextPath() + "/teacher/quizzes?msg=draft_saved");
+                session.setAttribute("flashSuccess", "Examination status reverted to Draft.");
+                response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId + "&tab=publish");
                 return;
             } else if ("update_config".equalsIgnoreCase(action)) {
-                handleUpdateConfig(request, quizId, teacherId);
-                session.setAttribute("flashSuccess", "Quiz parameters updated successfully.");
-                response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId);
+                try {
+                    handleUpdateConfig(request, quizId, teacherId);
+                    session.setAttribute("flashSuccess", "Quiz parameters and security settings updated successfully.");
+                } catch (IllegalArgumentException e) {
+                    logger.warn("Update config failed for quiz ID {}: {}", quizId, e.getMessage());
+                    session.setAttribute("flashError", e.getMessage());
+                }
+                response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId + "&tab=settings");
+                return;
+            } else if ("assign_cohort".equalsIgnoreCase(action)) {
+                String cohortIdStr = request.getParameter("cohortId");
+                if (cohortIdStr == null || cohortIdStr.trim().isEmpty()) {
+                    session.setAttribute("flashError", "Please select a cohort to assign.");
+                } else {
+                    int cohortId = Integer.parseInt(cohortIdStr.trim());
+                    String dueAtStr = request.getParameter("dueAt");
+                    Timestamp dueAt = parseTimestamp(dueAtStr);
+                    boolean assigned = teacherService.assignQuizToCohort(quizId, cohortId, dueAt, teacherId);
+                    if (assigned) {
+                        session.setAttribute("flashSuccess", "Cohort successfully assigned to examination.");
+                    } else {
+                        session.setAttribute("flashError", "Failed to assign cohort (verify permissions or existing assignments).");
+                    }
+                }
+                response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId + "&tab=publish");
+                return;
+            } else if ("assign_student".equalsIgnoreCase(action)) {
+                String studentIdStr = request.getParameter("studentId");
+                if (studentIdStr == null || studentIdStr.trim().isEmpty()) {
+                    session.setAttribute("flashError", "Please select a candidate student to assign.");
+                } else {
+                    int studentId = Integer.parseInt(studentIdStr.trim());
+                    String dueAtStr = request.getParameter("dueAt");
+                    Timestamp dueAt = parseTimestamp(dueAtStr);
+                    boolean assigned = teacherService.assignQuizToStudent(quizId, studentId, dueAt, teacherId);
+                    if (assigned) {
+                        session.setAttribute("flashSuccess", "Student candidate successfully assigned to examination.");
+                    } else {
+                        session.setAttribute("flashError", "Failed to assign student (verify permissions or existing assignments).");
+                    }
+                }
+                response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId + "&tab=publish");
+                return;
+            } else if ("remove_assignment".equalsIgnoreCase(action)) {
+                String assignmentIdStr = request.getParameter("assignmentId");
+                if (assignmentIdStr != null && !assignmentIdStr.trim().isEmpty()) {
+                    int assignmentId = Integer.parseInt(assignmentIdStr.trim());
+                    boolean removed = teacherService.removeQuizAssignment(assignmentId, quizId, teacherId);
+                    if (removed) {
+                        session.setAttribute("flashSuccess", "Assignment target successfully removed.");
+                    } else {
+                        session.setAttribute("flashError", "Failed to remove assignment.");
+                    }
+                }
+                response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId + "&tab=publish");
                 return;
             }
         } catch (Exception e) {
@@ -385,12 +502,12 @@ public class TeacherQuizBuilderServlet extends HttpServlet {
         question.setCodeSnippet(codeSnippet != null ? codeSnippet.trim() : "");
         question.setOptions(options);
 
+        String saveMode = request.getParameter("saveMode");
         int savedId;
         try {
             if (questionId > 0) {
                 boolean ok = teacherService.updateQuestion(question, teacherId);
                 if (ok) {
-                    session.setAttribute("flashSuccess", "Question updated successfully.");
                     savedId = questionId;
                 } else {
                     session.setAttribute("flashError", "Failed to update question.");
@@ -399,7 +516,6 @@ public class TeacherQuizBuilderServlet extends HttpServlet {
             } else {
                 Question created = teacherService.createQuestion(question, teacherId);
                 if (created != null && created.getQuestionId() > 0) {
-                    session.setAttribute("flashSuccess", "Question created and added to quiz successfully.");
                     savedId = created.getQuestionId();
                 } else {
                     session.setAttribute("flashError", "Failed to create question in database.");
@@ -412,30 +528,124 @@ public class TeacherQuizBuilderServlet extends HttpServlet {
             return;
         }
 
-        response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId + "&activeQuestionId=" + savedId);
+        // If newly created OR explicitly chosen "Save & Add Next Question", advance to clean blank template for next item
+        if (questionId == 0 || "save_next".equalsIgnoreCase(saveMode)) {
+            int nextCount = teacherService.getQuestionsForQuiz(quizId).size() + 1;
+            session.setAttribute("flashSuccess", "Question successfully saved! Ready to draft Question #" + nextCount + ".");
+            response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId + "&activeQuestionId=0&new=true");
+        } else {
+            session.setAttribute("flashSuccess", "Question updated successfully.");
+            response.sendRedirect(request.getContextPath() + "/teacher/quiz/builder?quizId=" + quizId + "&activeQuestionId=" + savedId);
+        }
     }
 
     private void handleUpdateConfig(HttpServletRequest request, int quizId, int teacherId) {
         Optional<Quiz> qOpt = teacherService.getQuizById(quizId);
-        if (qOpt.isEmpty()) return;
+        if (qOpt.isEmpty()) {
+            throw new IllegalArgumentException("Examination not found.");
+        }
 
         Quiz quiz = qOpt.get();
-        if (request.getParameter("title") != null) quiz.setTitle(request.getParameter("title"));
-        if (request.getParameter("durationMinutes") != null) quiz.setDurationMinutes(Integer.parseInt(request.getParameter("durationMinutes")));
-        if (request.getParameter("totalMarks") != null) quiz.setTotalMarks(new BigDecimal(request.getParameter("totalMarks")));
-        
+
+        String title = request.getParameter("title");
+        if (title != null && !title.trim().isEmpty()) {
+            quiz.setTitle(title.trim());
+        }
+
+        String description = request.getParameter("description");
+        if (description != null) {
+            quiz.setDescription(description.trim());
+        }
+
+        String durationStr = request.getParameter("durationMinutes");
+        if (durationStr != null && !durationStr.trim().isEmpty()) {
+            try {
+                quiz.setDurationMinutes(Integer.parseInt(durationStr.trim()));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid duration specified.");
+            }
+        }
+
+        String passPctStr = request.getParameter("passPercentage");
+        if (passPctStr != null && !passPctStr.trim().isEmpty()) {
+            try {
+                quiz.setPassPercentage(new BigDecimal(passPctStr.trim()));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid passing percentage specified.");
+            }
+        }
+
+        // Schedule window (datetime-local format: yyyy-MM-ddTHH:mm)
+        if (request.getParameter("startTime") != null) {
+            String startTimeStr = request.getParameter("startTime").trim();
+            if (!startTimeStr.isEmpty()) {
+                try {
+                    String normalized = startTimeStr.replace("T", " ");
+                    if (normalized.length() == 16) normalized += ":00";
+                    quiz.setStartTime(Timestamp.valueOf(normalized));
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid start date/time format.");
+                }
+            } else {
+                quiz.setStartTime(null);
+            }
+        }
+
+        if (request.getParameter("endTime") != null) {
+            String endTimeStr = request.getParameter("endTime").trim();
+            if (!endTimeStr.isEmpty()) {
+                try {
+                    String normalized = endTimeStr.replace("T", " ");
+                    if (normalized.length() == 16) normalized += ":00";
+                    quiz.setEndTime(Timestamp.valueOf(normalized));
+                } catch (Exception e) {
+                    throw new IllegalArgumentException("Invalid end date/time format.");
+                }
+            } else {
+                quiz.setEndTime(null);
+            }
+        }
+
+        // Negative marking
         quiz.setNegativeMarking(request.getParameter("negativeMarking") != null);
-        if (quiz.isNegativeMarking() && request.getParameter("negativeMarkValue") != null) {
-            quiz.setNegativeMarkValue(new BigDecimal(request.getParameter("negativeMarkValue")));
+        if (quiz.isNegativeMarking()) {
+            String negValStr = request.getParameter("negativeMarkValue");
+            if (negValStr != null && !negValStr.trim().isEmpty()) {
+                try {
+                    quiz.setNegativeMarkValue(new BigDecimal(negValStr.trim()));
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Invalid negative marking deduction value.");
+                }
+            }
         } else {
             quiz.setNegativeMarkValue(BigDecimal.ZERO);
         }
 
+        // Integrity & Anti-cheat rules
         quiz.setShuffleQuestions(request.getParameter("shuffleQuestions") != null);
         quiz.setFullscreenRequired(request.getParameter("fullscreenRequired") != null);
         quiz.setWebcamRequired(request.getParameter("webcamRequired") != null);
 
-        teacherService.updateQuiz(quiz, teacherId);
+        String tabSwitchesStr = request.getParameter("maxTabSwitches");
+        if (tabSwitchesStr != null && !tabSwitchesStr.trim().isEmpty()) {
+            try {
+                quiz.setMaxTabSwitches(Integer.parseInt(tabSwitchesStr.trim()));
+            } catch (NumberFormatException ignored) {}
+        }
+
+        // Status update if explicitly permitted
+        String statusParam = request.getParameter("status");
+        if (statusParam != null && !statusParam.trim().isEmpty()) {
+            String upperStatus = statusParam.trim().toUpperCase();
+            if ("DRAFT".equals(upperStatus) || "SCHEDULED".equals(upperStatus) || "ACTIVE".equals(upperStatus) || "COMPLETED".equals(upperStatus) || "ARCHIVED".equals(upperStatus)) {
+                quiz.setStatus(upperStatus);
+            }
+        }
+
+        boolean updated = teacherService.updateQuiz(quiz, teacherId);
+        if (!updated) {
+            throw new IllegalArgumentException("Failed to update examination parameters in database.");
+        }
     }
 
     private List<QuestionOption> createBlankOptions(String questionType) {
@@ -450,5 +660,21 @@ public class TeacherQuizBuilderServlet extends HttpServlet {
             opts.add(new QuestionOption("D", "", false, 4));
         }
         return opts;
+    }
+
+    private Timestamp parseTimestamp(String dtStr) {
+        if (dtStr == null || dtStr.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            String normalized = dtStr.trim().replace("T", " ");
+            if (normalized.length() == 16) {
+                normalized += ":00";
+            }
+            return Timestamp.valueOf(normalized);
+        } catch (Exception e) {
+            logger.warn("Failed to parse timestamp string: {}", dtStr, e);
+            return null;
+        }
     }
 }

@@ -83,6 +83,24 @@
                 </div>
 
                 <!-- Flash Notice -->
+                <c:if test="${not empty sessionScope.flashMessage}">
+                    <div class="p-4 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-sm font-semibold flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                            <span><c:out value="${sessionScope.flashMessage}"/></span>
+                        </div>
+                    </div>
+                    <c:remove var="flashMessage" scope="session"/>
+                </c:if>
+                <c:if test="${not empty sessionScope.flashError}">
+                    <div class="p-4 rounded-xl bg-rose-50 text-rose-800 border border-rose-200 text-sm font-semibold flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[20px]">error</span>
+                            <span><c:out value="${sessionScope.flashError}"/></span>
+                        </div>
+                    </div>
+                    <c:remove var="flashError" scope="session"/>
+                </c:if>
                 <c:if test="${not empty param.msg}">
                     <div class="p-4 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-sm font-semibold flex items-center gap-2">
                         <span class="material-symbols-outlined text-[20px]">check_circle</span>
@@ -128,6 +146,12 @@
                                     <h3 class="font-display font-bold text-lg text-on-surface leading-snug">
                                         <c:out value="${quiz.title}"/>
                                     </h3>
+                                    <c:if test="${currentUser.isAdmin() || sessionScope.userRole == 'ADMIN'}">
+                                        <p class="text-xs text-primary font-medium mt-0.5 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[14px]">school</span>
+                                            <span>Faculty: <c:out value="${quiz.teacherName}"/></span>
+                                        </p>
+                                    </c:if>
                                     <p class="text-xs text-on-surface-variant mt-1 line-clamp-2">
                                         <c:out value="${quiz.description != null ? quiz.description : 'No description provided.'}"/>
                                     </p>
@@ -170,6 +194,7 @@
                                 </a>
 
                                 <form action="${pageContext.request.contextPath}/teacher/quiz/action" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this quiz? All assigned items will be removed.')">
+                                    <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
                                     <input type="hidden" name="quizId" value="${quiz.quizId}"/>
                                     <input type="hidden" name="action" value="delete"/>
                                     <button type="submit" class="p-2 rounded-xl text-on-surface-variant hover:text-error hover:bg-error-container/40 transition-colors" title="Delete Quiz">

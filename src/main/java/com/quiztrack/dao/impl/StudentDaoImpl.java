@@ -74,10 +74,16 @@ public class StudentDaoImpl implements StudentDao {
                     }
 
                     int qCount = rs.getInt("total_questions");
-                    card.setTotalQuestions(qCount > 0 ? qCount : 35); // fallback to 35 items if not all authored yet
+                    card.setTotalQuestions(qCount);
+
+                    int maxTab = rs.getInt("max_tab_switches");
+                    card.setMaxTabSwitches(maxTab > 0 ? maxTab : 3);
+                    card.setFullscreenRequired(rs.getBoolean("fullscreen_required"));
+                    card.setWebcamRequired(rs.getBoolean("webcam_required"));
 
                     String attStatus = rs.getString("attempt_status");
                     card.setAttemptStatus(attStatus);
+                    card.setAttemptId(rs.getInt("attempt_id"));
                     card.setStudentScore(rs.getObject("total_score") != null ? rs.getDouble("total_score") : null);
                     card.setStudentGrade(rs.getString("grade"));
 
@@ -117,7 +123,7 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public Optional<LatestResult> getLatestResult(int studentId) {
         String sql =
-                "SELECT r.result_id, r.quiz_id, r.score, r.max_score, r.percentage, r.grade, " +
+                "SELECT r.result_id, r.attempt_id, r.quiz_id, r.score, r.max_score, r.percentage, r.grade, " +
                 "       r.cohort_rank, r.cohort_percentile, r.certificate_hash, r.certified_at, " +
                 "       q.title AS quiz_title, s.subject_code, s.subject_name " +
                 "FROM results r " +
@@ -135,6 +141,7 @@ public class StudentDaoImpl implements StudentDao {
                 if (rs.next()) {
                     LatestResult res = new LatestResult();
                     res.setResultId(rs.getInt("result_id"));
+                    res.setAttemptId(rs.getInt("attempt_id"));
                     res.setQuizId(rs.getInt("quiz_id"));
                     res.setScore(rs.getDouble("score"));
                     res.setMaxScore(rs.getDouble("max_score"));
@@ -252,7 +259,7 @@ public class StudentDaoImpl implements StudentDao {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     int count = rs.getInt(1);
-                    data.setQuizzesAttemptedCount(count > 0 ? count : 14); // default 14 if demo seed
+                    data.setQuizzesAttemptedCount(count);
                 }
             }
         } catch (SQLException e) {
@@ -271,7 +278,7 @@ public class StudentDaoImpl implements StudentDao {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     int count = rs.getInt(1);
-                    data.setTotalScheduledQuizzes(count > 0 ? Math.max(count, 16) : 16);
+                    data.setTotalScheduledQuizzes(count);
                 }
             }
         } catch (SQLException e) {
@@ -279,19 +286,21 @@ public class StudentDaoImpl implements StudentDao {
         }
 
         // 3. Average / Cumulative Score
-        String sqlAvg = "SELECT COALESCE(AVG(percentage), 86.2) FROM results WHERE student_id = ?";
+        String sqlAvg = "SELECT AVG(percentage) FROM results WHERE student_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sqlAvg)) {
             ps.setInt(1, studentId);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
+                if (rs.next() && rs.getObject(1) != null) {
                     double avg = rs.getDouble(1);
-                    if (avg == 0.0) avg = 86.2;
                     data.setCumulativeScore(Math.round(avg * 10.0) / 10.0);
                     if (avg >= 90) data.setGradeLetter("Grade A");
                     else if (avg >= 85) data.setGradeLetter("Grade A-");
                     else if (avg >= 80) data.setGradeLetter("Grade B+");
                     else data.setGradeLetter("Grade B");
+                } else {
+                    data.setCumulativeScore(0.0);
+                    data.setGradeLetter("N/A");
                 }
             }
         } catch (SQLException e) {
@@ -307,8 +316,11 @@ public class StudentDaoImpl implements StudentDao {
                 if (rs.next()) {
                     int rank = rs.getInt("cohort_rank");
                     double pctl = rs.getDouble("cohort_percentile");
-                    data.setCohortRank(rank > 0 ? rank : 3);
-                    data.setCohortPercentile(pctl > 0 ? pctl : 94.2);
+                    data.setCohortRank(rank);
+                    data.setCohortPercentile(pctl);
+                } else {
+                    data.setCohortRank(0);
+                    data.setCohortPercentile(0.0);
                 }
             }
         } catch (SQLException e) {

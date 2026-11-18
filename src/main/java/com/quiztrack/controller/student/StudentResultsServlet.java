@@ -44,17 +44,34 @@ public class StudentResultsServlet extends HttpServlet {
 
         int studentId = (Integer) session.getAttribute("userId");
         String attemptIdStr = request.getParameter("attemptId");
+        String quizIdStr = request.getParameter("quizId");
 
         try {
+            List<StudentResultDto> historyList = resultService.getResultsHistory(studentId);
             StudentResultDto resultDto = null;
+
             if (attemptIdStr != null && !attemptIdStr.trim().isEmpty()) {
-                int attemptId = Integer.parseInt(attemptIdStr.trim());
-                resultDto = resultService.getExamResult(attemptId, studentId);
-            } else {
-                resultDto = resultService.getLatestResult(studentId);
+                try {
+                    int attemptId = Integer.parseInt(attemptIdStr.trim());
+                    resultDto = resultService.getExamResult(attemptId, studentId);
+                } catch (NumberFormatException ignored) {}
             }
 
-            List<StudentResultDto> historyList = resultService.getResultsHistory(studentId);
+            if (resultDto == null && quizIdStr != null && !quizIdStr.trim().isEmpty()) {
+                try {
+                    int qId = Integer.parseInt(quizIdStr.trim());
+                    for (StudentResultDto h : historyList) {
+                        if (h.getQuizId() == qId) {
+                            resultDto = resultService.getExamResult(h.getAttemptId(), studentId);
+                            break;
+                        }
+                    }
+                } catch (NumberFormatException ignored) {}
+            }
+
+            if (resultDto == null) {
+                resultDto = resultService.getLatestResult(studentId);
+            }
 
             request.setAttribute("result", resultDto);
             request.setAttribute("historyList", historyList);

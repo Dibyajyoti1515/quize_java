@@ -77,8 +77,12 @@ public class StudentDashboardData implements Serializable {
         private String formattedDueAt;
         private boolean canStart;
         private String attemptStatus;
+        private int attemptId;
         private Double studentScore;
         private String studentGrade;
+        private int maxTabSwitches = 3;
+        private boolean fullscreenRequired = true;
+        private boolean webcamRequired = true;
 
         public StudentQuizCard() {}
 
@@ -139,11 +143,23 @@ public class StudentDashboardData implements Serializable {
         public String getAttemptStatus() { return attemptStatus; }
         public void setAttemptStatus(String attemptStatus) { this.attemptStatus = attemptStatus; }
 
+        public int getAttemptId() { return attemptId; }
+        public void setAttemptId(int attemptId) { this.attemptId = attemptId; }
+
         public Double getStudentScore() { return studentScore; }
         public void setStudentScore(Double studentScore) { this.studentScore = studentScore; }
 
         public String getStudentGrade() { return studentGrade; }
         public void setStudentGrade(String studentGrade) { this.studentGrade = studentGrade; }
+
+        public int getMaxTabSwitches() { return maxTabSwitches; }
+        public void setMaxTabSwitches(int maxTabSwitches) { this.maxTabSwitches = maxTabSwitches; }
+
+        public boolean isFullscreenRequired() { return fullscreenRequired; }
+        public void setFullscreenRequired(boolean fullscreenRequired) { this.fullscreenRequired = fullscreenRequired; }
+
+        public boolean isWebcamRequired() { return webcamRequired; }
+        public void setWebcamRequired(boolean webcamRequired) { this.webcamRequired = webcamRequired; }
     }
 
     public static class SubjectMastery implements Serializable {
@@ -185,6 +201,7 @@ public class StudentDashboardData implements Serializable {
         private static final long serialVersionUID = 1L;
 
         private int resultId;
+        private int attemptId;
         private int quizId;
         private String quizCode;
         private String quizTitle;
@@ -202,6 +219,9 @@ public class StudentDashboardData implements Serializable {
 
         public int getResultId() { return resultId; }
         public void setResultId(int resultId) { this.resultId = resultId; }
+
+        public int getAttemptId() { return attemptId; }
+        public void setAttemptId(int attemptId) { this.attemptId = attemptId; }
 
         public int getQuizId() { return quizId; }
         public void setQuizId(int quizId) { this.quizId = quizId; }
@@ -321,9 +341,11 @@ public class StudentDashboardData implements Serializable {
 
     public int getReadyToLaunchCount() {
         int count = 0;
-        for (StudentQuizCard card : assignedQuizzes) {
-            if ("ACTIVE".equalsIgnoreCase(card.getStatus())) {
-                count++;
+        if (assignedQuizzes != null) {
+            for (StudentQuizCard card : assignedQuizzes) {
+                if ("ACTIVE".equalsIgnoreCase(card.getStatus()) && !"SUBMITTED".equalsIgnoreCase(card.getAttemptStatus())) {
+                    count++;
+                }
             }
         }
         return count;
@@ -331,9 +353,23 @@ public class StudentDashboardData implements Serializable {
 
     public int getScheduledAheadCount() {
         int count = 0;
-        for (StudentQuizCard card : assignedQuizzes) {
-            if ("SCHEDULED".equalsIgnoreCase(card.getStatus())) {
-                count++;
+        if (assignedQuizzes != null) {
+            for (StudentQuizCard card : assignedQuizzes) {
+                if ("SCHEDULED".equalsIgnoreCase(card.getStatus()) && !"SUBMITTED".equalsIgnoreCase(card.getAttemptStatus())) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public int getCompletedCount() {
+        int count = 0;
+        if (assignedQuizzes != null) {
+            for (StudentQuizCard card : assignedQuizzes) {
+                if ("SUBMITTED".equalsIgnoreCase(card.getAttemptStatus()) || "COMPLETED".equalsIgnoreCase(card.getStatus())) {
+                    count++;
+                }
             }
         }
         return count;

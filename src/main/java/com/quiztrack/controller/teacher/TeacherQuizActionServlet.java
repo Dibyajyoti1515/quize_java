@@ -48,16 +48,34 @@ public class TeacherQuizActionServlet extends HttpServlet {
                 int quizId = Integer.parseInt(quizIdStr.trim());
                 if ("delete".equalsIgnoreCase(action)) {
                     boolean success = teacherService.deleteQuiz(quizId, teacherId);
-                    if (!success) {
+                    if (success) {
+                        session.setAttribute("flashMessage", "Quiz successfully deleted.");
+                    } else {
                         logger.warn("Could not delete quiz ID: {}", quizId);
+                        session.setAttribute("flashError", "Failed to delete quiz. You must be the owner or administrator, and the quiz must have no candidate attempts.");
                     }
                 } else if ("publish".equalsIgnoreCase(action)) {
-                    teacherService.setQuizStatus(quizId, teacherId, "ACTIVE");
+                    teacherService.validateQuizForPublish(quizId, teacherId);
+                    boolean success = teacherService.setQuizStatus(quizId, teacherId, "ACTIVE");
+                    if (success) {
+                        session.setAttribute("flashMessage", "Quiz published successfully.");
+                    } else {
+                        session.setAttribute("flashError", "Failed to publish quiz.");
+                    }
                 } else if ("draft".equalsIgnoreCase(action)) {
-                    teacherService.setQuizStatus(quizId, teacherId, "DRAFT");
+                    boolean success = teacherService.setQuizStatus(quizId, teacherId, "DRAFT");
+                    if (success) {
+                        session.setAttribute("flashMessage", "Quiz reverted to draft.");
+                    } else {
+                        session.setAttribute("flashError", "Failed to revert quiz to draft.");
+                    }
                 }
+            } catch (IllegalArgumentException iae) {
+                logger.warn("Validation error during quiz action: {}", iae.getMessage());
+                session.setAttribute("flashError", iae.getMessage());
             } catch (Exception e) {
                 logger.error("Error executing quiz action", e);
+                session.setAttribute("flashError", "An error occurred while executing the action.");
             }
         }
 

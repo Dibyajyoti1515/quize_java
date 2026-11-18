@@ -85,4 +85,10 @@ public interface AdminService {
      */
     int countAuditLogs(String eventType, String userQuery, String severity,
                        Timestamp startDate, Timestamp endDate);
+
+    /**
+     * Compiles detailed department analytics, faculty rosters, examination counts,
+     * and top 5 student performers for the Department Management console.
+     */
+    List<DepartmentSummaryDto> getDepartmentSummaries();
 }

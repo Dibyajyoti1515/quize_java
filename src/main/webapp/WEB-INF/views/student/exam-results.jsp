@@ -8,14 +8,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Score Card &amp; Performance Analytics | QuizTrack Student Portal</title>
 
+    <!-- Google Fonts & Material Symbols matching Stitch -->
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 
     <style>
         @layer base {
             html, body { margin: 0; padding: 0; }
+            body { overscroll-behavior: none; }
             ::-webkit-scrollbar { display: none; }
         }
         @media print {
@@ -27,50 +30,82 @@
     </style>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
+    <script id="tailwind-config">
         tailwind.config = {
+            darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        primary: '#3525cd',
-                        'primary-container': '#4f46e5',
-                        'on-primary': '#ffffff',
-                        'primary-fixed': '#e2dfff',
-                        'on-primary-fixed': '#0f0069',
-                        secondary: '#4648d4',
-                        'secondary-container': '#6063ee',
-                        'secondary-fixed': '#e1e0ff',
-                        'secondary-fixed-dim': '#c0c1ff',
-                        'on-secondary-fixed': '#07006c',
-                        tertiary: '#005338',
-                        'tertiary-container': '#006e4b',
-                        'tertiary-fixed': '#6ffbbe',
-                        'tertiary-fixed-dim': '#4edea3',
-                        error: '#ba1a1a',
-                        'error-container': '#ffdad6',
-                        'on-error-container': '#93000a',
-                        surface: '#f8f9ff',
-                        'surface-container-lowest': '#ffffff',
-                        'surface-container-low': '#eff4ff',
-                        'surface-container': '#e5eeff',
-                        'surface-container-high': '#dce9ff',
-                        'surface-container-highest': '#d3e4fe',
-                        'on-surface': '#0b1c30',
-                        'on-surface-variant': '#464555',
-                        outline: '#777587',
-                        'outline-variant': '#c7c4d8'
+                        "primary": "#3525cd",
+                        "primary-container": "#4f46e5",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#e2dfff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "secondary": "#4648d4",
+                        "secondary-container": "#6063ee",
+                        "secondary-fixed": "#e1e0ff",
+                        "secondary-fixed-dim": "#c0c1ff",
+                        "on-secondary-fixed": "#07006c",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#005338",
+                        "tertiary-container": "#006e4b",
+                        "tertiary-fixed": "#6ffbbe",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "on-tertiary-container": "#67f4b7",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface": "#f8f9ff",
+                        "background": "#f8f9ff",
+                        "on-surface": "#0b1c30",
+                        "on-surface-variant": "#464555",
+                        "outline": "#777587",
+                        "outline-variant": "#c7c4d8",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#eff4ff",
+                        "surface-container": "#e5eeff",
+                        "surface-container-high": "#dce9ff",
+                        "surface-container-highest": "#d3e4fe",
+                        "inverse-surface": "#213145",
+                        "inverse-on-surface": "#eaf1ff"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "gutter": "1.5rem",
+                        "gutter-sm": "1rem",
+                        "space-xs": "0.25rem",
+                        "space-sm": "0.5rem",
+                        "space-md": "1rem",
+                        "space-lg": "1.5rem",
+                        "space-xl": "2rem"
                     },
                     fontFamily: {
-                        display: ['Plus Jakarta Sans', 'sans-serif'],
-                        body: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace']
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "title-md": ["Inter"],
+                        "title-lg": ["Plus Jakarta Sans"],
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display": ["Plus Jakarta Sans"],
+                        "code-telemetry": ["JetBrains Mono"]
                     }
                 }
             }
         };
     </script>
 </head>
-<body class="bg-surface font-body text-on-surface antialiased min-h-screen">
+<body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen">
 
     <!-- Reusable Student Sidebar -->
     <jsp:include page="components/sidebar.jsp">
@@ -81,8 +116,8 @@
         <!-- Reusable Student Header -->
         <jsp:include page="components/header.jsp"/>
 
-        <main class="w-full pt-16 bg-surface min-h-screen px-4 sm:px-8 py-8">
-            <div class="max-w-7xl mx-auto flex flex-col gap-6">
+        <main class="w-full pt-16 bg-surface min-h-screen px-4 sm:px-space-lg py-space-lg">
+            <div class="flex flex-col gap-space-lg w-full max-w-[1400px] mx-auto">
 
                 <c:choose>
                     <%-- CASE 1: Student has a verified result record --%>
@@ -114,12 +149,12 @@
                             </div>
 
                             <div class="flex items-center gap-2.5 shrink-0 no-print flex-wrap">
-                                <c:if test="${not empty historyList and historyList.size() > 1}">
+                                <c:if test="${not empty historyList}">
                                     <div class="relative">
                                         <select onchange="window.location.href='${pageContext.request.contextPath}/student/results?attemptId=' + this.value" class="px-3 py-2 rounded-xl bg-surface-container-low border border-surface-container-high text-xs font-semibold text-on-surface focus:ring-2 focus:ring-primary focus:outline-none cursor-pointer">
                                             <c:forEach var="h" items="${historyList}">
                                                 <option value="${h.attemptId}" ${h.attemptId == result.attemptId ? 'selected' : ''}>
-                                                    ${h.subjectCode}: <fmt:formatDate value="${h.endTime}" pattern="MMM dd"/> (${h.score} pts)
+                                                    <c:out value="${h.quizTitle != null ? h.quizTitle : h.subjectCode}"/> (<c:out value="${h.subjectCode}"/>) • <fmt:formatNumber value="${h.score}" minFractionDigits="1" maxFractionDigits="2"/> pts
                                                 </option>
                                             </c:forEach>
                                         </select>

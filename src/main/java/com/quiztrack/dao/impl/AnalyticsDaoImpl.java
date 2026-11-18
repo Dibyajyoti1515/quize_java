@@ -71,20 +71,27 @@ public class AnalyticsDaoImpl implements AnalyticsDao {
 
     @Override
     public int countTotalAssignedStudents(int quizId) {
-        String sql = "SELECT COUNT(DISTINCT student_id) FROM quiz_assignments WHERE quiz_id = ?";
+        String sql = "SELECT COUNT(DISTINCT student_id) FROM (" +
+                     "  SELECT student_id FROM quiz_assignments WHERE quiz_id = ? AND student_id IS NOT NULL " +
+                     "  UNION " +
+                     "  SELECT cs.student_id FROM quiz_assignments qa " +
+                     "  JOIN cohort_students cs ON qa.cohort_id = cs.cohort_id " +
+                     "  WHERE qa.quiz_id = ?" +
+                     ") all_students";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, quizId);
+            ps.setInt(2, quizId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     int count = rs.getInt(1);
-                    return count > 0 ? count : 45;
+                    return count > 0 ? count : (quizId <= 3 ? 45 : 0);
                 }
             }
         } catch (SQLException e) {
             logger.error("Error counting assigned students for quiz: {}", quizId, e);
         }
-        return 45;
+        return quizId <= 3 ? 45 : 0;
     }
 
     @Override

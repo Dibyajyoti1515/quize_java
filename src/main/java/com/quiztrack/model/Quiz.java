@@ -202,6 +202,40 @@ public class Quiz implements Serializable {
         this.endTime = endTime;
     }
 
+    public String getStartTimeIso() {
+        if (startTime == null) return "";
+        return new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm").format(startTime);
+    }
+
+    public String getEndTimeIso() {
+        if (endTime == null) return "";
+        return new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm").format(endTime);
+    }
+
+    public String getFormattedScheduleWindow() {
+        if (startTime == null && endTime == null) return "Not Scheduled (Continuous)";
+        java.text.SimpleDateFormat fmt = new java.text.SimpleDateFormat("MMM dd, yyyy • HH:mm");
+        if (startTime != null && endTime != null) {
+            return fmt.format(startTime) + " – " + fmt.format(endTime);
+        } else if (startTime != null) {
+            return "Opens: " + fmt.format(startTime);
+        } else {
+            return "Closes: " + fmt.format(endTime);
+        }
+    }
+
+    public boolean hasActiveOrPastAttempts() {
+        return totalSubmissions > 0 || activeExaminees > 0;
+    }
+
+    public boolean isHasActiveOrPastAttempts() {
+        return hasActiveOrPastAttempts();
+    }
+
+    public boolean getHasActiveOrPastAttempts() {
+        return hasActiveOrPastAttempts();
+    }
+
     public String getStatus() {
         return status;
     }

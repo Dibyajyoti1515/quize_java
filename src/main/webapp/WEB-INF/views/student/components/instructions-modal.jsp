@@ -12,22 +12,22 @@
                 </div>
                 <div class="flex flex-col">
                     <div class="flex flex-wrap items-center gap-2">
-                        <span class="px-2 py-0.5 rounded bg-primary-fixed text-on-primary-fixed-variant font-code-telemetry text-code-telemetry font-bold">
+                        <span id="modal-subject-code" class="px-2 py-0.5 rounded bg-primary-fixed text-on-primary-fixed-variant font-code-telemetry text-code-telemetry font-bold">
                             <c:out value="${dashboardData.activeQuiz != null ? dashboardData.activeQuiz.subjectCode : 'CS402'}"/>
                         </span>
-                        <span class="font-title-md text-title-md text-on-surface font-bold tracking-tight">
-                            <c:out value="${dashboardData.activeQuiz != null ? dashboardData.activeQuiz.title : 'Midterm Exam: Distributed Systems & Concurrency'}"/>
+                        <span id="modal-title" class="font-title-md text-title-md text-on-surface font-bold tracking-tight">
+                            <c:out value="${dashboardData.activeQuiz != null ? dashboardData.activeQuiz.title : 'Midterm Examination'}"/>
                         </span>
                         <span class="hidden sm:inline-flex px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">
                             Proctored Session
                         </span>
                     </div>
                     <div class="flex flex-wrap items-center gap-2 font-label-sm text-label-sm text-on-surface-variant mt-0.5">
-                        <span>Host: Department of Computer Science</span>
+                        <span>Host: <c:out value="${sessionScope.userDepartment != null ? sessionScope.userDepartment : 'Department of Computer Science'}"/></span>
                         <span class="text-outline-variant">•</span>
-                        <span class="font-medium text-on-surface">Proctor: <c:out value="${dashboardData.activeQuiz != null ? dashboardData.activeQuiz.teacherName : 'Prof. Ronald Vance'}"/></span>
+                        <span class="font-medium text-on-surface" id="modal-proctor">Proctor: <c:out value="${dashboardData.activeQuiz != null ? dashboardData.activeQuiz.teacherName : 'Faculty Lead'}"/></span>
                         <span class="text-outline-variant">•</span>
-                        <span class="font-code-telemetry text-code-telemetry text-tertiary">TOKEN: QT-8842-DISTRIB</span>
+                        <span id="modal-token" class="font-code-telemetry text-code-telemetry text-tertiary">TOKEN: QT-<c:out value="${dashboardData.activeQuiz != null ? dashboardData.activeQuiz.quizId : 'SEC'}"/>-DISTRIB</span>
                     </div>
                 </div>
             </div>
@@ -45,36 +45,43 @@
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 p-space-sm bg-surface-container-low rounded-xl border border-surface-container">
                     <div class="flex flex-col p-2 text-center bg-surface-container-lowest rounded-lg shadow-sm">
                         <span class="font-label-sm text-label-sm text-outline uppercase font-semibold">Time Limit</span>
-                        <span class="font-title-lg text-title-lg text-on-surface font-bold mt-0.5">
+                        <span id="modal-duration" class="font-title-lg text-title-lg text-on-surface font-bold mt-0.5">
                             <c:out value="${dashboardData.activeQuiz != null ? dashboardData.activeQuiz.durationMinutes : 90}"/> Min
                         </span>
                         <span class="font-label-sm text-label-sm text-on-surface-variant">Auto-submits</span>
                     </div>
                     <div class="flex flex-col p-2 text-center bg-surface-container-lowest rounded-lg shadow-sm">
                         <span class="font-label-sm text-label-sm text-outline uppercase font-semibold">Questions</span>
-                        <span class="font-title-lg text-title-lg text-on-surface font-bold mt-0.5">
-                            <c:out value="${dashboardData.activeQuiz != null && dashboardData.activeQuiz.totalQuestions > 0 ? dashboardData.activeQuiz.totalQuestions : 35}"/> Qs
+                        <span id="modal-questions" class="font-title-lg text-title-lg text-on-surface font-bold mt-0.5">
+                            <c:out value="${dashboardData.activeQuiz != null ? dashboardData.activeQuiz.totalQuestions : 0}"/> Qs
                         </span>
                         <span class="font-label-sm text-label-sm text-on-surface-variant">Multiple Choice</span>
                     </div>
                     <div class="flex flex-col p-2 text-center bg-surface-container-lowest rounded-lg shadow-sm">
                         <span class="font-label-sm text-label-sm text-outline uppercase font-semibold">Total Score</span>
-                        <span class="font-title-lg text-title-lg text-on-surface font-bold mt-0.5">
-                            <c:out value="${dashboardData.activeQuiz != null ? dashboardData.activeQuiz.totalMarks : 140}"/> Pts
+                        <span id="modal-total-score" class="font-title-lg text-title-lg text-on-surface font-bold mt-0.5">
+                            <fmt:formatNumber value="${dashboardData.activeQuiz != null ? dashboardData.activeQuiz.totalMarks : 0}" maxFractionDigits="0"/> Pts
                         </span>
-                        <span class="font-label-sm text-label-sm text-on-surface-variant">+4.00 correct</span>
+                        <span class="font-label-sm text-label-sm text-on-surface-variant">Allocated Points</span>
                     </div>
-                    <div class="flex flex-col p-2 text-center bg-surface-container-lowest rounded-lg shadow-sm">
-                        <span class="font-label-sm text-label-sm text-error uppercase font-semibold">Negative</span>
-                        <span class="font-title-lg text-title-lg text-error font-bold mt-0.5">
+                    <div id="modal-negative-box" class="flex flex-col p-2 text-center bg-surface-container-lowest rounded-lg shadow-sm">
+                        <span id="modal-negative-heading" class="font-label-sm text-label-sm uppercase font-semibold ${dashboardData.activeQuiz != null && dashboardData.activeQuiz.negativeMarking && dashboardData.activeQuiz.negativeMarkValue > 0 ? 'text-error' : 'text-outline'}">Negative</span>
+                        <span id="modal-negative-val" class="font-title-lg text-title-lg font-bold mt-0.5 ${dashboardData.activeQuiz != null && dashboardData.activeQuiz.negativeMarking && dashboardData.activeQuiz.negativeMarkValue > 0 ? 'text-error' : 'text-on-surface'}">
                             <c:choose>
-                                <c:when test="${dashboardData.activeQuiz != null && dashboardData.activeQuiz.negativeMarking}">
-                                    -<c:out value="${dashboardData.activeQuiz.negativeMarkValue}"/>
+                                <c:when test="${dashboardData.activeQuiz != null && dashboardData.activeQuiz.negativeMarking && dashboardData.activeQuiz.negativeMarkValue > 0}">
+                                    -<fmt:formatNumber value="${dashboardData.activeQuiz.negativeMarkValue}" minFractionDigits="2"/>
                                 </c:when>
-                                <c:otherwise>-1.00</c:otherwise>
+                                <c:otherwise>0.00</c:otherwise>
                             </c:choose>
                         </span>
-                        <span class="font-label-sm text-label-sm text-error/80">Per incorrect</span>
+                        <span id="modal-negative-label" class="font-label-sm text-label-sm ${dashboardData.activeQuiz != null && dashboardData.activeQuiz.negativeMarking && dashboardData.activeQuiz.negativeMarkValue > 0 ? 'text-error/80' : 'text-on-surface-variant'}">
+                            <c:choose>
+                                <c:when test="${dashboardData.activeQuiz != null && dashboardData.activeQuiz.negativeMarking && dashboardData.activeQuiz.negativeMarkValue > 0}">
+                                    Per incorrect
+                                </c:when>
+                                <c:otherwise>No penalty</c:otherwise>
+                            </c:choose>
+                        </span>
                     </div>
                 </div>
 
@@ -107,9 +114,9 @@
                             <span class="material-symbols-outlined text-[18px]">warning</span>
                         </div>
                         <div class="flex flex-col">
-                            <span class="font-title-md text-title-md text-on-surface font-semibold">2. Blur Event Threshold (3 Strikes Escalation)</span>
+                            <span class="font-title-md text-title-md text-on-surface font-semibold">2. Blur Event Threshold (Strikes Escalation)</span>
                             <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
-                                Losing browser window focus more than <strong>3 times</strong> immediately escalates to Prof. Vance's console with an alert ping and locks answering privileges until proctor unlock.
+                                Losing browser window focus more than <strong id="modal-strikes-num"><c:out value="${dashboardData.activeQuiz != null && dashboardData.activeQuiz.maxTabSwitches > 0 ? dashboardData.activeQuiz.maxTabSwitches : 3}"/> times</strong> immediately escalates to the proctor console with an alert ping and locks answering privileges until proctor unlock.
                             </p>
                         </div>
                     </div>
@@ -164,9 +171,9 @@
                                     <span class="font-label-sm text-label-sm text-on-surface-variant">Face tracked • 1080p WebCam</span>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-1.5 text-tertiary font-label-sm text-label-sm font-semibold">
-                                <span class="material-symbols-outlined text-[16px]">check_circle</span>
-                                <span>Active</span>
+                            <div class="flex items-center gap-1.5 text-tertiary font-label-sm text-label-sm font-semibold" id="modal-cam-badge">
+                                <span class="material-symbols-outlined text-[16px]" id="modal-cam-icon">check_circle</span>
+                                <span id="modal-cam-status">Active</span>
                             </div>
                         </div>
 
@@ -270,6 +277,7 @@
 
         <!-- Modal Footer Controls -->
         <form id="preflight-start-form" method="POST" action="${pageContext.request.contextPath}/student/exam/start" class="m-0 p-0">
+            <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
             <input type="hidden" name="quizId" id="modal-quiz-id" value="1"/>
             <div class="px-4 sm:px-space-lg py-4 bg-surface-container-low border-t border-surface-container-high flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
                 <div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
@@ -292,7 +300,7 @@
 </div>
 
 <script>
-    function openPreflightModal(quizId, quizCode, quizTitle, totalMarks, duration, questions) {
+    function openPreflightModal(quizId, quizCode, quizTitle, duration, questions, totalMarks, negativeMarking, negativeMarkValue, teacherName, maxTabSwitches, fullscreenReq, webcamReq) {
         const modal = document.getElementById('preflight-modal-overlay');
         if (modal) {
             modal.classList.remove('hidden');
@@ -300,6 +308,78 @@
         if (quizId) {
             const input = document.getElementById('modal-quiz-id');
             if (input) input.value = quizId;
+            const token = document.getElementById('modal-token');
+            if (token) token.textContent = 'TOKEN: QT-' + quizId + '-DISTRIB';
+        }
+        if (quizCode) {
+            const el = document.getElementById('modal-subject-code');
+            if (el) el.textContent = quizCode;
+        }
+        if (quizTitle) {
+            const el = document.getElementById('modal-title');
+            if (el) el.textContent = quizTitle;
+        }
+        if (teacherName) {
+            const el = document.getElementById('modal-proctor');
+            if (el) el.textContent = 'Proctor: ' + teacherName;
+        }
+        if (duration) {
+            const el = document.getElementById('modal-duration');
+            if (el) el.textContent = duration + ' Min';
+        }
+        if (questions !== undefined && questions !== null) {
+            const el = document.getElementById('modal-questions');
+            if (el) el.textContent = questions + ' Qs';
+        }
+        if (totalMarks !== undefined && totalMarks !== null) {
+            const el = document.getElementById('modal-total-score');
+            if (el) el.textContent = parseFloat(totalMarks).toFixed(0) + ' Pts';
+        }
+
+        const isNeg = (negativeMarking === true || negativeMarking === 'true');
+        const negVal = parseFloat(negativeMarkValue || 0);
+        const valEl = document.getElementById('modal-negative-val');
+        const labelEl = document.getElementById('modal-negative-label');
+        const headingEl = document.getElementById('modal-negative-heading');
+        if (isNeg && negVal > 0) {
+            if (valEl) {
+                valEl.textContent = '-' + negVal.toFixed(2);
+                valEl.className = 'font-title-lg text-title-lg font-bold mt-0.5 text-error';
+            }
+            if (labelEl) {
+                labelEl.textContent = 'Per incorrect';
+                labelEl.className = 'font-label-sm text-label-sm text-error/80';
+            }
+            if (headingEl) {
+                headingEl.className = 'font-label-sm text-label-sm uppercase font-semibold text-error';
+            }
+        } else {
+            if (valEl) {
+                valEl.textContent = '0.00';
+                valEl.className = 'font-title-lg text-title-lg font-bold mt-0.5 text-on-surface';
+            }
+            if (labelEl) {
+                labelEl.textContent = 'No penalty';
+                labelEl.className = 'font-label-sm text-label-sm text-on-surface-variant';
+            }
+            if (headingEl) {
+                headingEl.className = 'font-label-sm text-label-sm uppercase font-semibold text-outline';
+            }
+        }
+
+        if (maxTabSwitches) {
+            const strikesEl = document.getElementById('modal-strikes-num');
+            if (strikesEl) strikesEl.textContent = maxTabSwitches + ' times';
+        }
+
+        const camStatusEl = document.getElementById('modal-cam-status');
+        const camIconEl = document.getElementById('modal-cam-icon');
+        if (webcamReq === false || webcamReq === 'false') {
+            if (camStatusEl) camStatusEl.textContent = 'Optional';
+            if (camIconEl) camIconEl.textContent = 'info';
+        } else {
+            if (camStatusEl) camStatusEl.textContent = 'Active';
+            if (camIconEl) camIconEl.textContent = 'check_circle';
         }
     }
 
@@ -319,18 +399,23 @@
         }
 
         const btn = document.getElementById('begin-exam-btn');
-        if (!btn) return;
-        btn.innerHTML = `
-            <span class="material-symbols-outlined text-[20px] animate-spin">progress_activity</span>
-            <span>Allocating Secure Sandbox...</span>
-        `;
-        btn.classList.add('opacity-80', 'pointer-events-none');
-        
-        setTimeout(() => {
-            const form = document.getElementById('preflight-start-form');
-            if (form) {
-                form.submit();
+        if (btn) {
+            btn.innerHTML = `
+                <span class="material-symbols-outlined text-[20px] animate-spin">progress_activity</span>
+                <span>Allocating Secure Sandbox...</span>
+            `;
+            btn.classList.add('opacity-80', 'pointer-events-none');
+        }
+
+        try {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(() => {});
             }
-        }, 600);
+        } catch (e) {}
+
+        const form = document.getElementById('preflight-start-form');
+        if (form) {
+            form.submit();
+        }
     }
 </script>

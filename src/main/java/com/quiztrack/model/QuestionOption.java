@@ -63,6 +63,10 @@ public class QuestionOption implements Serializable {
         return isCorrect;
     }
 
+    public boolean getIsCorrect() {
+        return isCorrect;
+    }
+
     public void setCorrect(boolean isCorrect) {
         this.isCorrect = isCorrect;
     }

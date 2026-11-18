@@ -5,7 +5,6 @@ import com.quiztrack.dao.impl.UserDaoImpl;
 import com.quiztrack.model.Role;
 import com.quiztrack.model.User;
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -17,8 +16,8 @@ import java.io.IOException;
 /**
  * Enforces Role-Based Access Control (RBAC) across Admin, Teacher, and Student routes.
  * Strictly prevents privilege escalation and lateral movement.
+ * Configured canonically in web.xml (B14).
  */
-@WebFilter(filterName = "RoleAuthorizationFilter", urlPatterns = {"/admin/*", "/teacher/*", "/student/*"})
 public class RoleAuthorizationFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(RoleAuthorizationFilter.class);

@@ -32,6 +32,7 @@ public class Question implements Serializable {
 
     // Associated Answer Options
     private List<QuestionOption> options = new ArrayList<>();
+    private boolean inCurrentQuiz;
 
     public Question() {
         this.questionType = "SINGLE_CHOICE";
@@ -191,5 +192,25 @@ public class Question implements Serializable {
     public String getCorrectOptionLetter() {
         QuestionOption opt = getCorrectOption();
         return opt != null ? opt.getOptionLetter() : "";
+    }
+
+    public boolean isInCurrentQuiz() {
+        return inCurrentQuiz;
+    }
+
+    public boolean getInCurrentQuiz() {
+        return inCurrentQuiz;
+    }
+
+    public boolean isCurrentQuiz() {
+        return inCurrentQuiz;
+    }
+
+    public boolean getCurrentQuiz() {
+        return inCurrentQuiz;
+    }
+
+    public void setInCurrentQuiz(boolean inCurrentQuiz) {
+        this.inCurrentQuiz = inCurrentQuiz;
     }
 }

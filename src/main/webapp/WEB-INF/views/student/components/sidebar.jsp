@@ -24,10 +24,7 @@
             </div>
         </div>
 
-        <!-- Academic Space Nav Section -->
-        <div class="px-space-md pt-space-xs">
-            <p class="px-space-sm mb-1.5 font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Academic Space</p>
-        </div>
+
         <nav class="flex flex-col gap-1 px-space-sm" data-active-classes="bg-primary-container text-on-primary font-title-md">
             <a class="flex items-center gap-3 px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all ${param.activeNav == 'overview' || pageContext.request.servletPath == '/student/dashboard' ? 'bg-primary-container text-on-primary font-title-md shadow-sm' : ''}" 
                href="${pageContext.request.contextPath}/student/dashboard">
@@ -52,37 +49,11 @@
                 <span class="material-symbols-outlined text-[20px]">fact_check</span>
                 <span class="font-title-md text-title-md">My Results</span>
             </a>
-            <a class="flex items-center gap-3 px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all ${param.activeNav == 'performance-analytics' || pageContext.request.servletPath == '/student/analytics' ? 'bg-primary-container text-on-primary font-title-md shadow-sm' : ''}" 
-               href="${pageContext.request.contextPath}/student/analytics">
-                <span class="material-symbols-outlined text-[20px]">analytics</span>
-                <span class="font-title-md text-title-md">Performance Analytics</span>
-            </a>
+
             <a class="flex items-center gap-3 px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all ${param.activeNav == 'leaderboard' || pageContext.request.servletPath == '/student/leaderboard' ? 'bg-primary-container text-on-primary font-title-md shadow-sm' : ''}" 
                href="${pageContext.request.contextPath}/student/leaderboard">
                 <span class="material-symbols-outlined text-[20px]">military_tech</span>
                 <span class="font-title-md text-title-md">Leaderboard</span>
-            </a>
-        </nav>
-
-        <!-- Preferences Nav Section -->
-        <div class="px-space-md pt-space-md">
-            <p class="px-space-sm mb-1.5 font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Preferences</p>
-        </div>
-        <nav class="flex flex-col gap-1 px-space-sm" data-active-classes="bg-primary-container text-on-primary font-title-md">
-            <a class="flex items-center justify-between px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all ${param.activeNav == 'notifications' || pageContext.request.servletPath == '/student/notifications' ? 'bg-primary-container text-on-primary font-title-md shadow-sm' : ''}" 
-               href="${pageContext.request.contextPath}/student/notifications">
-                <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-[20px]">notifications</span>
-                    <span class="font-title-md text-title-md">Notifications</span>
-                </div>
-                <span class="font-label-sm text-label-sm bg-error-container text-on-error-container font-semibold px-1.5 py-0.5 rounded-full">
-                    <c:out value="${dashboardData.unreadNotifications != null ? dashboardData.unreadNotifications : 3}"/>
-                </span>
-            </a>
-            <a class="flex items-center gap-3 px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all ${param.activeNav == 'settings' || pageContext.request.servletPath == '/student/settings' ? 'bg-primary-container text-on-primary font-title-md shadow-sm' : ''}" 
-               href="${pageContext.request.contextPath}/student/settings">
-                <span class="material-symbols-outlined text-[20px]">settings</span>
-                <span class="font-title-md text-title-md">Settings</span>
             </a>
         </nav>
     </div>

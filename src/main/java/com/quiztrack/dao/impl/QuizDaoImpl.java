@@ -38,6 +38,7 @@ public class QuizDaoImpl implements QuizDao {
 
     @Override
     public List<Quiz> findAllQuizzes() {
+        syncQuizStatusLifecycle();
         List<Quiz> list = new ArrayList<>();
         String sql = SELECT_BASE + "ORDER BY CASE WHEN q.status = 'ACTIVE' THEN 1 WHEN q.status = 'SCHEDULED' THEN 2 ELSE 3 END, q.start_time ASC";
 
@@ -55,6 +56,7 @@ public class QuizDaoImpl implements QuizDao {
 
     @Override
     public List<Quiz> findQuizzesByTeacher(int teacherId) {
+        syncQuizStatusLifecycle();
         List<Quiz> list = new ArrayList<>();
         String sql = SELECT_BASE + "WHERE q.teacher_id = ? ORDER BY q.created_at DESC";
 
@@ -74,6 +76,7 @@ public class QuizDaoImpl implements QuizDao {
 
     @Override
     public Optional<Quiz> findActiveQuiz() {
+        syncQuizStatusLifecycle();
         String sql = SELECT_BASE + "WHERE q.status = 'ACTIVE' ORDER BY q.start_time ASC LIMIT 1";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -89,7 +92,27 @@ public class QuizDaoImpl implements QuizDao {
     }
 
     @Override
+    public Optional<Quiz> findActiveQuizByTeacher(int teacherId) {
+        syncQuizStatusLifecycle();
+        String sql = SELECT_BASE + "WHERE q.status = 'ACTIVE' AND q.teacher_id = ? ORDER BY q.start_time ASC LIMIT 1";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, teacherId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(mapResultSetToQuiz(rs));
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Error finding active quiz for teacher ID: {}", teacherId, e);
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<Quiz> findById(int quizId) {
+        syncQuizStatusLifecycle();
         String sql = SELECT_BASE + "WHERE q.quiz_id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -119,6 +142,24 @@ public class QuizDaoImpl implements QuizDao {
             }
         } catch (SQLException e) {
             logger.error("Error counting quizzes by status: {}", status, e);
+        }
+        return 0;
+    }
+
+    @Override
+    public int countQuizzesByStatusAndTeacher(String status, int teacherId) {
+        String sql = "SELECT COUNT(*) FROM quizzes WHERE UPPER(status) = UPPER(?) AND teacher_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, teacherId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Error counting quizzes by status: {} for teacher: {}", status, teacherId, e);
         }
         return 0;
     }
@@ -190,7 +231,7 @@ public class QuizDaoImpl implements QuizDao {
                 "    pass_percentage = ?, negative_marking = ?, negative_mark_value = ?, max_tab_switches = ?, " +
                 "    fullscreen_required = ?, webcam_required = ?, shuffle_questions = ?, start_time = ?, " +
                 "    end_time = ?, status = ?, updated_at = CURRENT_TIMESTAMP " +
-                "WHERE quiz_id = ? AND (teacher_id = ? OR ? = 1)";
+                "WHERE quiz_id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -211,8 +252,6 @@ public class QuizDaoImpl implements QuizDao {
             ps.setTimestamp(14, quiz.getEndTime());
             ps.setString(15, quiz.getStatus());
             ps.setInt(16, quiz.getQuizId());
-            ps.setInt(17, quiz.getTeacherId());
-            ps.setInt(18, quiz.getTeacherId()); // allows admin bypass if teacherId=1
 
             int affected = ps.executeUpdate();
             return affected > 0;
@@ -224,13 +263,12 @@ public class QuizDaoImpl implements QuizDao {
 
     @Override
     public boolean delete(int quizId, int teacherId) {
-        String sql = "DELETE FROM quizzes WHERE quiz_id = ? AND (teacher_id = ? OR ? = 1)";
+        String sql = "DELETE FROM quizzes WHERE quiz_id = ? AND teacher_id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, quizId);
             ps.setInt(2, teacherId);
-            ps.setInt(3, teacherId);
 
             int affected = ps.executeUpdate();
             return affected > 0;
@@ -241,15 +279,30 @@ public class QuizDaoImpl implements QuizDao {
     }
 
     @Override
+    public boolean delete(int quizId) {
+        String sql = "DELETE FROM quizzes WHERE quiz_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, quizId);
+
+            int affected = ps.executeUpdate();
+            return affected > 0;
+        } catch (SQLException e) {
+            logger.error("Error administratively deleting quiz ID: {}", quizId, e);
+        }
+        return false;
+    }
+
+    @Override
     public boolean updateStatus(int quizId, int teacherId, String status) {
-        String sql = "UPDATE quizzes SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE quiz_id = ? AND (teacher_id = ? OR ? = 1)";
+        String sql = "UPDATE quizzes SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE quiz_id = ? AND teacher_id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, status);
             ps.setInt(2, quizId);
             ps.setInt(3, teacherId);
-            ps.setInt(4, teacherId);
 
             int affected = ps.executeUpdate();
             return affected > 0;
@@ -260,14 +313,81 @@ public class QuizDaoImpl implements QuizDao {
     }
 
     @Override
+    public boolean updateStatus(int quizId, String status) {
+        String sql = "UPDATE quizzes SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE quiz_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setInt(2, quizId);
+
+            int affected = ps.executeUpdate();
+            return affected > 0;
+        } catch (SQLException e) {
+            logger.error("Error administratively updating status of quiz ID: {} to {}", quizId, status, e);
+        }
+        return false;
+    }
+
+    @Override
+    public int syncQuizStatusLifecycle() {
+        int totalChanged = 0;
+        // 1. SCHEDULED -> ACTIVE when start_time has arrived and end_time is in the future (or null)
+        String activateSql =
+                "UPDATE quizzes SET status = 'ACTIVE', updated_at = CURRENT_TIMESTAMP " +
+                "WHERE status = 'SCHEDULED' AND start_time IS NOT NULL AND start_time <= CURRENT_TIMESTAMP " +
+                "  AND (end_time IS NULL OR end_time > CURRENT_TIMESTAMP)";
+
+        // 2. ACTIVE or SCHEDULED -> COMPLETED when end_time has passed
+        String completeSql =
+                "UPDATE quizzes SET status = 'COMPLETED', updated_at = CURRENT_TIMESTAMP " +
+                "WHERE status IN ('ACTIVE', 'SCHEDULED') AND end_time IS NOT NULL AND end_time <= CURRENT_TIMESTAMP";
+
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            try (PreparedStatement ps1 = conn.prepareStatement(activateSql)) {
+                totalChanged += ps1.executeUpdate();
+            }
+            try (PreparedStatement ps2 = conn.prepareStatement(completeSql)) {
+                totalChanged += ps2.executeUpdate();
+            }
+        } catch (SQLException e) {
+            logger.error("Error synchronizing quiz status lifecycle", e);
+        }
+        return totalChanged;
+    }
+
+    @Override
+    public boolean syncTotalMarks(int quizId) {
+        String sql =
+                "UPDATE quizzes " +
+                "SET total_marks = COALESCE(( " +
+                "    SELECT SUM(COALESCE(qq.points_override, q.points)) " +
+                "    FROM quiz_questions qq " +
+                "    JOIN questions q ON qq.question_id = q.question_id " +
+                "    WHERE qq.quiz_id = quizzes.quiz_id " +
+                "), 0.00), " +
+                "updated_at = CURRENT_TIMESTAMP " +
+                "WHERE quiz_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, quizId);
+            int affected = ps.executeUpdate();
+            return affected > 0;
+        } catch (SQLException e) {
+            logger.error("Error synchronizing total marks for quiz ID: {}", quizId, e);
+        }
+        return false;
+    }
+
+    @Override
     public boolean isOwnedBy(int quizId, int teacherId) {
-        String sql = "SELECT 1 FROM quizzes WHERE quiz_id = ? AND (teacher_id = ? OR ? = 1)";
+        String sql = "SELECT 1 FROM quizzes WHERE quiz_id = ? AND teacher_id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, quizId);
             ps.setInt(2, teacherId);
-            ps.setInt(3, teacherId);
 
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();

@@ -40,43 +40,51 @@
         };
     </script>
 </head>
-<body class="bg-surface font-body text-on-surface antialiased">
-    <!-- Include universal student header -->
-    <jsp:include page="components/header.jsp"/>
+<body class="bg-surface font-body text-on-surface antialiased min-h-screen">
+    <!-- Reusable Student Sidebar Component -->
+    <jsp:include page="components/sidebar.jsp">
+        <jsp:param name="activeNav" value="${activeNav}"/>
+    </jsp:include>
 
-    <main class="pt-24 px-4 md:px-8 max-w-4xl mx-auto py-8">
-        <div class="bg-surface-container-lowest rounded-2xl p-8 border border-surface-container-high shadow-sm">
-            <div class="flex items-center gap-4 mb-4">
-                <div class="w-12 h-12 rounded-xl bg-primary-container text-on-primary flex items-center justify-center font-bold shadow-sm">
-                    <span class="material-symbols-outlined text-[28px]"><c:out value="${moduleIcon != null ? moduleIcon : 'school'}"/></span>
+    <!-- Main Content Area offset by Sidebar (lg:pl-64) -->
+    <div class="lg:pl-64">
+        <!-- Reusable Student Header -->
+        <jsp:include page="components/header.jsp"/>
+
+        <main class="w-full pt-20 px-4 sm:px-8 max-w-4xl mx-auto py-8">
+            <div class="bg-surface-container-lowest rounded-2xl p-8 border border-surface-container-high shadow-sm">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-primary-container text-on-primary flex items-center justify-center font-bold shadow-sm">
+                        <span class="material-symbols-outlined text-[28px]"><c:out value="${moduleIcon != null ? moduleIcon : 'school'}"/></span>
+                    </div>
+                    <div>
+                        <span class="text-xs font-mono font-bold uppercase text-primary tracking-wider">
+                            Candidate Module • Scheduled for <c:out value="${targetPhase}"/>
+                        </span>
+                        <h1 class="text-2xl font-bold font-display text-on-surface"><c:out value="${moduleTitle}"/></h1>
+                    </div>
                 </div>
-                <div>
-                    <span class="text-xs font-mono font-bold uppercase text-primary tracking-wider">
-                        Candidate Module • Scheduled for <c:out value="${targetPhase}"/>
-                    </span>
-                    <h1 class="text-2xl font-bold font-display text-on-surface"><c:out value="${moduleTitle}"/></h1>
+                
+                <p class="text-on-surface-variant text-sm mb-6 leading-relaxed">
+                    <c:out value="${moduleDescription}"/>
+                </p>
+
+                <div class="p-4 rounded-xl bg-surface-container-low border border-surface-container flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-2 text-xs text-on-surface font-medium">
+                        <span class="w-2 h-2 rounded-full bg-tertiary-container animate-ping"></span>
+                        <span>Route verified &amp; protected by Student Role Authorization Filter.</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <a href="${pageContext.request.contextPath}/student/dashboard" class="px-4 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-bold transition-all">
+                            Student Dashboard
+                        </a>
+                        <a href="${pageContext.request.contextPath}/student/quizzes" class="px-4 py-2 rounded-lg bg-primary text-on-primary text-xs font-bold hover:opacity-90 transition-all">
+                            Available Quizzes
+                        </a>
+                    </div>
                 </div>
             </div>
-            
-            <p class="text-on-surface-variant text-sm mb-6 leading-relaxed">
-                <c:out value="${moduleDescription}"/>
-            </p>
-
-            <div class="p-4 rounded-xl bg-surface-container-low border border-surface-container flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div class="flex items-center gap-2 text-xs text-on-surface font-medium">
-                    <span class="w-2 h-2 rounded-full bg-tertiary-container animate-ping"></span>
-                    <span>Route verified &amp; protected by Student Role Authorization Filter.</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <a href="${pageContext.request.contextPath}/student/dashboard" class="px-4 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-bold transition-all">
-                        Student Dashboard
-                    </a>
-                    <a href="${pageContext.request.contextPath}/student/quizzes" class="px-4 py-2 rounded-lg bg-primary text-on-primary text-xs font-bold hover:opacity-90 transition-all">
-                        Available Quizzes
-                    </a>
-                </div>
-            </div>
-        </div>
-    </main>
+        </main>
+    </div>
 </body>
 </html>

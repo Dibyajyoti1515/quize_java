@@ -89,33 +89,76 @@ public class TeacherQuestionBankServlet extends HttpServlet {
         try {
             if ("delete".equalsIgnoreCase(action)) {
                 int questionId = Integer.parseInt(request.getParameter("questionId"));
-                teacherService.deleteQuestion(questionId, teacherId);
+                boolean deleted = teacherService.deleteQuestion(questionId, teacherId);
+                if (deleted) {
+                    session.setAttribute("flashMessage", "Question #" + questionId + " permanently deleted.");
+                } else {
+                    session.setAttribute("flashError", "Failed to delete question #" + questionId + ". Only the authoring faculty member or an administrator can delete this question.");
+                }
             } else if ("create".equalsIgnoreCase(action)) {
                 Question q = new Question();
                 q.setSubjectId(Integer.parseInt(request.getParameter("subjectId")));
                 q.setQuestionText(request.getParameter("questionText"));
-                q.setQuestionType(request.getParameter("questionType"));
+
+                String qType = request.getParameter("questionType");
+                if (qType == null || qType.isBlank() || "MCQ".equalsIgnoreCase(qType)) {
+                    qType = "SINGLE_CHOICE";
+                }
+                q.setQuestionType(qType.toUpperCase());
                 q.setPoints(new BigDecimal(request.getParameter("points")));
                 q.setDifficultyLevel(request.getParameter("difficultyLevel"));
                 q.setTaxonomyTopic(request.getParameter("taxonomyTopic"));
                 q.setExplanation(request.getParameter("explanation"));
                 q.setCodeSnippet(request.getParameter("codeSnippet"));
 
-                String correctLetter = request.getParameter("correctOption");
                 List<QuestionOption> options = new ArrayList<>();
-                String[] letters = {"A", "B", "C", "D"};
-                int sortOrder = 1;
-                for (String l : letters) {
-                    String optText = request.getParameter("optionText_" + l);
-                    if (optText != null && !optText.trim().isEmpty()) {
-                        options.add(new QuestionOption(l, optText.trim(), l.equalsIgnoreCase(correctLetter), sortOrder++));
+                if ("TRUE_FALSE".equalsIgnoreCase(qType)) {
+                    String correctTF = request.getParameter("correctOption_TF");
+                    if (correctTF == null) correctTF = request.getParameter("correctOption");
+                    boolean aCorrect = "A".equalsIgnoreCase(correctTF) || "TRUE".equalsIgnoreCase(correctTF);
+                    options.add(new QuestionOption("A", "True", aCorrect, 1));
+                    options.add(new QuestionOption("B", "False", !aCorrect, 2));
+                } else if ("MULTI_CHOICE".equalsIgnoreCase(qType)) {
+                    String[] correctArr = request.getParameterValues("correctOptions");
+                    java.util.Set<String> correctSet = new java.util.HashSet<>();
+                    if (correctArr != null) {
+                        for (String s : correctArr) correctSet.add(s.toUpperCase());
+                    }
+                    String[] letters = {"A", "B", "C", "D"};
+                    int sortOrder = 1;
+                    for (String l : letters) {
+                        String optText = request.getParameter("optionText_" + l);
+                        if (optText != null && !optText.trim().isEmpty()) {
+                            options.add(new QuestionOption(l, optText.trim(), correctSet.contains(l), sortOrder++));
+                        }
+                    }
+                } else {
+                    // SINGLE_CHOICE
+                    String correctLetter = request.getParameter("correctOption");
+                    String[] letters = {"A", "B", "C", "D"};
+                    int sortOrder = 1;
+                    for (String l : letters) {
+                        String optText = request.getParameter("optionText_" + l);
+                        if (optText != null && !optText.trim().isEmpty()) {
+                            options.add(new QuestionOption(l, optText.trim(), l.equalsIgnoreCase(correctLetter), sortOrder++));
+                        }
                     }
                 }
+
                 q.setOptions(options);
-                teacherService.createQuestion(q, teacherId);
+                Question created = teacherService.createQuestion(q, teacherId);
+                if (created != null) {
+                    session.setAttribute("flashMessage", "Question successfully added to the departmental question bank.");
+                } else {
+                    session.setAttribute("flashError", "Failed to save question.");
+                }
             }
+        } catch (IllegalArgumentException iae) {
+            logger.warn("Validation error in question bank authoring: {}", iae.getMessage());
+            session.setAttribute("flashError", iae.getMessage());
         } catch (Exception e) {
             logger.error("Error in QuestionBankServlet doPost", e);
+            session.setAttribute("flashError", "Failed to process question bank request: " + e.getMessage());
         }
 
         response.sendRedirect(request.getContextPath() + "/teacher/question-bank");

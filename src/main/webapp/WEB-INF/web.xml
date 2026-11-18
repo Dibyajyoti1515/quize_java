@@ -11,6 +11,75 @@
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
+    <!-- ==================================================================== -->
+    <!-- CANONICAL FILTER PIPELINE (Deterministic Execution Order - B14)     -->
+    <!-- 1. CharacterEncodingFilter (UTF-8 request/response encoding)         -->
+    <!-- 2. NoCacheFilter (Prevents history caching of sensitive views)      -->
+    <!-- 3. AuthenticationFilter (Validates active session and maintenance)   -->
+    <!-- 4. RoleAuthorizationFilter (Enforces RBAC boundaries)                -->
+    <!-- 5. CsrfFilter (Enforces CSRF token validation on mutating POST/PUT)  -->
+    <!-- ==================================================================== -->
+
+    <!-- 1. Character Encoding Filter -->
+    <filter>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-class>com.quiztrack.filter.CharacterEncodingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- 2. No Cache Filter -->
+    <filter>
+        <filter-name>NoCacheFilter</filter-name>
+        <filter-class>com.quiztrack.filter.NoCacheFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>NoCacheFilter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+        <url-pattern>/teacher/*</url-pattern>
+        <url-pattern>/student/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+
+    <!-- 3. Authentication Filter -->
+    <filter>
+        <filter-name>AuthenticationFilter</filter-name>
+        <filter-class>com.quiztrack.filter.AuthenticationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthenticationFilter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+        <url-pattern>/teacher/*</url-pattern>
+        <url-pattern>/student/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+
+    <!-- 4. Role Authorization Filter -->
+    <filter>
+        <filter-name>RoleAuthorizationFilter</filter-name>
+        <filter-class>com.quiztrack.filter.RoleAuthorizationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>RoleAuthorizationFilter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+        <url-pattern>/teacher/*</url-pattern>
+        <url-pattern>/student/*</url-pattern>
+    </filter-mapping>
+
+    <!-- 5. CSRF Protection Filter -->
+    <filter>
+        <filter-name>CsrfFilter</filter-name>
+        <filter-class>com.quiztrack.filter.CsrfFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CsrfFilter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+        <url-pattern>/teacher/*</url-pattern>
+        <url-pattern>/student/*</url-pattern>
+    </filter-mapping>
+
     <!-- Session Configuration: 60 minutes -->
     <session-config>
         <session-timeout>60</session-timeout>

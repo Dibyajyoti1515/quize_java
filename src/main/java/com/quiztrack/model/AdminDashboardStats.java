@@ -130,11 +130,19 @@ public class AdminDashboardStats implements Serializable {
         return averageScorePercentage;
     }
 
+    public double getAverageScore() {
+        return averageScorePercentage;
+    }
+
     public void setAverageScorePercentage(double averageScorePercentage) {
         this.averageScorePercentage = averageScorePercentage;
     }
 
     public double getOverallPassRate() {
+        return overallPassRate;
+    }
+
+    public double getPassRate() {
         return overallPassRate;
     }
 
@@ -175,6 +183,10 @@ public class AdminDashboardStats implements Serializable {
     }
 
     public List<UserTrendDto> getRegistrationTrends() {
+        return registrationTrends;
+    }
+
+    public List<UserTrendDto> getUserGrowthTrend() {
         return registrationTrends;
     }
 

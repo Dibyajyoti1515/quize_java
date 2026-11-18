@@ -31,4 +31,6 @@ public interface ResultDao {
     List<HistoryQuizDto> getHistoricalResults(int studentId);
 
     List<StudentResultDto> getAllResultsForStudent(int studentId);
+
+    List<StudentResultDto> getResultsByQuizId(int quizId);
 }

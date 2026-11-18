@@ -67,34 +67,11 @@
         <span>Question Bank</span>
       </a>
 
-      <!-- Student Roster -->
-      <a href="${pageContext.request.contextPath}/teacher/students" 
-         class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-label-md text-sm transition-all ${reqUri.contains('/students') ? 'bg-primary-container text-on-primary font-bold shadow-sm' : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'}">
-        <span class="material-symbols-outlined text-[20px]">group</span>
-        <span>Student Roster</span>
-      </a>
-
-      <!-- Violation Logs -->
-      <a href="${pageContext.request.contextPath}/teacher/violations" 
-         class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-label-md text-sm transition-all ${reqUri.contains('/violations') ? 'bg-primary-container text-on-primary font-bold shadow-sm' : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'}">
-        <span class="material-symbols-outlined text-[20px]">policy</span>
-        <span>Violation Logs</span>
-      </a>
-
-      <span class="px-3 pt-4 pb-1 text-[11px] font-mono font-bold uppercase tracking-wider text-outline">Analytics & Control</span>
-
-      <!-- Telemetry & Reports -->
-      <a href="${pageContext.request.contextPath}/teacher/analytics" 
-         class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-label-md text-sm transition-all ${reqUri.contains('/analytics') ? 'bg-primary-container text-on-primary font-bold shadow-sm' : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'}">
-        <span class="material-symbols-outlined text-[20px]">analytics</span>
-        <span>Telemetry & Reports</span>
-      </a>
-
-      <!-- Proctor Rules Engine -->
-      <a href="${pageContext.request.contextPath}/teacher/rules" 
-         class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-label-md text-sm transition-all ${reqUri.contains('/rules') ? 'bg-primary-container text-on-primary font-bold shadow-sm' : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'}">
-        <span class="material-symbols-outlined text-[20px]">tune</span>
-        <span>Proctor Rules Engine</span>
+      <!-- Performance Reports -->
+      <a href="${pageContext.request.contextPath}/teacher/reports" 
+         class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-label-md text-sm transition-all ${reqUri.contains('/reports') ? 'bg-primary-container text-on-primary font-bold shadow-sm' : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'}">
+        <span class="material-symbols-outlined text-[20px]">assessment</span>
+        <span>Performance Reports</span>
       </a>
     </nav>
   </div>

@@ -31,6 +31,10 @@ public class AdminServiceImpl implements AdminService {
         this.userDao = new UserDaoImpl();
     }
 
+    public AdminServiceImpl(AdminDao adminDao) {
+        this(adminDao, new com.quiztrack.dao.impl.UserDaoImpl());
+    }
+
     public AdminServiceImpl(AdminDao adminDao, UserDao userDao) {
         this.adminDao = adminDao;
         this.userDao = userDao;
@@ -338,5 +342,10 @@ public class AdminServiceImpl implements AdminService {
     public int countAuditLogs(String eventType, String userQuery, String severity,
                               Timestamp startDate, Timestamp endDate) {
         return adminDao.countAuditLogs(eventType, userQuery, severity, startDate, endDate);
+    }
+
+    @Override
+    public List<DepartmentSummaryDto> getDepartmentSummaries() {
+        return adminDao.getDepartmentSummaries();
     }
 }

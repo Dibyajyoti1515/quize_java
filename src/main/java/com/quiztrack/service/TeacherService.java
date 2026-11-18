@@ -1,9 +1,13 @@
 package com.quiztrack.service;
 
+import com.quiztrack.model.Cohort;
 import com.quiztrack.model.Question;
 import com.quiztrack.model.Quiz;
+import com.quiztrack.model.QuizAssignment;
 import com.quiztrack.model.Subject;
 import com.quiztrack.model.TeacherDashboardData;
+import com.quiztrack.model.User;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +34,13 @@ public interface TeacherService {
 
     List<Quiz> getQuizzesByTeacher(int teacherId);
 
+    List<Quiz> getAllQuizzes();
+
     boolean isQuizOwnedBy(int quizId, int teacherId);
+
+    void validateQuizForPublish(int quizId, int teacherId);
+
+    boolean syncTotalMarks(int quizId);
 
     List<Subject> getAllSubjects();
 
@@ -54,4 +64,20 @@ public interface TeacherService {
     boolean removeQuestionFromQuiz(int questionId, int quizId, int teacherId);
 
     int duplicateQuestion(int questionId, Integer targetQuizId, int teacherId);
+
+    // Quiz Assignments & Target Slates (Task 5 / B1)
+    List<QuizAssignment> getQuizAssignments(int quizId, int teacherId);
+
+    boolean assignQuizToCohort(int quizId, int cohortId, Timestamp dueAt, int teacherId);
+
+    boolean assignQuizToStudent(int quizId, int studentId, Timestamp dueAt, int teacherId);
+
+    boolean removeQuizAssignment(int assignmentId, int quizId, int teacherId);
+
+    List<Cohort> getAvailableCohortsForTeacher(int teacherId);
+
+    List<User> getAvailableStudentsForTeacher(int teacherId);
+
+    // Performance Reports
+    List<com.quiztrack.model.StudentResultDto> getQuizPerformanceReport(int quizId, int teacherId);
 }

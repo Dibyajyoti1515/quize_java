@@ -82,6 +82,26 @@
                     </div>
                 </div>
 
+                <!-- Flash Notice -->
+                <c:if test="${not empty sessionScope.flashMessage}">
+                    <div class="p-4 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 text-sm font-semibold flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                            <span><c:out value="${sessionScope.flashMessage}"/></span>
+                        </div>
+                    </div>
+                    <c:remove var="flashMessage" scope="session"/>
+                </c:if>
+                <c:if test="${not empty sessionScope.flashError}">
+                    <div class="p-4 rounded-xl bg-rose-50 text-rose-800 border border-rose-200 text-sm font-semibold flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[20px]">error</span>
+                            <span><c:out value="${sessionScope.flashError}"/></span>
+                        </div>
+                    </div>
+                    <c:remove var="flashError" scope="session"/>
+                </c:if>
+
                 <!-- Filter & Search Bar -->
                 <form method="GET" action="${pageContext.request.contextPath}/teacher/question-bank" class="bg-surface-container-lowest p-5 rounded-2xl shadow-sm border border-surface-container-high flex flex-wrap items-center gap-4">
                     <div class="flex-1 min-w-[200px]">
@@ -193,6 +213,7 @@
                                         <div class="flex items-center gap-2">
                                             <!-- Delete Form -->
                                             <form method="POST" action="${pageContext.request.contextPath}/teacher/question-bank" onsubmit="return confirm('Are you sure you want to permanently delete Question #${q.questionId}?');" class="inline">
+                                                <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
                                                 <input type="hidden" name="action" value="delete"/>
                                                 <input type="hidden" name="questionId" value="${q.questionId}"/>
                                                 <button type="submit" class="p-2 rounded-lg text-rose-600 hover:bg-rose-50 transition-colors" title="Delete Question">
@@ -261,16 +282,24 @@
             </div>
 
             <form method="POST" action="${pageContext.request.contextPath}/teacher/question-bank" class="flex flex-col gap-4 mt-4">
+                <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
                 <input type="hidden" name="action" value="create"/>
-                <input type="hidden" name="questionType" value="MCQ"/>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Subject</label>
                         <select name="subjectId" required class="w-full px-3 py-2 rounded-xl bg-surface-container-low border border-surface-container-high text-sm font-medium focus:ring-2 focus:ring-primary focus:outline-none">
                             <c:forEach var="sub" items="${subjects}">
                                 <option value="${sub.subjectId}">${sub.subjectCode} - ${sub.subjectName}</option>
                             </c:forEach>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Question Type</label>
+                        <select name="questionType" id="bankQuestionType" onchange="handleBankTypeChange(this.value)" class="w-full px-3 py-2 rounded-xl bg-surface-container-low border border-surface-container-high text-sm font-medium focus:ring-2 focus:ring-primary focus:outline-none">
+                            <option value="SINGLE_CHOICE" selected>Single Choice</option>
+                            <option value="MULTI_CHOICE">Multiple Choice</option>
+                            <option value="TRUE_FALSE">True / False</option>
                         </select>
                     </div>
                     <div>
@@ -302,30 +331,72 @@
                     <textarea name="codeSnippet" rows="2" placeholder="Optional formatted code snippet..." class="w-full px-3 py-2 rounded-xl bg-surface-container-low border border-surface-container-high text-xs font-mono focus:ring-2 focus:ring-primary focus:outline-none"></textarea>
                 </div>
 
-                <!-- 4 Options -->
-                <div>
-                    <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-2">Options &amp; Correct Answer Key</label>
+                <!-- SINGLE CHOICE OPTIONS CONTAINER -->
+                <div id="bankOptionsSingleChoice" class="flex flex-col gap-2">
+                    <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Options &amp; Correct Answer Key (Radio: exactly 1 correct)</label>
                     <div class="flex flex-col gap-2.5">
                         <div class="flex items-center gap-3">
                             <input type="radio" name="correctOption" value="A" checked class="w-4 h-4 text-primary focus:ring-primary" title="Select if Option A is correct"/>
                             <span class="w-6 font-mono font-bold text-xs text-on-surface">A:</span>
-                            <input type="text" name="optionText_A" required placeholder="Option A text" class="flex-1 px-3 py-1.5 rounded-lg bg-surface-container-low border border-surface-container-high text-sm focus:ring-2 focus:ring-primary focus:outline-none"/>
+                            <input type="text" name="optionText_A" id="optA_single" placeholder="Option A text" class="flex-1 px-3 py-1.5 rounded-lg bg-surface-container-low border border-surface-container-high text-sm focus:ring-2 focus:ring-primary focus:outline-none"/>
                         </div>
                         <div class="flex items-center gap-3">
                             <input type="radio" name="correctOption" value="B" class="w-4 h-4 text-primary focus:ring-primary" title="Select if Option B is correct"/>
                             <span class="w-6 font-mono font-bold text-xs text-on-surface">B:</span>
-                            <input type="text" name="optionText_B" required placeholder="Option B text" class="flex-1 px-3 py-1.5 rounded-lg bg-surface-container-low border border-surface-container-high text-sm focus:ring-2 focus:ring-primary focus:outline-none"/>
+                            <input type="text" name="optionText_B" id="optB_single" placeholder="Option B text" class="flex-1 px-3 py-1.5 rounded-lg bg-surface-container-low border border-surface-container-high text-sm focus:ring-2 focus:ring-primary focus:outline-none"/>
                         </div>
                         <div class="flex items-center gap-3">
                             <input type="radio" name="correctOption" value="C" class="w-4 h-4 text-primary focus:ring-primary" title="Select if Option C is correct"/>
                             <span class="w-6 font-mono font-bold text-xs text-on-surface">C:</span>
-                            <input type="text" name="optionText_C" required placeholder="Option C text" class="flex-1 px-3 py-1.5 rounded-lg bg-surface-container-low border border-surface-container-high text-sm focus:ring-2 focus:ring-primary focus:outline-none"/>
+                            <input type="text" name="optionText_C" id="optC_single" placeholder="Option C text" class="flex-1 px-3 py-1.5 rounded-lg bg-surface-container-low border border-surface-container-high text-sm focus:ring-2 focus:ring-primary focus:outline-none"/>
                         </div>
                         <div class="flex items-center gap-3">
                             <input type="radio" name="correctOption" value="D" class="w-4 h-4 text-primary focus:ring-primary" title="Select if Option D is correct"/>
                             <span class="w-6 font-mono font-bold text-xs text-on-surface">D:</span>
-                            <input type="text" name="optionText_D" required placeholder="Option D text" class="flex-1 px-3 py-1.5 rounded-lg bg-surface-container-low border border-surface-container-high text-sm focus:ring-2 focus:ring-primary focus:outline-none"/>
+                            <input type="text" name="optionText_D" id="optD_single" placeholder="Option D text" class="flex-1 px-3 py-1.5 rounded-lg bg-surface-container-low border border-surface-container-high text-sm focus:ring-2 focus:ring-primary focus:outline-none"/>
                         </div>
+                    </div>
+                </div>
+
+                <!-- MULTI CHOICE OPTIONS CONTAINER (Checkboxes) -->
+                <div id="bankOptionsMultiChoice" class="hidden flex flex-col gap-2">
+                    <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">Multi-Choice Options (Checkboxes: 1 or more correct)</label>
+                    <div class="flex flex-col gap-2.5">
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" name="correctOptions" value="A" checked class="w-4 h-4 text-primary rounded focus:ring-primary"/>
+                            <span class="w-6 font-mono font-bold text-xs text-on-surface">A:</span>
+                            <input type="text" name="optionText_A" id="optA_multi" placeholder="Option A text" class="flex-1 px-3 py-1.5 rounded-lg bg-surface-container-low border border-surface-container-high text-sm focus:ring-2 focus:ring-primary focus:outline-none"/>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" name="correctOptions" value="B" class="w-4 h-4 text-primary rounded focus:ring-primary"/>
+                            <span class="w-6 font-mono font-bold text-xs text-on-surface">B:</span>
+                            <input type="text" name="optionText_B" id="optB_multi" placeholder="Option B text" class="flex-1 px-3 py-1.5 rounded-lg bg-surface-container-low border border-surface-container-high text-sm focus:ring-2 focus:ring-primary focus:outline-none"/>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" name="correctOptions" value="C" class="w-4 h-4 text-primary rounded focus:ring-primary"/>
+                            <span class="w-6 font-mono font-bold text-xs text-on-surface">C:</span>
+                            <input type="text" name="optionText_C" id="optC_multi" placeholder="Option C text" class="flex-1 px-3 py-1.5 rounded-lg bg-surface-container-low border border-surface-container-high text-sm focus:ring-2 focus:ring-primary focus:outline-none"/>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" name="correctOptions" value="D" class="w-4 h-4 text-primary rounded focus:ring-primary"/>
+                            <span class="w-6 font-mono font-bold text-xs text-on-surface">D:</span>
+                            <input type="text" name="optionText_D" id="optD_multi" placeholder="Option D text" class="flex-1 px-3 py-1.5 rounded-lg bg-surface-container-low border border-surface-container-high text-sm focus:ring-2 focus:ring-primary focus:outline-none"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TRUE/FALSE OPTIONS CONTAINER -->
+                <div id="bankOptionsTrueFalse" class="hidden flex flex-col gap-2">
+                    <label class="block text-xs font-semibold text-on-surface-variant uppercase mb-1">True / False Answer Key</label>
+                    <div class="flex items-center gap-6 p-4 rounded-xl bg-surface-container-low border border-surface-container-high">
+                        <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-sm text-on-surface">
+                            <input type="radio" name="correctOption_TF" value="TRUE" checked class="w-4 h-4 text-primary focus:ring-primary"/>
+                            <span>True (Option A)</span>
+                        </label>
+                        <label class="flex items-center gap-2.5 cursor-pointer font-semibold text-sm text-on-surface">
+                            <input type="radio" name="correctOption_TF" value="FALSE" class="w-4 h-4 text-primary focus:ring-primary"/>
+                            <span>False (Option B)</span>
+                        </label>
                     </div>
                 </div>
 
@@ -354,6 +425,26 @@
                 modal.classList.remove('hidden');
             } else {
                 modal.classList.add('hidden');
+            }
+        }
+
+        function handleBankTypeChange(val) {
+            const sc = document.getElementById('bankOptionsSingleChoice');
+            const mc = document.getElementById('bankOptionsMultiChoice');
+            const tf = document.getElementById('bankOptionsTrueFalse');
+            if (!sc || !mc || !tf) return;
+            if (val === 'MULTI_CHOICE') {
+                sc.classList.add('hidden');
+                mc.classList.remove('hidden');
+                tf.classList.add('hidden');
+            } else if (val === 'TRUE_FALSE') {
+                sc.classList.add('hidden');
+                mc.classList.add('hidden');
+                tf.classList.remove('hidden');
+            } else {
+                sc.classList.remove('hidden');
+                mc.classList.add('hidden');
+                tf.classList.add('hidden');
             }
         }
     </script>

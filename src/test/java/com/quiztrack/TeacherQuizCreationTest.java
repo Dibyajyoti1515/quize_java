@@ -1,15 +1,25 @@
 package com.quiztrack;
 
+import com.quiztrack.dao.ExamDao;
 import com.quiztrack.dao.QuestionDao;
+import com.quiztrack.dao.QuizAssignmentDao;
 import com.quiztrack.dao.QuizDao;
+import com.quiztrack.dao.StudentDao;
 import com.quiztrack.dao.SubjectDao;
+import com.quiztrack.dao.impl.ExamDaoImpl;
 import com.quiztrack.dao.impl.QuestionDaoImpl;
+import com.quiztrack.dao.impl.QuizAssignmentDaoImpl;
 import com.quiztrack.dao.impl.QuizDaoImpl;
+import com.quiztrack.dao.impl.StudentDaoImpl;
 import com.quiztrack.dao.impl.SubjectDaoImpl;
+import com.quiztrack.model.Cohort;
 import com.quiztrack.model.Question;
 import com.quiztrack.model.QuestionOption;
 import com.quiztrack.model.Quiz;
+import com.quiztrack.model.QuizAssignment;
+import com.quiztrack.model.StudentDashboardData.StudentQuizCard;
 import com.quiztrack.model.Subject;
+import com.quiztrack.model.User;
 import com.quiztrack.service.TeacherService;
 import com.quiztrack.service.impl.TeacherServiceImpl;
 import com.quiztrack.util.DatabaseConnection;
@@ -29,6 +39,9 @@ public class TeacherQuizCreationTest {
     private static QuizDao quizDao;
     private static QuestionDao questionDao;
     private static SubjectDao subjectDao;
+    private static QuizAssignmentDao quizAssignmentDao;
+    private static StudentDao studentDao;
+    private static ExamDao examDao;
     private static TeacherService teacherService;
 
     private static final int TEACHER_RONALD_ID = 2; // Ronald Vance
@@ -42,6 +55,9 @@ public class TeacherQuizCreationTest {
         quizDao = new QuizDaoImpl();
         questionDao = new QuestionDaoImpl();
         subjectDao = new SubjectDaoImpl();
+        quizAssignmentDao = new QuizAssignmentDaoImpl();
+        studentDao = new StudentDaoImpl();
+        examDao = new ExamDaoImpl();
         teacherService = new TeacherServiceImpl(quizDao, questionDao, subjectDao);
     }
 
@@ -362,7 +378,7 @@ public class TeacherQuizCreationTest {
 
     @Test
     @Order(15)
-    @DisplayName("Test 15: Validation - Start time after end time or window shorter than duration rejected")
+    @DisplayName("Test 15: Validation - Start time after end time rejected; candidate entry window accepted")
     public void testValidationInvalidDateWindowRejected() {
         long now = System.currentTimeMillis();
         Timestamp start = new Timestamp(now + 3600000L); // +1 hour
@@ -379,18 +395,21 @@ public class TeacherQuizCreationTest {
             teacherService.createQuiz(badQuiz1, TEACHER_RONALD_ID);
         }, "Start time after end time must be rejected");
 
-        // Window shorter than duration: 30 min window for 60 min exam
-        Timestamp endShort = new Timestamp(now + 3600000L + 1800000L); // +30 min window
-        Quiz badQuiz2 = new Quiz();
-        badQuiz2.setTitle("Assessment With Window Shorter Than Duration");
-        badQuiz2.setSubjectId(1);
-        badQuiz2.setDurationMinutes(60); // 60 min duration
-        badQuiz2.setStartTime(start);
-        badQuiz2.setEndTime(endShort); // only 30 min window
+        // Candidate entry window: 10 min entry window for 60 min exam is valid candidate entry window
+        Timestamp endShort = new Timestamp(now + 3600000L + 600000L); // +10 min window
+        Quiz entryWindowQuiz = new Quiz();
+        entryWindowQuiz.setTitle("Assessment With Candidate Entry Window");
+        entryWindowQuiz.setSubjectId(1);
+        entryWindowQuiz.setDurationMinutes(60); // 60 min exam duration
+        entryWindowQuiz.setStartTime(start);
+        entryWindowQuiz.setEndTime(endShort); // 10 min entry window
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            teacherService.createQuiz(badQuiz2, TEACHER_RONALD_ID);
-        }, "Window shorter than exam duration must be rejected");
+        Quiz createdEntryQuiz = assertDoesNotThrow(() -> {
+            return teacherService.createQuiz(entryWindowQuiz, TEACHER_RONALD_ID);
+        }, "Candidate entry window shorter than duration must be permitted");
+        assertNotNull(createdEntryQuiz);
+        assertTrue(createdEntryQuiz.getQuizId() > 0);
+        teacherService.deleteQuiz(createdEntryQuiz.getQuizId(), TEACHER_RONALD_ID);
     }
 
     @Test
@@ -749,5 +768,428 @@ public class TeacherQuizCreationTest {
         // Clean up
         teacherService.deleteQuestion(multiId, TEACHER_RONALD_ID);
         teacherService.deleteQuestion(tfId, TEACHER_RONALD_ID);
+    }
+
+    @Test
+    @Order(23)
+    @DisplayName("Test 23: Quiz settings editing and parameter updates (B7)")
+    public void testUpdateQuizParameters() {
+        Quiz testQuiz = new Quiz();
+        testQuiz.setTitle("CS402: Mid-Term Systems Architecture");
+        testQuiz.setDescription("Initial assessment description.");
+        testQuiz.setSubjectId(1);
+        testQuiz.setTeacherId(TEACHER_RONALD_ID);
+        testQuiz.setDurationMinutes(45);
+        testQuiz.setTotalMarks(new BigDecimal("10.00"));
+        testQuiz.setPassPercentage(new BigDecimal("40.00"));
+        testQuiz.setStatus("DRAFT");
+        Quiz created = teacherService.createQuiz(testQuiz, TEACHER_RONALD_ID);
+        assertNotNull(created);
+        int quizId = created.getQuizId();
+
+        try {
+            Optional<Quiz> qOpt = teacherService.getQuizById(quizId);
+            assertTrue(qOpt.isPresent(), "Created quiz must exist");
+            Quiz quiz = qOpt.get();
+
+            quiz.setTitle("CS402: Advanced Distributed Systems Architecture");
+            quiz.setDescription("Updated comprehensive mid-term assessment covering consensus and consistency.");
+            quiz.setDurationMinutes(75);
+            quiz.setPassPercentage(new BigDecimal("50.00"));
+            quiz.setNegativeMarking(true);
+            quiz.setNegativeMarkValue(new BigDecimal("1.00"));
+            quiz.setShuffleQuestions(true);
+            quiz.setFullscreenRequired(true);
+            quiz.setWebcamRequired(false);
+            quiz.setMaxTabSwitches(5);
+
+            boolean updated = teacherService.updateQuiz(quiz, TEACHER_RONALD_ID);
+            assertTrue(updated, "Teacher must be able to update quiz parameters");
+
+            Optional<Quiz> reloaded = teacherService.getQuizById(quizId);
+            assertTrue(reloaded.isPresent());
+            assertEquals("CS402: Advanced Distributed Systems Architecture", reloaded.get().getTitle());
+            assertEquals(75, reloaded.get().getDurationMinutes());
+            assertEquals(new BigDecimal("50.00"), reloaded.get().getPassPercentage());
+            assertEquals(new BigDecimal("1.00"), reloaded.get().getNegativeMarkValue());
+            assertFalse(reloaded.get().isWebcamRequired());
+            assertEquals(5, reloaded.get().getMaxTabSwitches());
+        } finally {
+            teacherService.deleteQuiz(quizId, TEACHER_RONALD_ID);
+        }
+    }
+
+    @Test
+    @Order(24)
+    @DisplayName("Test 24: Publish validation checklist rejects invalid quizzes (B8)")
+    public void testPublishValidationChecklist() {
+        // 1. Create a bare quiz with 0 questions
+        Quiz emptyQuiz = new Quiz();
+        emptyQuiz.setTitle("Empty Quiz For Validation");
+        emptyQuiz.setSubjectId(1);
+        emptyQuiz.setTeacherId(TEACHER_RONALD_ID);
+        emptyQuiz.setDurationMinutes(30);
+        emptyQuiz.setStatus("DRAFT");
+        Quiz createdEmpty = teacherService.createQuiz(emptyQuiz, TEACHER_RONALD_ID);
+        assertNotNull(createdEmpty);
+        int emptyQuizId = createdEmpty.getQuizId();
+
+        try {
+            // Must fail publish validation because 0 questions exist
+            IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+                teacherService.validateQuizForPublish(emptyQuizId, TEACHER_RONALD_ID);
+            });
+            assertTrue(ex.getMessage().contains("at least 1 question"), "Should reject quiz with 0 questions: " + ex.getMessage());
+
+            // 2. Add a valid question to the quiz
+            Question q = new Question();
+            q.setSubjectId(1);
+            q.setQuizId(emptyQuizId);
+            q.setQuestionText("Which port does HTTPS use by default?");
+            q.setQuestionType("SINGLE_CHOICE");
+            q.setPoints(new BigDecimal("4.00"));
+            q.addOption(new QuestionOption("A", "80", false, 1));
+            q.addOption(new QuestionOption("B", "443", true, 2));
+            Question createdQ = teacherService.createQuestion(q, TEACHER_RONALD_ID);
+            assertNotNull(createdQ);
+
+            // 3. Set elapsed past end time and verify rejection
+            Quiz qWithPastEnd = teacherService.getQuizById(emptyQuizId).get();
+            long now = System.currentTimeMillis();
+            qWithPastEnd.setStartTime(new Timestamp(now - 3600 * 1000L));
+            qWithPastEnd.setEndTime(new Timestamp(now - 1800 * 1000L)); // ended 30 mins ago
+            quizDao.update(qWithPastEnd);
+
+            IllegalArgumentException exPast = assertThrows(IllegalArgumentException.class, () -> {
+                teacherService.validateQuizForPublish(emptyQuizId, TEACHER_RONALD_ID);
+            });
+            assertTrue(exPast.getMessage().contains("already elapsed"), "Should reject quiz with elapsed end time: " + exPast.getMessage());
+
+            // 4. Set invalid window (start > end) and verify rejection
+            qWithPastEnd.setStartTime(new Timestamp(now + 7200 * 1000L));
+            qWithPastEnd.setEndTime(new Timestamp(now + 3600 * 1000L)); // end before start!
+            quizDao.update(qWithPastEnd);
+
+            IllegalArgumentException exWindow = assertThrows(IllegalArgumentException.class, () -> {
+                teacherService.validateQuizForPublish(emptyQuizId, TEACHER_RONALD_ID);
+            });
+            assertTrue(exWindow.getMessage().contains("before end time"), "Should reject inverted window: " + exWindow.getMessage());
+
+            // Clean up question
+            teacherService.removeQuestionFromQuiz(createdQ.getQuestionId(), emptyQuizId, TEACHER_RONALD_ID);
+            teacherService.deleteQuestion(createdQ.getQuestionId(), TEACHER_RONALD_ID);
+        } finally {
+            teacherService.deleteQuiz(emptyQuizId, TEACHER_RONALD_ID);
+        }
+    }
+
+    @Test
+    @Order(25)
+    @DisplayName("Test 25: Smart scheduling and status lifecycle on publish (B8)")
+    public void testSmartPublishAndScheduling() {
+        // Create a scheduled quiz with future start time
+        Quiz schedQuiz = new Quiz();
+        schedQuiz.setTitle("CS402: Scheduled Final Exam");
+        schedQuiz.setSubjectId(1);
+        schedQuiz.setTeacherId(TEACHER_RONALD_ID);
+        schedQuiz.setDurationMinutes(60);
+        long now = System.currentTimeMillis();
+        Timestamp futureStart = new Timestamp(now + 24 * 3600 * 1000L); // tomorrow
+        Timestamp futureEnd = new Timestamp(now + 26 * 3600 * 1000L);   // tomorrow + 2 hrs
+        schedQuiz.setStartTime(futureStart);
+        schedQuiz.setEndTime(futureEnd);
+        schedQuiz.setStatus("DRAFT");
+
+        Quiz created = teacherService.createQuiz(schedQuiz, TEACHER_RONALD_ID);
+        assertNotNull(created);
+        int quizId = created.getQuizId();
+
+        try {
+            // Add a valid question
+            Question q = new Question();
+            q.setSubjectId(1);
+            q.setQuizId(quizId);
+            q.setQuestionText("What is the CAP theorem?");
+            q.setQuestionType("SINGLE_CHOICE");
+            q.setPoints(new BigDecimal("10.00"));
+            q.addOption(new QuestionOption("A", "Consistency, Availability, Partition tolerance", true, 1));
+            q.addOption(new QuestionOption("B", "Concurrency, Atomicity, Persistence", false, 2));
+            Question createdQ = teacherService.createQuestion(q, TEACHER_RONALD_ID);
+            assertNotNull(createdQ);
+
+            // Assign Cohort 1 to satisfy target assignment publish requirement
+            boolean assigned = teacherService.assignQuizToCohort(quizId, 1, futureEnd, TEACHER_RONALD_ID);
+            assertTrue(assigned, "Assigning cohort to quiz must succeed");
+
+            // Validate for publish
+            assertDoesNotThrow(() -> teacherService.validateQuizForPublish(quizId, TEACHER_RONALD_ID));
+
+            // Smart scheduling: start_time is in the future -> transitions to SCHEDULED
+            teacherService.setQuizStatus(quizId, TEACHER_RONALD_ID, "SCHEDULED");
+            Optional<Quiz> pubOpt = teacherService.getQuizById(quizId);
+            assertTrue(pubOpt.isPresent());
+            assertEquals("SCHEDULED", pubOpt.get().getStatus(), "Future start time quiz should be SCHEDULED");
+
+            // Revert to draft
+            teacherService.setQuizStatus(quizId, TEACHER_RONALD_ID, "DRAFT");
+            assertEquals("DRAFT", teacherService.getQuizById(quizId).get().getStatus());
+
+            // Immediate start time -> transitions to ACTIVE
+            teacherService.setQuizStatus(quizId, TEACHER_RONALD_ID, "ACTIVE");
+            assertEquals("ACTIVE", teacherService.getQuizById(quizId).get().getStatus());
+
+            // Clean up
+            teacherService.removeQuestionFromQuiz(createdQ.getQuestionId(), quizId, TEACHER_RONALD_ID);
+            teacherService.deleteQuestion(createdQ.getQuestionId(), TEACHER_RONALD_ID);
+        } finally {
+            teacherService.deleteQuiz(quizId, TEACHER_RONALD_ID);
+        }
+    }
+
+    @Test
+    @Order(26)
+    @DisplayName("Test 26: Time-driven status lifecycle sync (SCHEDULED -> ACTIVE -> COMPLETED) (B8)")
+    public void testTimeDrivenStatusLifecycleSync() {
+        long now = System.currentTimeMillis();
+        // 1. Create a quiz with start_time 10 mins ago and end_time 30 mins in the future, marked SCHEDULED
+        Quiz quiz = new Quiz();
+        quiz.setTitle("CS402: Auto-Activating Exam");
+        quiz.setSubjectId(1);
+        quiz.setTeacherId(TEACHER_RONALD_ID);
+        quiz.setDurationMinutes(30);
+        quiz.setStartTime(new Timestamp(now - 10 * 60 * 1000L));
+        quiz.setEndTime(new Timestamp(now + 30 * 60 * 1000L));
+        quiz.setStatus("SCHEDULED");
+
+        Quiz created = teacherService.createQuiz(quiz, TEACHER_RONALD_ID);
+        assertNotNull(created);
+        int quizId = created.getQuizId();
+
+        try {
+            // Trigger lifecycle sync
+            int transitioned = quizDao.syncQuizStatusLifecycle();
+            assertTrue(transitioned >= 1, "Should transition at least 1 quiz");
+
+            Optional<Quiz> activatedOpt = teacherService.getQuizById(quizId);
+            assertTrue(activatedOpt.isPresent());
+            assertEquals("ACTIVE", activatedOpt.get().getStatus(), "SCHEDULED quiz with past start_time must transition to ACTIVE");
+
+            // 2. Now simulate end_time passing (set end_time to 5 mins in past)
+            Quiz activeQuiz = activatedOpt.get();
+            activeQuiz.setEndTime(new Timestamp(now - 5 * 60 * 1000L));
+            quizDao.update(activeQuiz);
+
+            // Trigger lifecycle sync
+            int completedCount = quizDao.syncQuizStatusLifecycle();
+            assertTrue(completedCount >= 1, "Should transition expired quiz to COMPLETED");
+
+            Optional<Quiz> completedOpt = teacherService.getQuizById(quizId);
+            assertTrue(completedOpt.isPresent());
+            assertEquals("COMPLETED", completedOpt.get().getStatus(), "ACTIVE quiz with past end_time must transition to COMPLETED");
+        } finally {
+            teacherService.deleteQuiz(quizId, TEACHER_RONALD_ID);
+        }
+    }
+
+    @Test
+    @Order(27)
+    @DisplayName("Test 27: Assign quiz to cohort and verify assignment in DB & department scoping (B1)")
+    public void testAssignQuizToCohortAndDepartmentScoping() {
+        // 1. Verify available cohorts for Ronald Vance are scoped to Computer Science
+        List<Cohort> cohorts = teacherService.getAvailableCohortsForTeacher(TEACHER_RONALD_ID);
+        assertNotNull(cohorts);
+        assertFalse(cohorts.isEmpty(), "Ronald Vance should have available cohorts in Computer Science");
+        for (Cohort c : cohorts) {
+            assertEquals("Computer Science", c.getDepartment(), "Cohort must belong to teacher's department");
+        }
+
+        // 2. Create test quiz
+        Quiz quiz = new Quiz();
+        quiz.setTitle("CS402: Cohort Assignment Test");
+        quiz.setSubjectId(1);
+        quiz.setTeacherId(TEACHER_RONALD_ID);
+        quiz.setDurationMinutes(45);
+        quiz.setStatus("DRAFT");
+        Quiz created = teacherService.createQuiz(quiz, TEACHER_RONALD_ID);
+        assertNotNull(created);
+        int quizId = created.getQuizId();
+
+        try {
+            int cohortId = cohorts.get(0).getCohortId();
+            Timestamp dueAt = new Timestamp(System.currentTimeMillis() + 48 * 3600 * 1000L);
+
+            // 3. Assign to cohort
+            boolean assigned = teacherService.assignQuizToCohort(quizId, cohortId, dueAt, TEACHER_RONALD_ID);
+            assertTrue(assigned, "Assigning cohort to quiz should succeed");
+
+            // 4. Verify assignment query returns enriched details
+            List<QuizAssignment> assignments = teacherService.getQuizAssignments(quizId, TEACHER_RONALD_ID);
+            assertEquals(1, assignments.size(), "Should have exactly 1 assignment");
+            QuizAssignment qa = assignments.get(0);
+            assertEquals(cohortId, qa.getCohortId());
+            assertEquals("CS Senior Cohort 2026", qa.getCohortName());
+            assertEquals(6, qa.getEnrolledStudentsCount(), "Cohort 1 has 6 enrolled students");
+
+            // 5. Cross-teacher security check: Alistair Finch cannot assign to Ronald's quiz
+            boolean unauthorizedAssign = teacherService.assignQuizToCohort(quizId, cohortId, dueAt, TEACHER_ALISTAIR_ID);
+            assertFalse(unauthorizedAssign, "Unrelated teacher cannot assign cohorts to another teacher's quiz");
+        } finally {
+            teacherService.deleteQuiz(quizId, TEACHER_RONALD_ID);
+        }
+    }
+
+    @Test
+    @Order(28)
+    @DisplayName("Test 28: Assign quiz to student, verify duplicate prevention and removal (B1)")
+    public void testAssignQuizToStudentAndDuplicatePrevention() {
+        // 1. Verify available students for Ronald Vance
+        List<User> students = teacherService.getAvailableStudentsForTeacher(TEACHER_RONALD_ID);
+        assertNotNull(students);
+        assertFalse(students.isEmpty(), "Ronald Vance should have available students");
+        for (User u : students) {
+            assertEquals("Computer Science", u.getDepartment(), "Available students must belong to teacher's department");
+        }
+
+        // 2. Create test quiz
+        Quiz quiz = new Quiz();
+        quiz.setTitle("CS402: Individual Student Assignment Test");
+        quiz.setSubjectId(1);
+        quiz.setTeacherId(TEACHER_RONALD_ID);
+        quiz.setDurationMinutes(30);
+        quiz.setStatus("DRAFT");
+        Quiz created = teacherService.createQuiz(quiz, TEACHER_RONALD_ID);
+        assertNotNull(created);
+        int quizId = created.getQuizId();
+
+        try {
+            int studentId = 4; // Alex Mercer
+            Timestamp dueAt = new Timestamp(System.currentTimeMillis() + 24 * 3600 * 1000L);
+
+            // 3. Assign individual student
+            boolean assigned = teacherService.assignQuizToStudent(quizId, studentId, dueAt, TEACHER_RONALD_ID);
+            assertTrue(assigned, "Assigning individual student should succeed");
+
+            List<QuizAssignment> assignments = teacherService.getQuizAssignments(quizId, TEACHER_RONALD_ID);
+            assertEquals(1, assignments.size());
+            QuizAssignment qa = assignments.get(0);
+            assertEquals(studentId, qa.getStudentId());
+            assertEquals("Alex Mercer", qa.getStudentName());
+            assertEquals("CS-2022-041", qa.getStudentIdentifier());
+
+            // 4. Duplicate assignment attempt should be handled gracefully (idempotent)
+            boolean dupeAssigned = teacherService.assignQuizToStudent(quizId, studentId, dueAt, TEACHER_RONALD_ID);
+            assertTrue(dupeAssigned, "Duplicate assignment should be handled safely");
+            assertEquals(1, teacherService.getQuizAssignments(quizId, TEACHER_RONALD_ID).size(), "Still exactly 1 assignment");
+
+            // 5. Remove assignment
+            boolean removed = teacherService.removeQuizAssignment(qa.getAssignmentId(), quizId, TEACHER_RONALD_ID);
+            assertTrue(removed, "Removing assignment should succeed");
+            assertEquals(0, teacherService.getQuizAssignments(quizId, TEACHER_RONALD_ID).size(), "Assignments list should now be empty");
+        } finally {
+            teacherService.deleteQuiz(quizId, TEACHER_RONALD_ID);
+        }
+    }
+
+    @Test
+    @Order(29)
+    @DisplayName("Test 29: Publish checklist requires at least one assignment target (B1)")
+    public void testPublishChecklistRequiresAssignmentTarget() {
+        Quiz quiz = new Quiz();
+        quiz.setTitle("CS402: Target Requirement Publish Test");
+        quiz.setSubjectId(1);
+        quiz.setTeacherId(TEACHER_RONALD_ID);
+        quiz.setDurationMinutes(30);
+        quiz.setStatus("DRAFT");
+        Quiz created = teacherService.createQuiz(quiz, TEACHER_RONALD_ID);
+        assertNotNull(created);
+        int quizId = created.getQuizId();
+
+        try {
+            // Add a valid question
+            Question q = new Question();
+            q.setSubjectId(1);
+            q.setQuizId(quizId);
+            q.setQuestionText("What protocol operates on TCP port 443?");
+            q.setQuestionType("SINGLE_CHOICE");
+            q.setPoints(new BigDecimal("5.00"));
+            q.addOption(new QuestionOption("A", "HTTPS", true, 1));
+            q.addOption(new QuestionOption("B", "HTTP", false, 2));
+            Question createdQ = teacherService.createQuestion(q, TEACHER_RONALD_ID);
+            assertNotNull(createdQ);
+
+            // Validation with 0 assignments MUST fail
+            IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+                teacherService.validateQuizForPublish(quizId, TEACHER_RONALD_ID);
+            });
+            assertTrue(ex.getMessage().contains("assign the examination to at least one cohort or student"),
+                    "Must reject publish when no targets assigned: " + ex.getMessage());
+
+            // Now assign Cohort 1
+            teacherService.assignQuizToCohort(quizId, 1, null, TEACHER_RONALD_ID);
+
+            // Now publish validation should pass
+            assertDoesNotThrow(() -> teacherService.validateQuizForPublish(quizId, TEACHER_RONALD_ID));
+
+            // Clean up
+            teacherService.removeQuestionFromQuiz(createdQ.getQuestionId(), quizId, TEACHER_RONALD_ID);
+            teacherService.deleteQuestion(createdQ.getQuestionId(), TEACHER_RONALD_ID);
+        } finally {
+            teacherService.deleteQuiz(quizId, TEACHER_RONALD_ID);
+        }
+    }
+
+    @Test
+    @Order(30)
+    @DisplayName("Test 30: Student visibility in getAssignedQuizzes and window eligibility in isStudentEligible (B1)")
+    public void testStudentVisibilityAndEligibility() {
+        long now = System.currentTimeMillis();
+        // 1. Create an active quiz for Ronald Vance
+        Quiz quiz = new Quiz();
+        quiz.setTitle("CS402: Live Distributed Systems Assessment");
+        quiz.setSubjectId(1);
+        quiz.setTeacherId(TEACHER_RONALD_ID);
+        quiz.setDurationMinutes(60);
+        quiz.setStartTime(new Timestamp(now - 10 * 60 * 1000L)); // started 10 mins ago
+        quiz.setEndTime(new Timestamp(now + 2 * 3600 * 1000L));   // ends in 2 hrs
+        quiz.setStatus("ACTIVE");
+        Quiz created = teacherService.createQuiz(quiz, TEACHER_RONALD_ID);
+        assertNotNull(created);
+        int quizId = created.getQuizId();
+
+        try {
+            int studentId = 4; // Alex Mercer, in Cohort 1
+
+            // Initially, student is NOT eligible (no assignment yet)
+            assertFalse(examDao.isStudentEligible(quizId, studentId), "Student must not be eligible before quiz assignment");
+
+            // Assign quiz to Cohort 1 (which includes student 4)
+            teacherService.assignQuizToCohort(quizId, 1, null, TEACHER_RONALD_ID);
+
+            // Now student IS eligible
+            assertTrue(examDao.isStudentEligible(quizId, studentId), "Student in assigned cohort must be eligible");
+
+            // Student 4's assigned quiz list includes this quiz with canStart = true
+            List<StudentQuizCard> cards = studentDao.getAssignedQuizzes(studentId);
+            boolean found = false;
+            for (StudentQuizCard card : cards) {
+                if (card.getQuizId() == quizId) {
+                    found = true;
+                    assertEquals("ACTIVE", card.getStatus());
+                    assertTrue(card.isCanStart(), "Active quiz within window should have canStart=true");
+                    break;
+                }
+            }
+            assertTrue(found, "Newly assigned quiz must appear on student's dashboard");
+
+            // An ineligible student ID (e.g. 99999) must return false
+            assertFalse(examDao.isStudentEligible(quizId, 99999), "Unenrolled student must not be eligible");
+
+            // If the quiz start_time is in the future, isStudentEligible returns false
+            quiz.setStartTime(new Timestamp(now + 24 * 3600 * 1000L)); // tomorrow
+            quizDao.update(quiz);
+            assertFalse(examDao.isStudentEligible(quizId, studentId), "Future start_time quiz must not be startable by student");
+        } finally {
+            teacherService.deleteQuiz(quizId, TEACHER_RONALD_ID);
+        }
     }
 }
